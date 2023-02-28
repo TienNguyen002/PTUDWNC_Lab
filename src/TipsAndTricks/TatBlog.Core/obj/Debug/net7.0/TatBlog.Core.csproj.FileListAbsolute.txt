@@ -1,0 +1,12 @@
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\bin\Debug\net7.0\TatBlog.Core.deps.json
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\bin\Debug\net7.0\TatBlog.Core.dll
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\bin\Debug\net7.0\TatBlog.Core.pdb
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\obj\Debug\net7.0\TatBlog.Core.csproj.AssemblyReference.cache
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\obj\Debug\net7.0\TatBlog.Core.GeneratedMSBuildEditorConfig.editorconfig
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\obj\Debug\net7.0\TatBlog.Core.AssemblyInfoInputs.cache
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\obj\Debug\net7.0\TatBlog.Core.AssemblyInfo.cs
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\obj\Debug\net7.0\TatBlog.Core.csproj.CoreCompileInputs.cache
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\obj\Debug\net7.0\TatBlog.Core.dll
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\obj\Debug\net7.0\refint\TatBlog.Core.dll
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\obj\Debug\net7.0\TatBlog.Core.pdb
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Core\obj\Debug\net7.0\ref\TatBlog.Core.dll

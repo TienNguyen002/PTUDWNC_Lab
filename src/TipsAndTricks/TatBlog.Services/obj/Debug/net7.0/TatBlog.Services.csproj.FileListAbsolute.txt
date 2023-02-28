@@ -1,0 +1,17 @@
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\bin\Debug\net7.0\TatBlog.Services.deps.json
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\bin\Debug\net7.0\TatBlog.Services.dll
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\bin\Debug\net7.0\TatBlog.Services.pdb
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\bin\Debug\net7.0\TatBlog.Core.dll
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\bin\Debug\net7.0\TatBlog.Data.dll
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\bin\Debug\net7.0\TatBlog.Core.pdb
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\bin\Debug\net7.0\TatBlog.Data.pdb
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\TatBlog.Services.csproj.AssemblyReference.cache
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\TatBlog.Services.GeneratedMSBuildEditorConfig.editorconfig
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\TatBlog.Services.AssemblyInfoInputs.cache
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\TatBlog.Services.AssemblyInfo.cs
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\TatBlog.Services.csproj.CoreCompileInputs.cache
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\TatBlog.Services.csproj.CopyComplete
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\TatBlog.Services.dll
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\refint\TatBlog.Services.dll
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\TatBlog.Services.pdb
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.Services\obj\Debug\net7.0\ref\TatBlog.Services.dll
