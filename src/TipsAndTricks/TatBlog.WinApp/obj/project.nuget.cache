@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "REPZ1wM5SgBGcd6lOKmQ4N5sUwqiP6nG5/mypX4URF+XpwPKhAjS6npLsw476LhJo+HFM+4hqo3WBkR3WAWoFg==",
+  "dgSpecHash": "Xqsv9J+TEvVrljmhbMOzYmycz4Bv1bdnvnQBmqVowT1AZBKTAHNrn5kLKvtJ1BShXW/mDBIhhn9XRPS/vZbmGg==",
   "success": true,
   "projectFilePath": "E:\\Learning\\Year3-Term2\\PTUDWNC\\Lab\\PTUDWNC_Lab\\src\\TipsAndTricks\\TatBlog.WinApp\\TatBlog.WinApp.csproj",
   "expectedPackageFiles": [
@@ -51,6 +51,7 @@
     "C:\\Users\\jirus\\.nuget\\packages\\system.globalization\\4.3.0\\system.globalization.4.3.0.nupkg.sha512",
     "C:\\Users\\jirus\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.21.0\\system.identitymodel.tokens.jwt.6.21.0.nupkg.sha512",
     "C:\\Users\\jirus\\.nuget\\packages\\system.io\\4.3.0\\system.io.4.3.0.nupkg.sha512",
+    "C:\\Users\\jirus\\.nuget\\packages\\system.linq.dynamic.core\\1.2.25\\system.linq.dynamic.core.1.2.25.nupkg.sha512",
     "C:\\Users\\jirus\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\jirus\\.nuget\\packages\\system.memory.data\\1.0.2\\system.memory.data.1.0.2.nupkg.sha512",
     "C:\\Users\\jirus\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",

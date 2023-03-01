@@ -72,3 +72,4 @@ E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.WinApp
 E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.WinApp\obj\Debug\net7.0\TatBlog.WinApp.pdb
 E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.WinApp\obj\Debug\net7.0\TatBlog.WinApp.genruntimeconfig.cache
 E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.WinApp\obj\Debug\net7.0\ref\TatBlog.WinApp.dll
+E:\Learning\Year3-Term2\PTUDWNC\Lab\PTUDWNC_Lab\src\TipsAndTricks\TatBlog.WinApp\bin\Debug\net7.0\System.Linq.Dynamic.Core.dll
