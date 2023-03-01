@@ -13,8 +13,7 @@ namespace TatBlog.Services.Extensions
 {
     public static class PagedListExtensions
     {
-        //Tọa biểu thức dùng để sắp xếp dữ liệu
-        //Sử dụng sau mệnh đề ORDER BY trong truy vấn
+        //Tọa biểu thức dùng để sắp xếp dữ liệu sử dụng sau mệnh đề ORDER BY trong truy vấn
         public static string GetOrderExpression(
             this IPagingParams pagingParams,
             string defaultColumn = "Id")

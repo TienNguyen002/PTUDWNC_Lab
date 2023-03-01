@@ -4,8 +4,7 @@ using TatBlog.Data.Seeders;
 using TatBlog.Services.Blogs;
 using TatBlog.WinApp;
 
-//Tạo đối tượng DbContext để quản lý phiên làm việc
-//với CSDL và trạng thái của các đối tượng
+//Tạo đối tượng DbContext để quản lý phiên làm việc với CSDL và trạng thái của các đối tượng
 var context = new BlogDbContext();
 
 //Tạo đối tượng khởi tạo dữ liệu mẫu
@@ -17,10 +16,10 @@ seeder.Initialize();
 //Tạo đối tượng BlogRepository
 IBlogRepository blogRepo = new BlogRepository(context);
 
+#region Author
 ////Đọc danh sách tác giả từ cơ sở dữ liệu
 //var authors = context.Authors.ToList();
 
-////Xuất danh sách tác giả ra màn hình
 //Console.WriteLine("{0,-4}{1,-30},{2,-30},{3,12}",
 //    "ID", "Full Name", "Email", "Joined Date");
 
@@ -29,7 +28,9 @@ IBlogRepository blogRepo = new BlogRepository(context);
 //    Console.WriteLine("{0,-4}{1,-30},{2,-30},{3,12:MM/dd/yyyy}",
 //        author.Id, author.FullName, author.Email, author.JoinedDate);
 //}
+#endregion
 
+#region Posts
 ////Đọc danh sách bài viết từ cơ sở dữ liệu
 ////Lấy kèm tên tác giả và chuyên mục
 //var posts = context.Posts
@@ -46,7 +47,6 @@ IBlogRepository blogRepo = new BlogRepository(context);
 //    })
 //    .ToList();
 
-////Xuất danh sách bài viết ra màn hình
 //foreach(var post in posts)
 //{
 //    Console.WriteLine("ID       : {0}", post.Id);
@@ -57,11 +57,12 @@ IBlogRepository blogRepo = new BlogRepository(context);
 //    Console.WriteLine("Category : {0}", post.Category);
 //    Console.WriteLine("".PadRight(80,'-'));
 //}
+#endregion
 
+#region 3_Popular_Posts
 ////Tìm 3 bài viết được xem/đọc nhiều nhất
 //var posts = await blogRepo.GetPopularArticlesAsync(3);
 
-////Xuất danh sách bài viết ra màn hình
 //foreach(var post in posts)
 //{
 //    Console.WriteLine("ID       : {0}", post.Id);
@@ -72,19 +73,23 @@ IBlogRepository blogRepo = new BlogRepository(context);
 //    Console.WriteLine("Category : {0}", post.Category.Name);
 //    Console.WriteLine("".PadRight(80, '-'));
 //}
+#endregion
 
+#region Category
 ////Lấy danh sách chuyên mục
 //var categories = await blogRepo.GetCategoriesAsync();
 
-////Xuất ra màn hình
 //Console.WriteLine("{0,-5}{1,-50}{2,10}",
 //    "ID", "Name", "Count");
+
 //foreach(var item in categories)
 //{
 //    Console.WriteLine("{0,-5}{1,-50}{2,10}",
 //    item.Id, item.Name, item.PostCount);
 //}
+#endregion
 
+#region Page
 //Tạo đối tượng chứa tham số phân trang
 var pagingParams = new PagingParams
 {
@@ -97,7 +102,6 @@ var pagingParams = new PagingParams
 //Lấy danh sách từ khóa
 var tagsList = await blogRepo.GetPagedTagsAsync(pagingParams);
 
-//Xuất ra màn hình
 Console.WriteLine("{0,-5}{1,-50}{2,10}",
     "ID", "Name", "Count");
 
@@ -106,3 +110,4 @@ foreach(var item in tagsList)
     Console.WriteLine("{0,-5}{1,-50}{2,10}",
     item.Id, item.Name, item.PostCount);
 }
+#endregion

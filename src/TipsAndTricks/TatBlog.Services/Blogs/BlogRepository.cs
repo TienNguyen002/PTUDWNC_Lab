@@ -21,8 +21,7 @@ namespace TatBlog.Services.Blogs
             _context = context;
         }
 
-        //Tìm bài viết có tên định danh là 'slug'
-        //và được đăng vào tháng 'month' năm 'year'
+        //Tìm bài viết có tên định danh là 'slug' và được đăng vào tháng 'month' năm 'year'
         public async Task<Post> GetPostAsync(
             int year,
             int month,
@@ -81,8 +80,7 @@ namespace TatBlog.Services.Blogs
                     p.SetProperty(x => x.ViewCount, x => x.ViewCount + 1), cancellationToken);
         }
 
-        //Lấy danh sách chuyên mục và số lượng bài viết
-        //nằm thuộc từng chuyên mục/chủ đề
+        //Lấy danh sách chuyên mục và số lượng bài viết nằm thuộc từng chuyên mục/chủ đề
         public async Task<IList<CategoryItem>> GetCategoriesAsync(
             bool showOnMenu = false,
             CancellationToken cancellationToken = default)
@@ -106,8 +104,7 @@ namespace TatBlog.Services.Blogs
                 .ToListAsync(cancellationToken);
         }
 
-        //Lấy danh sách từ khóa/thẻ và phân trang theo
-        //Các tham số pagingParams
+        //Lấy danh sách từ khóa/thẻ và phân trang theo các tham số pagingParams
         public async Task<IPagedList<TagItem>> GetPagedTagsAsync(
             IPagingParams pagingParams,
             CancellationToken cancellationToken = default)

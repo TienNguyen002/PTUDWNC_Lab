@@ -7,47 +7,34 @@ using System.Threading.Tasks;
 namespace TatBlog.Core.Constants
 {
     public interface IPagedList
-    {
-        //Tổng số trang (số tập con)
-        int PageCount { get; }
+    {      
+        int PageCount { get; }          //Tổng số trang (số tập con)
 
-        //Tổng số phần tử trả về từ truy vấn
-        int TotalItemCount { get; }
+        int TotalItemCount { get; }     //Tổng số phần tử trả về từ truy vấn
 
-        //Chỉ số trang hiện tại (bắt đầu từ 0)
-        int PageIndex { get; }
+        int PageIndex { get; }          //Chỉ số trang hiện tại (bắt đầu từ 0)
 
-        //Vị trí của trang hiện tại (bắt đầu từ 1)
-        int PageNumber { get; }
+        int PageNumber { get; }         //Vị trí của trang hiện tại (bắt đầu từ 1)
 
-        //Số lượng phần tử tối đa trên 1 trang
-        int PageSize { get; }
+        int PageSize { get; }           //Số lượng phần tử tối đa trên 1 trang
 
-        //Kiểm tra có trang trước hay không
-        bool HasPreviousPage { get; }
+        bool HasPreviousPage { get; }   //Kiểm tra có trang trước hay không
+        
+        bool HasNextPage { get; }       //Kiểm tra có trang tiếp theo hay không
 
-        //Kiểm tra có trang tiếp theo hay không
-        bool HasNextPage { get; }
+        bool IsFirstPage { get; }       //Trang hiện tại có phải là trang đầu tiên không
 
-        //Trang hiện tại có phải là trang đầu tiên không
-        bool IsFirstPage { get; }
+        bool IsLastPage { get; }        //Trang hiện tại có phải là trang cuối cùng không
 
-        //Trang hiện tại có phải là trang cuối cùng không
-        bool IsLastPage { get; }
+        int FirstItemIndex { get; }     //Thứ tự của phần tử đầu trang trong truy vấn (bắt đầu từ 1)
 
-        //Thứ tự của phần tử đầu trang trong truy vấn (bắt đầu từ 1)
-        int FirstItemIndex { get; }
-
-        //Thứ tự của phần tử cuối trang trong truy vấn (bắt đầu từ 1)
-        int LastItemIndex { get; }
+        int LastItemIndex { get; }      //Thứ tự của phần tử cuối trang trong truy vấn (bắt đầu từ 1)
     }
 
     public interface IPagedList<out T>: IPagedList, IEnumerable<T>
-    {
-        //Lấy phần tử tại vị trí index (bắt đầu từ 0)
-        T this[int index] { get; }
+    { 
+        T this[int index] { get; }      //Lấy phần tử tại vị trí index (bắt đầu từ 0)
 
-        //Đếm số lượng phần tử chứa trong trang
-        int Count { get; }
+        int Count { get; }              //Đếm số lượng phần tử chứa trong trang
     }
 }

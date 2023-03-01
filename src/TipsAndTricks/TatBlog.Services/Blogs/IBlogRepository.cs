@@ -11,8 +11,7 @@ namespace TatBlog.Services.Blogs
 {
     public interface IBlogRepository
     {
-        //Tìm bài viết có tên định danh là 'slug'
-        //và được đăng vào tháng 'month' năm 'year'
+        //Tìm bài viết có tên định danh là 'slug' và được đăng vào tháng 'month' năm 'year'
         Task<Post> GetPostAsync(
             int year,
             int month,
@@ -34,14 +33,12 @@ namespace TatBlog.Services.Blogs
             int postId,
             CancellationToken cancellationToken = default);
 
-        //Lấy danh sách chuyên mục và số lượng bài viết
-        //nằm thuộc từng chuyên mục/chủ đề
+        //Lấy danh sách chuyên mục và số lượng bài viết nằm thuộc từng chuyên mục/chủ đề
         Task<IList<CategoryItem>> GetCategoriesAsync(
             bool showOnMenu = false,
             CancellationToken cancellationToken = default);
 
-        //Lấy danh sách từ khóa/thẻ và phân trang theo
-        //Các tham số pagingParám
+        //Lấy danh sách từ khóa/thẻ và phân trang theo các tham số pagingParám
         Task<IPagedList<TagItem>> GetPagedTagsAsync(
             IPagingParams pagingParams,
             CancellationToken cancellationToken = default);
