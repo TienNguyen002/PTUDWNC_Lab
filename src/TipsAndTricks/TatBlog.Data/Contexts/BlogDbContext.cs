@@ -21,7 +21,7 @@ namespace TatBlog.Data.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-O16TT65\SQLEXPRESS;Database=TatBlog;Trusted_Connection=True;Encrypt=False;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=TatBlog;Trusted_Connection=True;Encrypt=False;MultipleActiveResultSets=true");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
