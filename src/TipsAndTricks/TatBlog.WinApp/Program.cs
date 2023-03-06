@@ -379,12 +379,61 @@ var pagingParamsAuthor = new PagingParams
 #endregion
 
 #region GetNPopularAuthor
-var topAuthors = await authorRepo.GetNPopularAuthors(3, pagingParamsAuthor);
-Console.WriteLine("{0, -5}{1,-25}{2,-20}{3,-10}{4,-30}{5,-20}{6,-10}",
-              "Id", "FullName", "UrlSlug", "ImageUrl", "JoinedDate", "Email", "Notes");
-foreach (var author in topAuthors)
+//var topAuthors = await authorRepo.GetNPopularAuthors(3, pagingParamsAuthor);
+//Console.WriteLine("{0, -5}{1,-25}{2,-20}{3,-10}{4,-30}{5,-20}{6,-10}",
+//              "Id", "FullName", "UrlSlug", "ImageUrl", "JoinedDate", "Email", "Notes");
+//foreach (var author in topAuthors)
+//{
+//    Console.WriteLine(author);
+//}
+#endregion
+#endregion
+
+#region Subscriber
+ISubscriberRepository subscribersRepo = new SubscriberRepository(context);
+
+#region GetSubscriberByEmail
+//var subscriberEmail = await subscribersRepo.GetSubscriberByEmailAsync("tiennguyenn002@gmail.com");
+//Console.WriteLine(subscriberEmail);
+#endregion
+
+#region GetSubscriberById
+//var subscriberId = await subscribersRepo.GetSubscriberByIdAsync(1);
+//Console.WriteLine(subscriberId);
+#endregion
+
+#region NewSubscriber
+//var newSubscriber = await subscribersRepo.SubscribeAsync("nguoilaoi0202@gmail.com");
+//Console.WriteLine(newSubscriber);
+#endregion
+
+#region Unsubscribe
+//Console.WriteLine(await subscribersRepo.UnsubscribeAsync("minhtien@gmail.com", "Unsubscribe", true));
+#endregion
+
+#region BlockSubscribe
+//Console.WriteLine(await subscribersRepo.BlockSubscriberAsync(5, "Thong tin gia mao", "Toi khong ro thong tin cua nguoi dung nay"));
+#endregion
+
+#region DeleteSubscriber
+//Console.WriteLine(await subscribersRepo.DeleteSubscriberAsync(7));
+#endregion
+
+#region Page
+IPagingParams pagingParamsSubscriber = new PagingParams()
 {
-    Console.WriteLine(author);
+    PageNumber = 1,
+    PageSize = 5,
+    SortColumn = "Email",
+    SortOrder = "ASC"
+};
+
+var subscribersSearch = await subscribersRepo
+  .SearchSubscribersAsync(pagingParamsSubscriber, "tien", false, false);
+
+foreach (var subscriber in subscribersSearch)
+{
+    Console.WriteLine(subscriber);
 }
 #endregion
 #endregion
