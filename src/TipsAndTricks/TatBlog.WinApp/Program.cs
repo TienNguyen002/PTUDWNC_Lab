@@ -6,6 +6,7 @@ using TatBlog.Data.Contexts;
 using TatBlog.Data.Seeders;
 using TatBlog.Services.Blogs;
 using TatBlog.WinApp;
+using static Azure.Core.HttpHeader;
 
 //Tạo đối tượng DbContext để quản lý phiên làm việc với CSDL và trạng thái của các đối tượng
 var context = new BlogDbContext();
@@ -279,18 +280,18 @@ PostQuery postQuery = new PostQuery()
 #endregion
 
 #region CountPostQuery
-var count = await blogRepo.CountPostQueryAsync(postQuery);
-Console.WriteLine("Number of Posts have query: " + count);
+//var count = await blogRepo.CountPostQueryAsync(postQuery);
+//Console.WriteLine("Number of Posts have query: " + count);
 #endregion
 
 #region Page
-var pagingParams = new PagingParams
-{
-    PageNumber = 1,        
-    PageSize = 5,           
-    SortColumn = "Title",  
-    SortOrder = "ASC"     
-};
+//var pagingParams = new PagingParams
+//{
+//    PageNumber = 1,        
+//    PageSize = 5,           
+//    SortColumn = "Title",  
+//    SortOrder = "ASC"     
+//};
 
 //var postList = await blogRepo.GetPagesPostQueryAsync(postQuery, pagingParams);
 //Console.WriteLine("----Title----");
@@ -348,5 +349,42 @@ var pagingParams = new PagingParams
 //    "ID", "Full Name", "UrlSlug", "Email", "Joined Date");
 //Console.WriteLine("{0,-4}{1,-30}{2,-20}{3,-30}{4,12:MM/dd/yyyy}",
 //        author.Id, author.FullName, author.UrlSlug, author.Email, author.JoinedDate);
+#endregion
+
+#region Page
+var pagingParamsAuthor = new PagingParams
+{
+    PageNumber = 1,
+    PageSize = 5,
+    SortColumn = "FullName",
+    SortOrder = "DESC"
+};
+
+//var authorList = await authorRepo.GetPagedAuthorsAsync(pagingParamsAuthor);
+//foreach (var author in authorList)
+//{
+//    Console.WriteLine(author);
+//}
+#endregion
+
+#region AddOrUpdateAuthor
+//var authorAdd = new Author()
+//{
+//    FullName = "Nguyen Hoang Nhat Tien",
+//    UrlSlug = "tien-nguyen",
+//    Email = "tiennguyenn002@gmail.com",
+//    JoinedDate = new DateTime(2023, 3, 6)
+//};
+//await authorRepo.AddOrUpdateAuthorAsync(authorAdd);
+#endregion
+
+#region GetNPopularAuthor
+var topAuthors = await authorRepo.GetNPopularAuthors(3, pagingParamsAuthor);
+Console.WriteLine("{0, -5}{1,-25}{2,-20}{3,-10}{4,-30}{5,-20}{6,-10}",
+              "Id", "FullName", "UrlSlug", "ImageUrl", "JoinedDate", "Email", "Notes");
+foreach (var author in topAuthors)
+{
+    Console.WriteLine(author);
+}
 #endregion
 #endregion
