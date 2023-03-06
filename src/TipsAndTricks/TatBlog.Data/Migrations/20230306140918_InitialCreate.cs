@@ -46,6 +46,24 @@ namespace TatBlog.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Subscriber",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    SubscribeDate = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UnsubscribeDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    UnsubscribeCause = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FlagBlockSub = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subscriber", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -141,6 +159,9 @@ namespace TatBlog.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "PostTags");
+
+            migrationBuilder.DropTable(
+                name: "Subscriber");
 
             migrationBuilder.DropTable(
                 name: "Posts");

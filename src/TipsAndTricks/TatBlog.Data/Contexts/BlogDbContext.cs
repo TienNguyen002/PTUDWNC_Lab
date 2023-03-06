@@ -19,6 +19,8 @@ namespace TatBlog.Data.Contexts
 
         public DbSet<Tag> Tags { get; set; }
 
+        public DbSet<Subscriber> Subscribers { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=TatBlog;Trusted_Connection=True;Encrypt=False;MultipleActiveResultSets=true");

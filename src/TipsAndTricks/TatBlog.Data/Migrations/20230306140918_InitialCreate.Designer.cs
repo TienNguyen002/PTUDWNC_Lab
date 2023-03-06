@@ -12,7 +12,7 @@ using TatBlog.Data.Contexts;
 namespace TatBlog.Data.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    [Migration("20230227134418_InitialCreate")]
+    [Migration("20230306140918_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -176,6 +176,42 @@ namespace TatBlog.Data.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Posts", (string)null);
+                });
+
+            modelBuilder.Entity("TatBlog.Core.Entities.Subscriber", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<bool>("FlagBlockSub")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("SubscribeDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UnsubscribeCause")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UnsubscribeDate")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Subscriber", (string)null);
                 });
 
             modelBuilder.Entity("TatBlog.Core.Entities.Tag", b =>
