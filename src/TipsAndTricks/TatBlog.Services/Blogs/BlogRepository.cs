@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
-using TatBlog.Core.Constants;
+using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
@@ -328,7 +328,10 @@ namespace TatBlog.Services.Blogs
 
         private IQueryable<Post> FindPostByQueryable(PostQuery query) 
         {
-            IQueryable<Post> postQuery = _context.Set<Post>();
+            IQueryable<Post> postQuery = _context.Set<Post>()
+                .Include(p => p.Author)
+                .Include(p => p.Tags)
+                .Include(p => p.Category);
             if(!string.IsNullOrEmpty(query.KeyWord))
             {
                 postQuery = postQuery.Where(p => p.Title.Contains(query.KeyWord) 
