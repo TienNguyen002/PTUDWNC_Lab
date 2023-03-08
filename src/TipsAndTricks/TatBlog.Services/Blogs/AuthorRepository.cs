@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
-using TatBlog.Core.Constants;
 using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
@@ -15,7 +14,7 @@ using static Azure.Core.HttpHeader;
 
 namespace TatBlog.Services.Blogs
 {
-  public class AuthorRepository : IAuthorRepository
+    public class AuthorRepository : IAuthorRepository
   {
 
     private readonly BlogDbContext _context;

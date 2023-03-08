@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using TatBlog.Core.Constants;
+using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;

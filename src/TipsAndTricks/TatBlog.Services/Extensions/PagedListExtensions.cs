@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TatBlog.Core.Collections;
-using TatBlog.Core.Constants;
+using TatBlog.Core.Contracts;
 
 namespace TatBlog.Services.Extensions
 {

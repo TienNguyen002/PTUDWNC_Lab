@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TatBlog.Core.Constants;
 using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
 
 namespace TatBlog.Services.Blogs
 {
-  public interface IAuthorRepository
+    public interface IAuthorRepository
   {
     Task<Author> GetAuthorByIdAsync(int id, CancellationToken cancellationToken = default);
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TatBlog.Core.Constants;
+using TatBlog.Core.Contracts;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
 using TatBlog.Services.Extensions;

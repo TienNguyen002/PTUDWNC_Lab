@@ -15,6 +15,8 @@ namespace TatBlog.Core.DTO
         public int PostMonth { get; set; }
         public int PostYear { get; set; }
         public string Tags { get; set; }
+        public bool PublishedOnly { get; set; }
+        public bool NotPublished { get; set; }
         public List<string> GetTag()
         {
             return (Tags ?? "")
