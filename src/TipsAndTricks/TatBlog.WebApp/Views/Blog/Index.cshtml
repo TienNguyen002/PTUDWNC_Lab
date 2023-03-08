@@ -2,6 +2,7 @@
 
 @{
     ViewData["PageTitle"] = "Trang chủ";
+<<<<<<< HEAD
     var postQuery = (ViewBag.PostQuery as PostQuery) ?? new PostQuery();
 }
 
@@ -12,9 +13,17 @@
             Những bài viết chứa từ khóa '@postQuery.KeyWord'
         </h3>
     }
+=======
+}
+
+<div class="p-4">
+>>>>>>> ec06aef83118dbad8ddac92676d66126e9bd53a7
     @foreach(var postItem in Model)
     {
         <partial name="_PostList" model="postItem"/>
     }
+<<<<<<< HEAD
     <partial name="_Pager" model="@Model"/>
+=======
+>>>>>>> ec06aef83118dbad8ddac92676d66126e9bd53a7
 </div>
