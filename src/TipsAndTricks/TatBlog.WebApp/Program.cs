@@ -2,6 +2,15 @@
 using TatBlog.Data.Contexts;
 using TatBlog.Data.Seeders;
 using TatBlog.Services.Blogs;
+<<<<<<< HEAD
+using TatBlog.WebApp.Extensions;
+using TatBlog.Webendpoints.Extensions;
+
+var builder = WebApplication.CreateBuilder(args);
+{
+    builder.ConfigureMvc()
+           .ConfigureServices();
+=======
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -15,10 +24,18 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddScoped<IBlogRepository, BlogRepository>();
     builder.Services.AddScoped<IDataSeeder, DataSeeder>();
+>>>>>>> ec06aef83118dbad8ddac92676d66126e9bd53a7
 }
 
 var app = builder.Build();
 {
+<<<<<<< HEAD
+    app.UseRequestPipeline();
+    app.UseBlogRoutes();
+    app.UseDataSeeder();
+}
+
+=======
     //Cấu hình HTTP Request pipeline
 
     //Thêm middleware để hiển thị thông báo lỗi
@@ -58,4 +75,5 @@ using (var scope = app.Services.CreateScope())
     var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
     seeder.Initialize();
 }
+>>>>>>> ec06aef83118dbad8ddac92676d66126e9bd53a7
 app.Run();
