@@ -346,7 +346,17 @@ namespace TatBlog.Services.Blogs
                 postQuery = postQuery
                     .Where(p => p.Category.UrlSlug == query.CategorySlug);
             }
-            if(query.PostMonth > 0)
+            if (!string.IsNullOrWhiteSpace(query.AuthorName))
+            {
+                postQuery = postQuery
+                    .Where(p => p.Author.FullName == query.AuthorName);
+            }
+            if (!string.IsNullOrWhiteSpace(query.AuthorSlug))
+            {
+                postQuery = postQuery
+                    .Where(p => p.Author.UrlSlug == query.AuthorSlug);
+            }
+            if (query.PostMonth > 0)
             {
                 postQuery = postQuery
                     .Where(p => p.PostedDate.Month == query.PostMonth);

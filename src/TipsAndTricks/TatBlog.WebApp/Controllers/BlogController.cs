@@ -9,9 +9,11 @@ namespace TatBlog.WebApp.Controllers
     public class BlogController : Controller
     {
         private readonly IBlogRepository _blogRepository;
-        public BlogController(IBlogRepository blogRepository)
+        private readonly IAuthorRepository _authorRepository;
+        public BlogController(IBlogRepository blogRepository, IAuthorRepository authorRepository)
         {
             _blogRepository = blogRepository;
+            _authorRepository = authorRepository;
         }
         //Action này xử lý HTTP request đến trang chủ của
         //ứng dụng web hoặc tìm kiếm bài viết theo từ khóa
@@ -38,7 +40,7 @@ namespace TatBlog.WebApp.Controllers
         public async Task<IActionResult> Category(
             string slug,
             [FromQuery(Name = "p")] int pageNumber = 1,
-            [FromQuery(Name = "ps")] int pageSize = 5)
+            [FromQuery(Name = "ps")] int pageSize = 2)
         {
             var category = await _blogRepository.GetCategoryBySlugAsync(slug);
             var postQuery = new PostQuery()
@@ -50,7 +52,25 @@ namespace TatBlog.WebApp.Controllers
             IPagingParams pagingParams = CreatePagingParamsForPost(pageNumber, pageSize);
             var postsList = await _blogRepository.GetPagesPostQueryAsync(postQuery, pagingParams);
             ViewBag.PostQuery = postQuery;
-            ViewBag.Title = $"Các bài viết có chủ đề '{category.Name}'";
+            ViewBag.Title = $"Các bài viết có chủ đề '{postQuery.CategoryName}'";
+            return View("Index", postsList);
+        }
+        public async Task<IActionResult> Author(
+            string slug,
+            [FromQuery(Name = "p")] int pageNumber = 1,
+            [FromQuery(Name = "ps")] int pageSize = 5)
+        {
+            var author = await _authorRepository.GetAuthorBySlugAsync(slug);
+            var postQuery = new PostQuery()
+            {
+                PublishedOnly = true,
+                AuthorSlug = slug,
+                AuthorName = author?.FullName,
+            };
+            IPagingParams pagingParams = CreatePagingParamsForPost(pageNumber, pageSize);
+            var postsList = await _blogRepository.GetPagesPostQueryAsync(postQuery, pagingParams);
+            ViewBag.PostQuery = postQuery;
+            ViewBag.Title = $"Các bài viết có tác giả '{postQuery.AuthorName}'";
             return View("Index", postsList);
         }
         public IActionResult About() => View();
