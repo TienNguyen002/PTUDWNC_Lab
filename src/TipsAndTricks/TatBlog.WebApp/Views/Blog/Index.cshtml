@@ -13,7 +13,9 @@
             Những bài viết chứa từ khóa '@postQuery.KeyWord'
         </h3>
     }
-    @if(postQuery.CategorySlug != null || postQuery.AuthorSlug != null)
+    @if(postQuery.CategorySlug != null 
+    || postQuery.AuthorSlug != null
+    || postQuery.TagSlug != null)
     {
         <h3 class="text-primary mb-3">
             @ViewData["Title"]

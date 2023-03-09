@@ -18,6 +18,7 @@
     else if (!string.IsNullOrWhiteSpace(postQuery.TagSlug))
     {
         actionName = "Tag";
+        slug = postQuery.TagSlug;
     }
 
     if (Model.PageCount > 1)

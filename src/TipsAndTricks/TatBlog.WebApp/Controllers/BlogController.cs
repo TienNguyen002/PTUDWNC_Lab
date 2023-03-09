@@ -73,6 +73,24 @@ namespace TatBlog.WebApp.Controllers
             ViewBag.Title = $"Các bài viết có tác giả '{postQuery.AuthorName}'";
             return View("Index", postsList);
         }
+        public async Task<IActionResult> Tag(
+            string slug,
+            [FromQuery(Name = "p")] int pageNumber = 1,
+            [FromQuery(Name = "ps")] int pageSize = 5)
+        {
+            var tag = await _blogRepository.GetTagBySlugAsync(slug);
+            var postQuery = new PostQuery()
+            {
+                PublishedOnly = true,
+                TagSlug = slug,
+                TagName = tag.Name,
+            };
+            IPagingParams pagingParams = CreatePagingParamsForPost(pageNumber, pageSize);
+            var postsList = await _blogRepository.GetPagesPostQueryAsync(postQuery, pagingParams);
+            ViewBag.PostQuery = postQuery;
+            ViewBag.Title = $"Các bài viết có tag '{postQuery.TagName}'";
+            return View("Index", postsList);
+        }
         public IActionResult About() => View();
         public IActionResult Contact() => View();
         public IActionResult Rss() => Content("Nội dung sẽ được cập nhật");
