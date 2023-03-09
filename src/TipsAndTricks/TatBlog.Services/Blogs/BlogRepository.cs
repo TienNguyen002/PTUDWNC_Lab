@@ -349,7 +349,7 @@ namespace TatBlog.Services.Blogs
             if (!string.IsNullOrWhiteSpace(query.AuthorName))
             {
                 postQuery = postQuery
-                    .Where(p => p.Author.FullName == query.AuthorName);
+                    .Where(p => p.Author.FullName.Contains(query.AuthorName));
             }
             if (!string.IsNullOrWhiteSpace(query.AuthorSlug))
             {

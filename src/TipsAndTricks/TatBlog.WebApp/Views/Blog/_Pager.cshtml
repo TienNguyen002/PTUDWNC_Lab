@@ -8,6 +8,7 @@
     if (!string.IsNullOrWhiteSpace(postQuery.AuthorSlug))
     {
         actionName = "Author";
+        slug = postQuery.AuthorSlug;
     }
     else if (!string.IsNullOrWhiteSpace(postQuery.CategorySlug))
     {
