@@ -2,28 +2,20 @@
 
 @{
     ViewData["PageTitle"] = "Trang chủ";
-<<<<<<< HEAD
+
     var postQuery = (ViewBag.PostQuery as PostQuery) ?? new PostQuery();
 }
 
 <div class="p-4">
-    @if(!string.IsNullOrWhiteSpace(postQuery.KeyWord))
+    @if (!string.IsNullOrWhiteSpace(postQuery.KeyWord))
     {
         <h3 class="text-primary mb-3">
             Những bài viết chứa từ khóa '@postQuery.KeyWord'
         </h3>
     }
-=======
-}
-
-<div class="p-4">
->>>>>>> ec06aef83118dbad8ddac92676d66126e9bd53a7
-    @foreach(var postItem in Model)
+    @foreach (var post in Model)
     {
-        <partial name="_PostList" model="postItem"/>
+        <partial name="_PostList" model="@post" />
     }
-<<<<<<< HEAD
-    <partial name="_Pager" model="@Model"/>
-=======
->>>>>>> ec06aef83118dbad8ddac92676d66126e9bd53a7
+    <partial name="_Pager" model="@Model" />
 </div>
