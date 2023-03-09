@@ -12,6 +12,7 @@
     else if (!string.IsNullOrWhiteSpace(postQuery.CategorySlug))
     {
         actionName = "Category";
+        slug = postQuery.CategorySlug;
     }
     else if (!string.IsNullOrWhiteSpace(postQuery.TagSlug))
     {

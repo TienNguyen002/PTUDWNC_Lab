@@ -13,9 +13,24 @@
             Những bài viết chứa từ khóa '@postQuery.KeyWord'
         </h3>
     }
-    @foreach (var post in Model)
+    @if(postQuery.CategorySlug != null)
     {
-        <partial name="_PostList" model="@post" />
+        <h3 class="text-primary mb-3">
+            @ViewData["Title"]
+        </h3>
+    }
+    @if(Model.Count > 0)
+    {
+        @foreach (var post in Model)
+        {
+            <partial name="_PostList" model="@post" />
+        }
+    }  
+    else
+    {
+        <h1 class="text-center">
+            Không tìm thấy bài viết nào
+        </h1>
     }
     <partial name="_Pager" model="@Model" />
 </div>

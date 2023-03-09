@@ -341,6 +341,11 @@ namespace TatBlog.Services.Blogs
                 || p.Tags.Any(t => t.Name.Contains(query.KeyWord))
                 );
             }
+            if(!string.IsNullOrWhiteSpace(query.CategorySlug)) 
+            {
+                postQuery = postQuery
+                    .Where(p => p.Category.UrlSlug == query.CategorySlug);
+            }
             if(query.PostMonth > 0)
             {
                 postQuery = postQuery
