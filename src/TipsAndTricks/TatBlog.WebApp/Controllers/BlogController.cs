@@ -91,6 +91,24 @@ namespace TatBlog.WebApp.Controllers
             ViewBag.Title = $"Các bài viết có tag '{postQuery.TagName}'";
             return View("Index", postsList);
         }
+        public async Task<IActionResult> Post(
+            int year,
+            int month,
+            int day,
+            string slug)
+        {
+            var posts = await _blogRepository.GetPostAsync(year, month, slug);
+            if(posts == null)
+            {
+                ViewBag.Title = $"Không có bài viết nào có '{slug}'";
+            }
+            if(!posts.Published)
+            {
+                ViewBag.Title = $"Bài viết có '{slug}' chưa được công bố";
+            }
+            await _blogRepository.IncreaseViewCountAsync(posts.Id);
+            return View("PostInfo", posts);
+        }
         public IActionResult About() => View();
         public IActionResult Contact() => View();
         public IActionResult Rss() => Content("Nội dung sẽ được cập nhật");
