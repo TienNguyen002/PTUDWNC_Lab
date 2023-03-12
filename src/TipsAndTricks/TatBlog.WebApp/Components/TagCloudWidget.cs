@@ -1,19 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using TatBlog.Services.Blogs;
 
 namespace TatBlog.WebApp.Components
 {
-    public class FeaturedPosts : ViewComponent
+    public class TagCloudWidget : ViewComponent
     {
         private readonly IBlogRepository _blogRepository;
-        public FeaturedPosts(IBlogRepository blogRepository)
+        public TagCloudWidget(IBlogRepository blogRepository)
         {
             _blogRepository = blogRepository;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var top3PopularPosts = await _blogRepository.GetPopularArticlesAsync(3);
-            return View(top3PopularPosts);
+            var tags = await _blogRepository.GetAllTagsAsync();
+            return View(tags);
         }
     }
 }
