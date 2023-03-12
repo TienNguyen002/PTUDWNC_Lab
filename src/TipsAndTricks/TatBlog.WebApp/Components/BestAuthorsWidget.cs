@@ -12,15 +12,15 @@ namespace TatBlog.WebApp.Components
         {
             _authorRepository = authorRepository;
         }
+        IPagingParams pagingParams = new PagingParams()
+        {
+            PageNumber = 1,
+            PageSize = 4
+        };
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            IPagingParams pagingParams = new PagingParams()
-            {
-                PageNumber = 1,
-                PageSize = 4,
-            };
-            var bestAuthor = _authorRepository.GetNPopularAuthors(4, pagingParams);
-            return View();
+            var authors = await _authorRepository.GetNPopularAuthors(4, pagingParams);
+            return View(authors);
         }
     }
 }

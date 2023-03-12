@@ -110,18 +110,11 @@ namespace TatBlog.Services.Blogs
       CancellationToken cancellationToken = default
     )
     {
-      Author authors = _context.Set<Author>()
-        .Include(a => a.Posts)
-        .OrderByDescending(a => a.Posts.Count(p => p.Published))
-        .First();
-
-      int maxPost = authors.Posts.Count(p => p.Published);
-
       return await _context.Set<Author>()
-        .Include(a => a.Posts)
-        .Where(a => a.Posts.Count(p => p.Published) == maxPost)
-        .Take(n)
-        .ToPagedListAsync(pagingParams, cancellationToken);
+                .Include (a => a.Posts)
+                .OrderByDescending (a => a.Posts.Count(p =>p.Published))
+                .Take(n)
+                .ToPagedListAsync(pagingParams, cancellationToken);
     }
-  }
+    }
 }
