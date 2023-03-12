@@ -43,6 +43,14 @@
                           class="text-decoration-none">
                         @Model.Category.Name
                     </a>
+                    <small class="text-muted">
+                        Ngày đăng:
+                    </small>
+                    <a asp-controller="Blog"
+                       asp-route-slug="@Model.PostedDate"
+                       class="text-decoration-none">
+                        @Model.PostedDate.ToString("dd/MM/yyyy")
+                    </a>
                 </p>
 
                 <p class="card-text">

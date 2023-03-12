@@ -109,6 +109,25 @@ namespace TatBlog.WebApp.Controllers
             await _blogRepository.IncreaseViewCountAsync(posts.Id);
             return View("PostInfo", posts);
         }
+
+        public async Task<IActionResult> Archive(
+            [FromQuery(Name = "month")] int month,
+            [FromQuery(Name = "year")] int year,
+            [FromQuery(Name = "p")] int pageNumber = 1,
+            [FromQuery(Name = "ps")] int pageSize = 5)
+        {
+            var postQuery = new PostQuery()
+            {
+                PostMonth = month,
+                PostYear = year
+            };
+            IPagingParams pagingParams = CreatePagingParamsForPost(pageNumber, pageSize);
+            var posts = await _blogRepository.GetPagesPostQueryAsync(postQuery, pagingParams);
+            ViewBag.PostQuery = postQuery;
+            ViewBag.Title = $"Các bài viết của tháng {postQuery.PostMonth} năm {postQuery.PostYear}";
+            return View("Index", posts);
+        }
+
         public IActionResult About() => View();
         public IActionResult Contact() => View();
         public IActionResult Rss() => Content("Nội dung sẽ được cập nhật");
