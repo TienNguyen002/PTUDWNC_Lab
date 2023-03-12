@@ -1,4 +1,4 @@
-﻿@model IList<PostItems>
+﻿@model IList<PostItemsByMonth>
 
 
 <div class="mb-4">
@@ -14,7 +14,7 @@
                asp-action="Archive"
                asp-route-month=@item.Month
                asp-route-year=@item.Year>
-                    @item.Year - Tháng @item.Month
+                    @item.Year - @item.MonthName
                     <span>(@item.PostCount)</span>
                 </a>
             </li>

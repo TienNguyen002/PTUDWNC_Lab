@@ -12,7 +12,7 @@ namespace TatBlog.WebApp.Components
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var archive = await _blogRepository.GetPostInNMonthAsync(10);
+            var archive = await _blogRepository.GetPostInMonthAndYearAsync(12);
             return View(archive);
         }
     }

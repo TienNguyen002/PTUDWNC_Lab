@@ -67,6 +67,7 @@ namespace TatBlog.Services.Blogs
 
         //Post
         Task<IList<PostItems>> GetPostInNMonthAsync(int month, CancellationToken cancellationToken = default);
+        Task<IList<PostItemsByMonth>> GetPostInMonthAndYearAsync(int month, CancellationToken cancellationToken = default);
 
         Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default);
 

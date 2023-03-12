@@ -16,7 +16,7 @@
     @if(postQuery.CategorySlug != null 
     || postQuery.AuthorSlug != null
     || postQuery.TagSlug != null
-    || (postQuery.PostMonth > 0 && postQuery.PostYear > 0))
+    || (postQuery.PostMonth != 0 && postQuery.PostYear >0))
     {
         <h3 class="text-primary mb-3">
             @ViewData["Title"]

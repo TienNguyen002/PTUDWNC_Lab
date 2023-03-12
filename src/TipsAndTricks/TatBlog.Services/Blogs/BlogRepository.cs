@@ -275,6 +275,23 @@ namespace TatBlog.Services.Blogs
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<IList<PostItemsByMonth>> GetPostInMonthAndYearAsync(int n, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Post>()
+                .Select(p => new PostItemsByMonth()
+                {
+                    Year = p.PostedDate.Year,
+                    Month = p.PostedDate.Month,
+                    PostCount = _context.Set<Post>()
+                    .Where(x => x.PostedDate == p.PostedDate)
+                    .Count()
+                })
+                .Distinct()
+                .OrderByDescending(p => p.Year).ThenByDescending(p => p.Month)
+                .Take(n)
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>()
