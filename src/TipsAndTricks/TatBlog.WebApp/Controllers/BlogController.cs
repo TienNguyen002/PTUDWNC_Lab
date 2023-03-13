@@ -114,7 +114,7 @@ namespace TatBlog.WebApp.Controllers
             [FromQuery(Name = "month")] int month,
             [FromQuery(Name = "year")] int year,
             [FromQuery(Name = "p")] int pageNumber = 1,
-            [FromQuery(Name = "ps")] int pageSize = 5)
+            [FromQuery(Name = "ps")] int pageSize = 10)
         {
             var postQuery = new PostQuery()
             {
@@ -124,7 +124,7 @@ namespace TatBlog.WebApp.Controllers
             IPagingParams pagingParams = CreatePagingParamsForPost(pageNumber, pageSize);
             var posts = await _blogRepository.GetPagesPostQueryAsync(postQuery, pagingParams);
             ViewBag.PostQuery = postQuery;
-            ViewBag.Title = $"Các bài viết của tháng {postQuery.PostMonth} năm {postQuery.PostYear}";
+            ViewBag.Title = $"Các bài viết của tháng {postQuery.PostMonth} và của năm {postQuery.PostYear}";
             return View("Index", posts);
         }
 
