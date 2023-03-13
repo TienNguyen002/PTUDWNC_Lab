@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Drawing.Printing;
 using TatBlog.Core;
@@ -13,10 +14,15 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
     {
         private readonly IBlogRepository _blogRepository;
         private readonly IAuthorRepository _authorRepository;
-        public PostsController(IBlogRepository blogRepository, IAuthorRepository authorRepository)
+        private readonly IMapper _mapper;
+        public PostsController(
+            IBlogRepository blogRepository, 
+            IAuthorRepository authorRepository,
+            IMapper mapper)
         {
             _blogRepository = blogRepository;
             _authorRepository = authorRepository;
+            _mapper = mapper;
         }
         private async Task PopulatePostFulterModelAsync(PostFilterModel model)
         {
@@ -36,14 +42,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index(PostFilterModel model)
         {
-            var postQuery = new PostQuery()
-            {
-                KeyWord = model.Keyword,
-                CategoryId = model.CategoryId,
-                AuthorId = model.AuthorId,
-                PostYear = model.Year,
-                PostMonth = model.Month
-            };
+            var postQuery = _mapper.Map<PostQuery>(model);
             IPagingParams pagingParams = CreatePagingParamsForPost(1, 10);
             ViewBag.PostsList = await _blogRepository.GetPagesPostQueryAsync(postQuery, pagingParams);
             await PopulatePostFulterModelAsync(model);
