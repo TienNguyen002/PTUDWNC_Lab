@@ -1,13 +1,10 @@
 ﻿<div class="my-4">
-    <!--Form tìm kiếm-->
     <partial name="_SearchForm" />
-    <!--Các chuyên mục/chủ đề-->
     @await Component.InvokeAsync("CategoriesWidget")
-    <!--Top bài viết nổi bật-->
-    <h1>Bài viết nổi bật</h1>
-    <!--Đăng ký nhận tin mới-->
-    <h1>Đăng ký nhận tin mới</h1>
-    <!--Tag cloud-->
-    <h1>Tag cloud</h1>
+    @await Component.InvokeAsync("ArchivesWidget")
+    @await Component.InvokeAsync("FeaturedPostsWidget")
+    @await Component.InvokeAsync("RandomPostsWidget")
+    @await Component.InvokeAsync("TagCloudWidget")
+    @await Component.InvokeAsync("BestAuthorsWidget")
 </div>
 

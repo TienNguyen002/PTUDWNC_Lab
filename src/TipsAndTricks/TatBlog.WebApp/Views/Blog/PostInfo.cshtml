@@ -1,0 +1,90 @@
+﻿@model Post
+
+@{
+    var imagePost = string.IsNullOrWhiteSpace(Model.ImageUrl)
+        ? "/images/asp.net-image.jpg"
+        : $"/{Model.ImageUrl}";
+
+    var imageAuthor = string.IsNullOrWhiteSpace(Model.ImageUrl)
+    ? "/images/person.jpg"
+    : $"/{Model.Author.ImageUrl}";
+
+    ViewData["PageTitle"] = "Bài viết";
+}
+
+<div class="container">
+    <div class="row">
+        <h1>@Model.Title</h1>
+        <p class="lead">
+            <span>
+                <i class="fa fa-user-circle"></i>
+                <small class="text-secondary">
+                    Tác giả:
+                </small>
+                <a asp-controller="Blog"
+                   asp-action="Author"
+                   asp-route-slug="@Model.Author.UrlSlug"
+                   class="text-decoration-none text-info fw-semibold">
+                    @Model.Author.FullName
+                </a>
+            </span>
+            &emsp;
+            <span>
+                <i class="fa fa-brands fa-paperclip"></i>
+                <small class="text-secondary">
+                    Chủ đề:
+                </small>
+                <a asp-controller="Blog"
+                   asp-action="Category"
+                   asp-route-slug="@Model.Category.UrlSlug"
+                   class="text-decoration-none text-info fw-semibold">
+                    @Model.Category.Name
+                </a>
+            </span>
+            &emsp;
+            <span>
+                <i class="fa fa-solid fa-eye"></i>
+                <small class="text-secondary">
+                    Lượt xem:
+                </small>
+                <span class="text-info fw-semibold">
+                    @Model.ViewCount
+                </span>
+            </span>
+        </p>
+        <hr />
+        <p class="lead">
+            <i class="fa fa-calendar"> </i>
+            @if (Model.ModifiedDate != null)
+            {
+                <small class="text-muted">
+                    Lần cập nhật mới đây:
+                </small>
+                @Model.ModifiedDate.ToString()
+            }
+            else
+            {
+                <small class="text-muted">
+                    Bài viết được đăng vào lúc:
+                </small>
+                @Model.PostedDate.ToString("dd/MM/yyyy")
+            }
+        </p>
+        <p class="lead">
+            <i class="fa fa-tags"></i>
+            <span class="text-muted">Tags:&emsp;</span>
+            @if(Model.Tags.Count > 0)
+            {
+                    <partial name="_TagList" model="@Model.Tags"> </partial>
+            }
+            else
+            {
+                <p>Bài viết không có thẻ nào</p>
+            }
+        </p>
+        <hr />
+        <p class="lead">@Model.ShortDescription</p>
+        <img src="@imagePost" style="height:500px; width: 1000px;"></img>
+        <p class="lead">@Model.Description</p>
+    </div>
+</div>

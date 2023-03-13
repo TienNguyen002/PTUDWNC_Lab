@@ -2,7 +2,7 @@
 
 @{
     var imageUrl = string.IsNullOrWhiteSpace(Model.ImageUrl)
-        ? "/images/bg.jpg"
+        ? "/images/asp.net-image.jpg"
         : $"/{Model.ImageUrl}";
 }
 
@@ -15,22 +15,42 @@
                      alt="@Model.Title" />
             </div>
             <div class="col-md-8 py-1">
-                <h5 class="card-title">
+                <a asp-controller="Blog"
+                   asp-action="Post"
+                   asp-route-slug="@Model.UrlSlug"
+                   asp-route-year="@Model.PostedDate.Year"
+                   asp-route-month="@Model.PostedDate.Month"
+                   asp-route-day="@Model.PostedDate.Day"
+                   class="text-reset text-decoration-none h5">
                     @Model.Title
-                </h5>
+                </a>
                 <p class="card-text">
                     <small class="text-muted">
                         Tác giả:
                     </small>
-                    <span class="text-primary">
+                    <a asp-controller="Blog"
+                       asp-action="Author"
+                       asp-route-slug="@Model.Author.UrlSlug"
+                       class="text-decoration-none">
                         @Model.Author.FullName
-                    </span>
+                    </a>
                     <small class="text-muted">
                         Chủ đề:
                     </small>
-                    <span class="text-primary">
+                    <a asp-controller="Blog"
+                          asp-action="Category"
+                          asp-route-slug="@Model.Category.UrlSlug"
+                          class="text-decoration-none">
                         @Model.Category.Name
-                    </span>
+                    </a>
+                    <small class="text-muted">
+                        Ngày đăng:
+                    </small>
+                    <a asp-controller="Blog"
+                       asp-route-slug="@Model.PostedDate"
+                       class="text-decoration-none">
+                        @Model.PostedDate.ToString("dd/MM/yyyy")
+                    </a>
                 </p>
 
                 <p class="card-text">

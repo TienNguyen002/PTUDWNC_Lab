@@ -1,0 +1,23 @@
+﻿@model IList<PostItemsByMonth>
+
+
+<div class="mb-4">
+    <h3 class="text-success mb-2">
+        Danh sách lưu trữ
+    </h3>
+
+    <ul class="list-group">
+        @foreach (var item in Model)
+        {
+            <li class="list-group-item">
+                <a asp-controller="Blog"
+               asp-action="Archive"
+               asp-route-month=@item.Month
+               asp-route-year=@item.Year>
+                    @item.MonthName @item.Year
+                    <span>(@item.PostCount)</span>
+                </a>
+            </li>
+        }
+    </ul>
+</div>

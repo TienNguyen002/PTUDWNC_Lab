@@ -8,14 +8,17 @@
     if (!string.IsNullOrWhiteSpace(postQuery.AuthorSlug))
     {
         actionName = "Author";
+        slug = postQuery.AuthorSlug;
     }
     else if (!string.IsNullOrWhiteSpace(postQuery.CategorySlug))
     {
         actionName = "Category";
+        slug = postQuery.CategorySlug;
     }
     else if (!string.IsNullOrWhiteSpace(postQuery.TagSlug))
     {
         actionName = "Tag";
+        slug = postQuery.TagSlug;
     }
 
     if (Model.PageCount > 1)
