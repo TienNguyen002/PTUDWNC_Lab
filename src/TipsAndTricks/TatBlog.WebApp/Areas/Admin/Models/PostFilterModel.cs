@@ -10,16 +10,16 @@ namespace TatBlog.WebApp.Areas.Admin.Models
         public string Keyword { get; set; }
 
         [DisplayName("Tác giả")]
-        public int AuthorId { get; set; }
+        public int? AuthorId { get; set; }
 
         [DisplayName("Chủ đề")]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         [DisplayName("Năm")]
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         [DisplayName("Tháng")]
-        public int Month { get; set; }
+        public int? Month { get; set; }
 
         public IEnumerable<SelectListItem> AuthorList { get; set; }
         public IEnumerable<SelectListItem> CategoryList { get; set; }

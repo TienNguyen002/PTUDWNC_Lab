@@ -133,6 +133,7 @@ namespace TatBlog.Services.Blogs
                     Notes = x.Notes,
                     PostsCount = x.Posts.Count(p => p.Published)
                 })
+                .OrderByDescending(s => s.PostsCount)
                 .ToListAsync(cancellationToken);
         }
     }

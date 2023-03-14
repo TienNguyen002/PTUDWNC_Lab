@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Text;
-using System.Threading.Tasks;
+using SlugGenerator;
 using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
 using TatBlog.Services.Extensions;
+
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TatBlog.Services.Blogs
@@ -299,35 +294,51 @@ namespace TatBlog.Services.Blogs
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task AddOrUpdatePostAsync(Post post, IList<Tag> tags, CancellationToken cancellationToken = default)
+        public async Task<Post> AddOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default)
         {
             if (post.Id > 0)
             {
-                Post postEdit = await _context.Set<Post>()
-                    .Include(p => p.Tags)
-                    .Where(c => c.Id == post.Id)
-                    .FirstOrDefaultAsync(cancellationToken);
-                if (postEdit == null)
-                { return; }
-                if (postEdit.UrlSlug != post.UrlSlug && CheckExistCategorySlugAsync(post.Id, post.UrlSlug).Result)
-                {
-                    await Console.Out.WriteLineAsync("Da ton tai UrlSlug");
-                    return;
-                }
-                postEdit.Tags = tags;
-                _context.Entry(postEdit).CurrentValues.SetValues(post);
+                await _context.Entry(post).Collection(x => x.Tags).LoadAsync(cancellationToken);
             }
             else
             {
-                if (await CheckExistCategorySlugAsync(post.Id, post.UrlSlug))
-                {
-                    await Console.Out.WriteLineAsync("Da ton tai UrlSlug");
-                    return;
-                }
-                post.Tags = tags;
-                _context.Set<Post>().Add(post);
+                post.Tags = new List<Tag>();
             }
+
+            var validTags = tags.Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => new
+                {
+                    Name = x,
+                    Slug = x.GenerateSlug()
+                })
+                .GroupBy(x => x.Slug)
+                .ToDictionary(g => g.Key, g => g.First().Name);
+
+
+            foreach (var kv in validTags)
+            {
+                if (post.Tags.Any(x => string.Compare(x.UrlSlug, kv.Key, StringComparison.InvariantCultureIgnoreCase) == 0)) continue;
+
+                var tag = await GetTagBySlugAsync(kv.Key, cancellationToken) ?? new Tag()
+                {
+                    Name = kv.Value,
+                    Description = kv.Value,
+                    UrlSlug = kv.Key
+                };
+
+                post.Tags.Add(tag);
+            }
+
+            post.Tags = post.Tags.Where(t => validTags.ContainsKey(t.UrlSlug)).ToList();
+
+            if (post.Id > 0)
+                _context.Update(post);
+            else
+                _context.Add(post);
+
             await _context.SaveChangesAsync(cancellationToken);
+
+            return post;
         }
 
         public async Task ChangePublishedPostAsync(int id, bool published, CancellationToken cancellationToken = default)
