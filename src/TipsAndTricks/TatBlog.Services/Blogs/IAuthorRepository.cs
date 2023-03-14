@@ -11,6 +11,8 @@ namespace TatBlog.Services.Blogs
 {
     public interface IAuthorRepository
   {
+    Task<IList<AuthorItem>> GetAuthorAsync(
+            CancellationToken cancellationToken = default);
     Task<Author> GetAuthorByIdAsync(int id, CancellationToken cancellationToken = default);
 
     Task<Author> GetAuthorBySlugAsync(string slug, CancellationToken cancellationToken = default);

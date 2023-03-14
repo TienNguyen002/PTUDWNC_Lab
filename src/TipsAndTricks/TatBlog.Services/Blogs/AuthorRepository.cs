@@ -116,5 +116,25 @@ namespace TatBlog.Services.Blogs
                 .Take(n)
                 .ToPagedListAsync(pagingParams, cancellationToken);
     }
+
+        public async Task<IList<AuthorItem>> GetAuthorAsync(CancellationToken cancellationToken = default)
+        {
+            IQueryable<Author> authors = _context.Set<Author>();
+            return await authors
+                .OrderBy(x => x.FullName)
+                .Select(x => new AuthorItem()
+                {
+                    Id = x.Id,
+                    FullName = x.FullName,
+                    UrlSlug = x.UrlSlug,
+                    ImageUrl = x.ImageUrl,
+                    JoinedDate = x.JoinedDate,
+                    Email = x.Email,
+                    Notes = x.Notes,
+                    PostsCount = x.Posts.Count(p => p.Published)
+                })
+                .OrderByDescending(s => s.PostsCount)
+                .ToListAsync(cancellationToken);
+        }
     }
 }
