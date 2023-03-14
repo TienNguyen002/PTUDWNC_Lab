@@ -364,7 +364,8 @@ namespace TatBlog.Services.Blogs
             IQueryable<Post> postQuery = _context.Set<Post>()
                 .Include(p => p.Author)
                 .Include(p => p.Tags)
-                .Include(p => p.Category);
+                .Include(p => p.Category)
+                .Where(p => p.Published); 
             if(!string.IsNullOrEmpty(query.KeyWord))
             {
                 postQuery = postQuery.Where(p => p.Title.Contains(query.KeyWord) 
@@ -426,9 +427,82 @@ namespace TatBlog.Services.Blogs
             return postQuery;
         }
 
+        private IQueryable<Post> FindAllPostByQueryable(PostQuery query)
+        {
+            IQueryable<Post> postQuery = _context.Set<Post>()
+                .Include(p => p.Author)
+                .Include(p => p.Tags)
+                .Include(p => p.Category);
+            if (!string.IsNullOrEmpty(query.KeyWord))
+            {
+                postQuery = postQuery.Where(p => p.Title.Contains(query.KeyWord)
+                || p.Description.Contains(query.KeyWord)
+                || p.ShortDescription.Equals(query.KeyWord)
+                || p.UrlSlug.Equals(query.KeyWord)
+                || p.Tags.Any(t => t.Name.Contains(query.KeyWord))
+                );
+            }
+            if (!string.IsNullOrWhiteSpace(query.CategorySlug))
+            {
+                postQuery = postQuery
+                    .Where(p => p.Category.UrlSlug == query.CategorySlug);
+            }
+            if (!string.IsNullOrWhiteSpace(query.AuthorName))
+            {
+                postQuery = postQuery
+                    .Where(p => p.Author.FullName.Contains(query.AuthorName));
+            }
+            if (!string.IsNullOrWhiteSpace(query.AuthorSlug))
+            {
+                postQuery = postQuery
+                    .Where(p => p.Author.UrlSlug == query.AuthorSlug);
+            }
+            if (!string.IsNullOrWhiteSpace(query.TagName))
+            {
+                postQuery = postQuery
+                    .Where(p => p.Tags.Any(t => t.Name == query.TagName));
+            }
+            if (query.PostMonth > 0)
+            {
+                postQuery = postQuery
+                    .Where(p => p.PostedDate.Month == query.PostMonth);
+            }
+            if (query.CategoryId > 0)
+            {
+                postQuery = postQuery
+                    .Where(p => p.CategoryId == query.CategoryId);
+            }
+            if (query.AuthorId > 0)
+            {
+                postQuery = postQuery
+                    .Where(p => p.AuthorId == query.AuthorId);
+            }
+            if (!string.IsNullOrEmpty(query.CategoryName))
+            {
+                postQuery = postQuery
+                    .Where(p => p.Category.Name == query.CategoryName);
+            }
+            var tags = query.GetTag();
+            if (tags.Count > 0)
+            {
+                foreach (var tag in tags)
+                {
+                    postQuery = postQuery.Include(p => p.Tags)
+                        .Where(p => p.Tags.Any(t => t.Name == tag));
+                }
+            }
+            return postQuery;
+        }
+
         public async Task<IList<Post>> FindPostByQueryAsync(PostQuery query, CancellationToken cancellationToken = default)
         {
             IQueryable<Post> posts = FindPostByQueryable(query);
+            return await posts.ToListAsync(cancellationToken);
+        }
+
+        public async Task<IList<Post>> FindAllPostByQueryAsync(PostQuery query, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Post> posts = FindAllPostByQueryable(query);
             return await posts.ToListAsync(cancellationToken);
         }
 
@@ -436,6 +510,13 @@ namespace TatBlog.Services.Blogs
         {
             IQueryable<Post> posts = await Task.Run(() => FindPostByQueryable(query));
             return posts.Count();
+        }
+
+        public async Task<IPagedList<Post>> GetPagesAllPostQueryAsync(PostQuery query, IPagingParams pagingParams, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Post> posts = FindAllPostByQueryable(query);
+            return await posts
+                .ToPagedListAsync(pagingParams, cancellationToken);
         }
 
         public async Task<IPagedList<Post>> GetPagesPostQueryAsync(PostQuery query, IPagingParams pagingParams, CancellationToken cancellationToken = default)

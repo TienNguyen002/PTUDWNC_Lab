@@ -81,9 +81,13 @@ namespace TatBlog.Services.Blogs
 
         Task<IList<Post>> FindPostByQueryAsync(PostQuery postQuery, CancellationToken cancellationToken = default);
 
+        Task<IList<Post>> FindAllPostByQueryAsync(PostQuery postQuery, CancellationToken cancellationToken = default);
+
         Task<int> CountPostQueryAsync(PostQuery postQuery, CancellationToken cancellationToken= default);
 
         Task<IPagedList<Post>> GetPagesPostQueryAsync(PostQuery postQuery, IPagingParams pagingParams, CancellationToken cancellationToken = default);
+
+        Task<IPagedList<Post>> GetPagesAllPostQueryAsync(PostQuery postQuery, IPagingParams pagingParams, CancellationToken cancellationToken = default);
 
         Task<IPagedList<T>> GetPagesPostsAsync<T>(PostQuery postQuery, IPagingParams pagingParams, Func<IQueryable<Post>, IQueryable<T>> mapper, CancellationToken cancellationToken = default);
     }

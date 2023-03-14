@@ -65,7 +65,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         {
             var postQuery = _mapper.Map<PostQuery>(model);
             IPagingParams pagingParams = CreatePagingParamsForPost(1, 10);
-            ViewBag.PostsList = await _blogRepository.GetPagesPostQueryAsync(postQuery, pagingParams);
+            ViewBag.PostsList = await _blogRepository.GetPagesAllPostQueryAsync(postQuery, pagingParams);
             await PopulatePostFilterModelAsync(model);
             return View(model);
         }
