@@ -69,7 +69,7 @@ namespace TatBlog.Services.Blogs
         Task<IList<PostItems>> GetPostInNMonthAsync(int month, CancellationToken cancellationToken = default);
         Task<IList<PostItemsByMonth>> GetPostInMonthAndYearAsync(int month, CancellationToken cancellationToken = default);
 
-        Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<Post> GetPostByIdAsync(int id, bool includeDetails = false, CancellationToken cancellationToken = default);
 
         Task<Post> AddOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default);
 

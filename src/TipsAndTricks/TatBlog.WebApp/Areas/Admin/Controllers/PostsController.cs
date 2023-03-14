@@ -1,4 +1,6 @@
-﻿    using MapsterMapper;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Drawing.Printing;
@@ -10,6 +12,7 @@ using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
 using TatBlog.WebApp.Areas.Admin.Models;
+using TatBlog.WebApp.Validations;
 
 namespace TatBlog.WebApp.Areas.Admin.Controllers
 {
@@ -19,6 +22,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         private readonly IAuthorRepository _authorRepository;
         private readonly IMediaManager _mediaManager;
         private readonly IMapper _mapper;
+        private readonly IValidator<PostEditModel> _postValidator;
         public PostsController(
             IBlogRepository blogRepository, 
             IAuthorRepository authorRepository,
@@ -29,6 +33,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             _authorRepository = authorRepository;
             _mediaManager = mediaManager;
             _mapper = mapper;
+            _postValidator = new PostValidator(_blogRepository);
         }
         private async Task PopulatePostFilterModelAsync(PostFilterModel model)
         {
@@ -90,10 +95,16 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(PostEditModel model)
         {
+            var validatorResult = await this._postValidator.ValidateAsync(model);
+            if (!validatorResult.IsValid)
+            {
+                validatorResult.AddToModelState(ModelState);
+            }
             if (!ModelState.IsValid)
             {
-                await PopulatePostEditModelAsync(model);
-                return View(model);
+                return BadRequest(ModelState);
+                //await PopulatePostEditModelAsync(model);
+                //return View(model);
             }
             var post = model.Id > 0
                 ? await _blogRepository.GetPostByIdAsync(model.Id) : null;

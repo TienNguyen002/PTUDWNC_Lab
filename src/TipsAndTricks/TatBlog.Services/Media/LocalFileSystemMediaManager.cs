@@ -52,7 +52,7 @@ namespace TatBlog.Services.Media
             }
         }
 
-        private string CreateFilePath(string fileExt, string contentType = null)
+        private string CreateFilePath(string fileExt, string contentType = "")
         {
             return string.Format(PicturesFolder, Guid.NewGuid().ToString("N"), fileExt);
         }

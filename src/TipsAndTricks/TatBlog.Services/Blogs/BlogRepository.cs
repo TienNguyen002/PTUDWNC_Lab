@@ -287,7 +287,7 @@ namespace TatBlog.Services.Blogs
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<Post> GetPostByIdAsync(int id, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>()
                 .Include(x => x.Category)
