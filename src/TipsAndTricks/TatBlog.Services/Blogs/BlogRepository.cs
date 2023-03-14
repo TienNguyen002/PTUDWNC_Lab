@@ -290,7 +290,10 @@ namespace TatBlog.Services.Blogs
         public async Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>()
-                .Where(c => c.Id == id)
+                .Include(x => x.Category)
+                .Include(x => x.Author)
+                .Include(x => x.Tags)
+                .Where(x => x.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
