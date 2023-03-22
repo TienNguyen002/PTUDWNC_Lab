@@ -289,6 +289,10 @@ namespace TatBlog.Services.Blogs
 
         public async Task<Post> GetPostByIdAsync(int id, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
+            if (!includeDetails)
+            {
+                return await _context.Set<Post>().FindAsync(id);
+            }
             return await _context.Set<Post>()
                 .Include(x => x.Category)
                 .Include(x => x.Author)
@@ -399,6 +403,11 @@ namespace TatBlog.Services.Blogs
             {
                 postQuery = postQuery
                     .Where(p => p.PostedDate.Month == query.PostMonth);
+            }
+            if(query.PostYear > 0)
+            {
+                postQuery = postQuery
+                    .Where(p => p.PostedDate.Year == query.PostYear);
             }
             if(query.CategoryId > 0)
             {

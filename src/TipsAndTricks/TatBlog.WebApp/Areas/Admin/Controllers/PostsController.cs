@@ -93,7 +93,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             //ID = 0 <=> Thêm bài viết mới
             //ID > 0 : Đọc dữ liệu của bài viết từ CSDL
             var post = id > 0
-                ? await _blogRepository.GetPostByIdAsync(id)
+                ? await _blogRepository.GetPostByIdAsync(id, true)
                 : null;
             //Tạo view model từ dữ liệu của bài viết
             var model = post == null
