@@ -7,7 +7,7 @@ namespace TatBlog.WebApp.Areas.Admin.Models
     public class PostFilterModel
     {
         [DisplayName("Từ khóa")]
-        public string Keyword { get; set; }
+        public string KeyWord { get; set; }
 
         [DisplayName("Tác giả")]
         public int? AuthorId { get; set; }
