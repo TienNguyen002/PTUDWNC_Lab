@@ -26,6 +26,8 @@ namespace TatBlog.Data.Seeders
             var categories = AddCategories();
             var tags = AddTags();
             var posts = AddPosts(authors, categories, tags);
+            var subscribers = AddSubscribers();
+            var comments = AddComments(posts);
         }
 
         private IList<Author> AddAuthors() 
@@ -68,9 +70,14 @@ namespace TatBlog.Data.Seeders
                     JoinedDate = new DateTime(2023, 1, 8)
                 },
             };
-            _dbContext.Authors.AddRange(authors);
+            foreach(var author in authors)
+            {
+                if(!_dbContext.Authors.Any(a => a.UrlSlug == author.UrlSlug))
+                {
+                    _dbContext.Authors.AddRange(author);
+                }
+            }         
             _dbContext.SaveChanges();
-
             return authors;
         }
 
@@ -184,10 +191,14 @@ namespace TatBlog.Data.Seeders
                     ShowOnMenu = true
                 },
             };
-
-            _dbContext.AddRange(categories);
+            foreach(var category in categories)
+            {
+                if(!_dbContext.Categories.Any(c => c.UrlSlug == category.UrlSlug))
+                {
+                    _dbContext.AddRange(category);
+                }
+            }
             _dbContext.SaveChanges();
-
             return categories;
         }
 
@@ -352,10 +363,14 @@ namespace TatBlog.Data.Seeders
                     UrlSlug = "windows"
                 },
             };
-
-            _dbContext.AddRange(tags);
+            foreach(var tag in tags)
+            {
+                if(!_dbContext.Tags.Any(t => t.UrlSlug == tag.UrlSlug))
+                {
+                    _dbContext.AddRange(tag);
+                }
+            }
             _dbContext.SaveChanges();
-
             return tags;
         }
 
@@ -930,11 +945,95 @@ namespace TatBlog.Data.Seeders
                     }
                 },
             };
-
-            _dbContext.AddRange(posts);
+            foreach(var post in posts)
+            {
+                if(!_dbContext.Posts.Any(p => p.UrlSlug == post.UrlSlug))
+                {
+                    _dbContext.AddRange(post);
+                }
+            }
             _dbContext.SaveChanges();
-
             return posts;
+        }
+
+        private IList<Subscriber> AddSubscribers()
+        {
+            var subscribers = new List<Subscriber>() 
+            {
+                new()
+                {
+                    Email = "tiennguyenn002@gmail.com",
+                    SubscribeDate = new DateTime(2023,1,20,12,20,0),
+                },
+                new()
+                {
+                    Email = "hieupor01@gmail.com",
+                    SubscribeDate = new DateTime(2023,2,12,15,43,0),
+                },
+                new()
+                {
+                    Email = "hoanglong6622@gmail.com",
+                    SubscribeDate = new DateTime(2023,1,23,11,22,0),
+                },
+                new()
+                {
+                    Email = "duattran00@gmail.com",
+                    SubscribeDate = new DateTime(2023,3,21,15,01,0),
+                },
+                new()
+                {
+                    Email = "xuanhung01@gmail.com",
+                    SubscribeDate = new DateTime(2023,2,21,08,12,0),
+                },
+                new()
+                {
+                    Email = "minhtien9@gmail.com",
+                    SubscribeDate = new DateTime(2023,2,2,23,12,0),
+                },
+            };
+            foreach(var subscriber in subscribers)
+            {
+                if(!_dbContext.Subscribers.Any(s => s.Email == subscriber.Email))
+                {
+                    _dbContext.Subscribers.Add(subscriber);
+                } 
+            }
+            _dbContext.SaveChanges();
+            return subscribers;
+        }
+
+        private IList<Comment> AddComments(IList<Post> posts)
+        {
+            var comments = new List<Comment>() 
+            {
+                new()
+                {
+                    Email = "tiennguyenn002@gmail.com",
+                    Username = "Tien Nguyen",
+                    Post = posts[1],
+                    DateComment = new DateTime(2023,3,23,11,22,0),
+                    Content = "Bai viet nay rat dang de doc",
+                },
+                new()
+                {
+                    Email = "minhtien9@gmail.com",
+                    Username = "Minh Tien",
+                    Post = posts[1],
+                    DateComment = new DateTime(2023,2,11,12,21,0),
+                    Content = "Bai viet rat te, cac ban khong nen doc",
+                },
+            };
+            foreach(var comment in comments)
+            {
+                if(!_dbContext.Comments.Any(c => c.Content == comment.Content
+                    && c.Email == comment.Email
+                    && c.PostId == comment.PostId))
+                {
+                    _dbContext.Comments.Add(comment);
+                }
+            }
+            _dbContext.SaveChanges();
+            return comments;
         }
     }
 }
