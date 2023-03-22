@@ -21,7 +21,8 @@
                 <small class="text-secondary">
                     Tác giả:
                 </small>
-                <a asp-controller="Blog"
+                <a asp-area="" 
+                asp-controller="Blog"
                    asp-action="Author"
                    asp-route-slug="@Model.Author.UrlSlug"
                    class="text-decoration-none text-info fw-semibold">
@@ -34,7 +35,8 @@
                 <small class="text-secondary">
                     Chủ đề:
                 </small>
-                <a asp-controller="Blog"
+                <a asp-area="" 
+                asp-controller="Blog"
                    asp-action="Category"
                    asp-route-slug="@Model.Category.UrlSlug"
                    class="text-decoration-none text-info fw-semibold">

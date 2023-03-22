@@ -10,7 +10,8 @@
         @foreach (var item in Model)
         {
             <li class="list-group-item">
-                <a asp-controller="Blog"
+                <a asp-area="" 
+                asp-controller="Blog"
                asp-action="Archive"
                asp-route-month=@item.Month
                asp-route-year=@item.Year>
