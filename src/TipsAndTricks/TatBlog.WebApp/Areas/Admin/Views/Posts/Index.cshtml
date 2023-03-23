@@ -18,6 +18,7 @@
                 <th>Tác giả</th>
                 <th>Chủ đề</th>
                 <th>Xuất bản</th>
+                <th>Xóa bài viết</th>
             </tr>
         </thead>
         <tbody>
@@ -43,12 +44,43 @@
                         @post.Category.Name
                     </td>
                     <td>
-                        @(post.Published ? "Có" : "Không")
+                        <a asp-area="Admin"
+                           asp-controller="Posts"
+                           asp-action="ChangeStatus"
+                           asp-route-id="@post.Id"
+                           asp-route-p="@postsList.PageNumber"
+                           asp-route-ps="@postsList.PageSize"
+                           class="btn change-status">
+                            @if (post.Published)
+                            {
+                                <i class="fa fa-toggle-on" style="color:deepskyblue"></i>
+                                <span style="color:deepskyblue">Có</span>
+                            }
+                            else
+                            {
+                                <i class="fa fa-toggle-off" style="color:red"></i>
+                                <span style="color:red">Không</span>
+                            }
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="Posts"
+                           asp-action="Delete"
+                           asp-route-id="@post.Id"
+                           asp-route-p="@postsList.PageNumber"
+                           asp-route-ps="@postsList.PageSize"
+                           class="btn"
+                           onclick="return confirm('Bạn có thực sự muốn xóa bài viết này không?')">
+                           <i class="fa fa-trash" style="color:red"></i>
+                           <span style="color:red">Xóa</span>
+                        </a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    <partial name="_Pager" model="postsList"></partial>
 }
 else
 {

@@ -69,18 +69,20 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
                 Value = c.Id.ToString()
             });
         }
-        public async Task<IActionResult> Index(PostFilterModel model)
+
+        [HttpGet]
+        public async Task<IActionResult> Index(PostFilterModel model,
+            [FromQuery(Name = "p")] int pageNumber = 1,
+            [FromQuery(Name = "ps")] int pageSize = 10)
         {
             _logger.LogInformation("Tạo điều kiện truy vấn");
             //Sử dụng Mapster để tạo đối tượng PostQuery
             //từ đối tượng PostFilterModel model
             var postQuery = _mapper.Map<PostQuery>(model);
 
-            IPagingParams pagingParams = CreatePagingParamsForPost(1, 10);
-
             _logger.LogInformation("Lấy danh sách bài viết từ CSDL");
-            ViewBag.PostsList = await _blogRepository.GetPagesAllPostQueryAsync(postQuery, pagingParams);
-
+            ViewBag.PostsList = await _blogRepository.GetAllPagedPostQueryAsync(postQuery, pageNumber: pageNumber, pageSize: pageSize);
+            ViewBag.PostQuery = postQuery;
             _logger.LogInformation("Chuẩn bị dữ liệu cho ViewModel");
             await PopulatePostFilterModelAsync(model);
 
@@ -102,6 +104,26 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             //Gán các giá trị khác cho view model
             await PopulatePostEditModelAsync(model);
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatus(
+            int id,
+            [FromQuery(Name = "p")] int pageNumber,
+            [FromQuery(Name = "ps")] int pageSize)
+        {
+            await _blogRepository.ChangePublishedPostAsync(id);
+            return RedirectToAction(nameof(Index), new {p = pageNumber, ps = pageSize});
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(
+            int id,
+            [FromQuery(Name = "p")] int pageNumber,
+            [FromQuery(Name = "ps")] int pageSize)
+        {
+            await _blogRepository.DeletePostByIdAsync(id);
+            return RedirectToAction(nameof(Index), new { p = pageNumber, ps = pageSize });
         }
 
         [HttpPost]
@@ -156,19 +178,20 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             var slugExited = await _blogRepository.IsPostSlugExistedAsync(id, urlSlug);
             return slugExited ? Json($"Slug '{urlSlug}' đã được sử dụng") : Json(true);
         }
-        private IPagingParams CreatePagingParamsForPost(
-            int pageNumber = 1,
-            int pageSize = 5,
-            string sortColumn = "PostedDate",
-            string sortOrder = "DESC")
-        {
-            return new PagingParams()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                SortColumn = sortColumn,
-                SortOrder = sortOrder,
-            };
-        }
+
+        //private IPagingParams CreatePagingParamsForPost(
+        //    int pageNumber = 1,
+        //    int pageSize = 5,
+        //    string sortColumn = "PostedDate",
+        //    string sortOrder = "DESC")
+        //{
+        //    return new PagingParams()
+        //    {
+        //        PageNumber = pageNumber,
+        //        PageSize = pageSize,
+        //        SortColumn = sortColumn,
+        //        SortOrder = sortOrder,
+        //    };
+        //}
     }
 }

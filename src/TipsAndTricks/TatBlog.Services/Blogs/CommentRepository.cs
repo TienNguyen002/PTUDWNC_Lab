@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
 
 namespace TatBlog.Services.Blogs
 {
-    internal class CommentRepository : ICommentRepository
+    public class CommentRepository : ICommentRepository
     {
         private readonly BlogDbContext _context;
         public CommentRepository(BlogDbContext context)
@@ -17,9 +18,14 @@ namespace TatBlog.Services.Blogs
             _context = context;
         }
 
-        public Task<Comment> AddCommentAsync(Comment comment, CancellationToken cancellationToken = default)
+        public async Task<Comment> AddCommentAsync(Comment comment, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            if(comment.Id < 0)
+            {
+                _context.Set<Comment>().Add(comment);
+            }
+            await _context.SaveChangesAsync(cancellationToken);
+            return comment;
         }
 
         public async Task<bool> ApproveCommentAsync(int id, bool isApproved = true, CancellationToken cancellationToken = default)
@@ -32,13 +38,12 @@ namespace TatBlog.Services.Blogs
             comment.IsApproved = isApproved;
             await _context.SaveChangesAsync(cancellationToken);
             return true;
-
         }
 
         public async Task<bool> DeleteCommentAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Comment>()
-                .Where(comment => comment.Id == id)
+                .Where(c => c.Id == id)
                 .ExecuteDeleteAsync(cancellationToken) > 0;
         }
 

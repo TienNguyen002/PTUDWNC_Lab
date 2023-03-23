@@ -16,7 +16,6 @@ namespace TatBlog.Data.Seeders
         {
             _dbContext = dbContext;
         }
-
         public void Initialize()
         {
             _dbContext.Database.EnsureCreated();
@@ -70,13 +69,13 @@ namespace TatBlog.Data.Seeders
                     JoinedDate = new DateTime(2023, 1, 8)
                 },
             };
-            foreach(var author in authors)
+            foreach (var author in authors)
             {
-                if(!_dbContext.Authors.Any(a => a.UrlSlug == author.UrlSlug))
+                if (!_dbContext.Authors.Any(a => a.UrlSlug == author.UrlSlug))
                 {
-                    _dbContext.Authors.AddRange(author);
+                    _dbContext.Authors.Add(author);
                 }
-            }         
+            }
             _dbContext.SaveChanges();
             return authors;
         }
@@ -193,9 +192,9 @@ namespace TatBlog.Data.Seeders
             };
             foreach(var category in categories)
             {
-                if(!_dbContext.Categories.Any(c => c.UrlSlug == category.UrlSlug))
+                if (!_dbContext.Categories.Any(c => c.UrlSlug == category.UrlSlug))
                 {
-                    _dbContext.AddRange(category);
+                    _dbContext.Categories.Add(category);
                 }
             }
             _dbContext.SaveChanges();
@@ -363,11 +362,11 @@ namespace TatBlog.Data.Seeders
                     UrlSlug = "windows"
                 },
             };
-            foreach(var tag in tags)
+            foreach (var tag in tags)
             {
-                if(!_dbContext.Tags.Any(t => t.UrlSlug == tag.UrlSlug))
+                if (!_dbContext.Tags.Any(t => t.UrlSlug == tag.UrlSlug))
                 {
-                    _dbContext.AddRange(tag);
+                    _dbContext.Tags.Add(tag);
                 }
             }
             _dbContext.SaveChanges();
@@ -945,11 +944,11 @@ namespace TatBlog.Data.Seeders
                     }
                 },
             };
-            foreach(var post in posts)
+            foreach (var post in posts)
             {
-                if(!_dbContext.Posts.Any(p => p.UrlSlug == post.UrlSlug))
+                if (!_dbContext.Posts.Any(a => a.UrlSlug == post.UrlSlug))
                 {
-                    _dbContext.AddRange(post);
+                    _dbContext.Posts.Add(post);
                 }
             }
             _dbContext.SaveChanges();
@@ -963,40 +962,40 @@ namespace TatBlog.Data.Seeders
                 new()
                 {
                     Email = "tiennguyenn002@gmail.com",
-                    SubscribeDate = new DateTime(2023,1,20,12,20,0),
+                    SubscribeDate = new DateTime(2023, 3, 22, 12, 22, 0),
                 },
                 new()
                 {
                     Email = "hieupor01@gmail.com",
-                    SubscribeDate = new DateTime(2023,2,12,15,43,0),
+                    SubscribeDate = new DateTime(2023, 3, 22, 12, 22, 0),
                 },
                 new()
                 {
                     Email = "hoanglong6622@gmail.com",
-                    SubscribeDate = new DateTime(2023,1,23,11,22,0),
+                    SubscribeDate = new DateTime(2023, 3, 22, 12, 22, 0),
                 },
                 new()
                 {
                     Email = "duattran00@gmail.com",
-                    SubscribeDate = new DateTime(2023,3,21,15,01,0),
+                    SubscribeDate = new DateTime(2023, 3, 22, 12, 22, 0),
                 },
                 new()
                 {
                     Email = "xuanhung01@gmail.com",
-                    SubscribeDate = new DateTime(2023,2,21,08,12,0),
+                    SubscribeDate = new DateTime(2023, 3, 22, 12, 22, 0),
                 },
                 new()
                 {
-                    Email = "minhtien9@gmail.com",
-                    SubscribeDate = new DateTime(2023,2,2,23,12,0),
+                    Email = "minhtienne@gmail.com",
+                    SubscribeDate = new DateTime(2023, 3, 22, 12, 22, 0),
                 },
             };
-            foreach(var subscriber in subscribers)
+            foreach (var subscriber in subscribers)
             {
-                if(!_dbContext.Subscribers.Any(s => s.Email == subscriber.Email))
+                if (!_dbContext.Subscribers.Any(s => s.Email == subscriber.Email))
                 {
                     _dbContext.Subscribers.Add(subscriber);
-                } 
+                }
             }
             _dbContext.SaveChanges();
             return subscribers;
@@ -1011,21 +1010,22 @@ namespace TatBlog.Data.Seeders
                     Email = "tiennguyenn002@gmail.com",
                     Username = "Tien Nguyen",
                     Post = posts[1],
-                    DateComment = new DateTime(2023,3,23,11,22,0),
-                    Content = "Bai viet nay rat dang de doc",
+                    DateComment = new DateTime(2023,3,22,12,22,0),
+                    Content = "Cac ban nen doc bai viet nay, bai viet chi rat tan tinh",
                 },
                 new()
                 {
-                    Email = "minhtien9@gmail.com",
+                    Email = "minhtienne@gmail.com",
                     Username = "Minh Tien",
                     Post = posts[1],
-                    DateComment = new DateTime(2023,2,11,12,21,0),
-                    Content = "Bai viet rat te, cac ban khong nen doc",
+                    DateComment = new DateTime(2023,3,22,12,22,0),
+                    Content = "Toi thay bai nay khong nen doc",
                 },
             };
-            foreach(var comment in comments)
+            foreach (var comment in comments)
             {
-                if(!_dbContext.Comments.Any(c => c.Content == comment.Content
+                if (!_dbContext.Comments
+                  .Any(c => c.Content == comment.Content
                     && c.Email == comment.Email
                     && c.PostId == comment.PostId))
                 {

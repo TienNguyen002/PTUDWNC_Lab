@@ -17,6 +17,5 @@ namespace TatBlog.Core.Entities
         public bool? IsApproved { get; set; }
         public int PostId { get; set; }
         public Post Post { get; set; }
-
     }
 }

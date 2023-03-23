@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SlugGenerator;
+using TatBlog.Core;
 using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
@@ -256,15 +257,13 @@ namespace TatBlog.Services.Blogs
         public async Task<IList<PostItems>> GetPostInNMonthAsync(int n, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>()
+                .GroupBy(p => new {p.PostedDate.Year, p.PostedDate.Month})
                 .Select(p => new PostItems()
                 {
-                    Year = p.PostedDate.Year,
-                    Month = p.PostedDate.Month,
-                    PostCount = _context.Set<Post>()
-                    .Where(x => x.PostedDate == p.PostedDate)
-                    .Count()
+                    Year = p.Key.Year,
+                    Month = p.Key.Month,
+                    PostCount = p.Count()
                 })
-                .Distinct()
                 .OrderByDescending(p => p.Year).ThenByDescending(p => p.Month)
                 .Take(n)
                 .ToListAsync(cancellationToken);
@@ -348,11 +347,11 @@ namespace TatBlog.Services.Blogs
             return post;
         }
 
-        public async Task ChangePublishedPostAsync(int id, bool published, CancellationToken cancellationToken = default)
+        public async Task ChangePublishedPostAsync(int id, CancellationToken cancellationToken = default)
         {
             await _context.Set<Post>()
                 .Where(p => p.Id == id)
-                .ExecuteUpdateAsync(p => p.SetProperty(p => p.Published, published), cancellationToken);
+                .ExecuteUpdateAsync(p => p.SetProperty(p => p.Published, p => !p.Published), cancellationToken);
         }
 
         public async Task<IList<Post>> GetNRandomPostsAsync(int numPosts, CancellationToken cancellationToken = default)
@@ -542,9 +541,59 @@ namespace TatBlog.Services.Blogs
         {
             IQueryable<Post> postsFindResultQuery = FindPostByQueryable(query);
             IQueryable<T> result = mapper(postsFindResultQuery);
-
             return await result
               .ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
+        public async Task<IPagedList<Post>> GetPagedPostQueryAsync(PostQuery postQuery,
+            int pageNumber,
+            int pageSize,
+            string sortColumn = "id",
+            string sortOrder = "ASC",
+            CancellationToken cancellationToken = default)
+        {
+            var pagingParams = new PagingParams()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder,
+            };
+            IQueryable<Post> postResult = FindPostByQueryable(postQuery);
+            return await postResult.ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
+        public async Task<IPagedList<Post>> GetAllPagedPostQueryAsync(PostQuery postQuery,
+            int pageNumber,
+            int pageSize,
+            string sortColumn = "id",
+            string sortOrder = "ASC",
+            CancellationToken cancellationToken = default)
+        {
+            var pagingParams = new PagingParams()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder,
+            };
+            IQueryable<Post> postResult = FindAllPostByQueryable(postQuery);
+            return await postResult.ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
+        public async Task<bool> DeletePostByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var postDelete = await _context.Set<Post>()
+                .Include(p => p.Tags)
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
+            if(postDelete == null)
+            {
+                return false;
+            }
+            _context.Set<Post>().Remove(postDelete);
+            await _context.SaveChangesAsync(cancellationToken);
+            return true;
         }
     }
 }
