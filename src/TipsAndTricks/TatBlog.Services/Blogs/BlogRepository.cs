@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SlugGenerator;
+using TatBlog.Core;
 using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
@@ -542,9 +543,44 @@ namespace TatBlog.Services.Blogs
         {
             IQueryable<Post> postsFindResultQuery = FindPostByQueryable(query);
             IQueryable<T> result = mapper(postsFindResultQuery);
-
             return await result
               .ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
+        public async Task<IPagedList<Post>> GetPagedPostQueryAsync(PostQuery postQuery,
+            int pageNumber,
+            int pageSize,
+            string sortColumn = "id",
+            string sortOrder = "ASC",
+            CancellationToken cancellationToken = default)
+        {
+            var pagingParams = new PagingParams()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder,
+            };
+            IQueryable<Post> postResult = FindPostByQueryable(postQuery);
+            return await postResult.ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
+        public async Task<IPagedList<Post>> GetAllPagedPostQueryAsync(PostQuery postQuery,
+            int pageNumber,
+            int pageSize,
+            string sortColumn = "id",
+            string sortOrder = "ASC",
+            CancellationToken cancellationToken = default)
+        {
+            var pagingParams = new PagingParams()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder,
+            };
+            IQueryable<Post> postResult = FindAllPostByQueryable(postQuery);
+            return await postResult.ToPagedListAsync(pagingParams, cancellationToken);
         }
     }
 }
