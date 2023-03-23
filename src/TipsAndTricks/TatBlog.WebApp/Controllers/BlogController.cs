@@ -40,7 +40,7 @@ namespace TatBlog.WebApp.Controllers
         public async Task<IActionResult> Category(
             string slug,
             [FromQuery(Name = "p")] int pageNumber = 1,
-            [FromQuery(Name = "ps")] int pageSize = 2)
+            [FromQuery(Name = "ps")] int pageSize = 5)
         {
             var category = await _blogRepository.GetCategoryBySlugAsync(slug);
             var postQuery = new PostQuery()
@@ -111,8 +111,8 @@ namespace TatBlog.WebApp.Controllers
         }
 
         public async Task<IActionResult> Archive(
-            [FromQuery(Name = "month")] int month,
-            [FromQuery(Name = "year")] int year,
+            int month,
+            int year,
             [FromQuery(Name = "p")] int pageNumber = 1,
             [FromQuery(Name = "ps")] int pageSize = 10)
         {

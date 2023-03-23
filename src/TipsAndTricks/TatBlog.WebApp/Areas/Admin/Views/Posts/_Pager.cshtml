@@ -3,23 +3,6 @@
 @{
     var postQuery = (ViewBag.PostQuery as PostQuery) ?? new PostQuery();
     var actionName = "Index";
-    var slug = "";
-
-    if (!string.IsNullOrWhiteSpace(postQuery.AuthorSlug))
-    {
-        actionName = "Author";
-        slug = postQuery.AuthorSlug;
-    }
-    else if (!string.IsNullOrWhiteSpace(postQuery.CategorySlug))
-    {
-        actionName = "Category";
-        slug = postQuery.CategorySlug;
-    }
-    else if (!string.IsNullOrWhiteSpace(postQuery.TagSlug))
-    {
-        actionName = "Tag";
-        slug = postQuery.TagSlug;
-    }
 
     if (Model.PageCount > 1)
     {
@@ -29,8 +12,6 @@
                 <a asp-area="Admin"
                     asp-controller="Posts"
                     asp-action="@actionName"
-                    asp-route-slug="@slug"
-                    asp-route-k="@postQuery.KeyWord"
                     asp-route-p="@(Model.PageNumber -1)"
                     asp-route-ps="@Model.PageSize"
                class="btn btn-info">
@@ -52,8 +33,6 @@
                 <a asp-area="Admin"
                 asp-controller="Posts"
                     asp-action="@actionName"
-                    asp-route-slug="@slug"
-                    asp-route-k="@postQuery.KeyWord"
                     asp-route-p="@(Model.PageNumber + 1)"
                     asp-route-ps="@Model.PageSize"
                class="btn btn-info">

@@ -7,6 +7,11 @@
         public static IEndpointRouteBuilder UseBlogRoutes(this IEndpointRouteBuilder endpoints)
         {
             endpoints.MapControllerRoute(
+               name: "post-by-archive",
+               pattern: "blog/archive/{year:int}/{month:int}/",
+               defaults: new { controller = "Blog", action = "Archive" });
+
+            endpoints.MapControllerRoute(
                 name: "posts-by-author",
                 pattern: "blog/author/{slug}",
                 defaults: new { controller = "Blog", action = "Author" });
