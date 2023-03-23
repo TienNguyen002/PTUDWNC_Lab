@@ -30,7 +30,8 @@ namespace TatBlog.Services.Blogs
             IQueryable<Post> postsQuery = _context.Set<Post>()
                 .Include(x => x.Category)
                 .Include(x => x.Author)
-                .Include(x => x.Tags);
+                .Include(x => x.Tags)
+                .Include(x => x.Comments);
             if (year > 0)
             {
                 postsQuery = postsQuery.Where(x => x.PostedDate.Year == year);
@@ -277,7 +278,8 @@ namespace TatBlog.Services.Blogs
                     Year = p.PostedDate.Year,
                     Month = p.PostedDate.Month,
                     PostCount = _context.Set<Post>()
-                    .Where(x => x.PostedDate == p.PostedDate)
+                    .Where(x => x.PostedDate.Month == p.PostedDate.Month)
+                    .Where(x => x.PostedDate.Year ==  p.PostedDate.Year)
                     .Count()
                 })
                 .Distinct()
@@ -423,6 +425,10 @@ namespace TatBlog.Services.Blogs
                 postQuery = postQuery
                     .Where(p => p.Category.Name == query.CategoryName);
             }
+            if (query.NotPublished)
+            {
+                postQuery = postQuery.Where(p => !p.Published);
+            }
             var tags = query.GetTag();
             if(tags.Count > 0)
             {
@@ -489,6 +495,10 @@ namespace TatBlog.Services.Blogs
             {
                 postQuery = postQuery
                     .Where(p => p.Category.Name == query.CategoryName);
+            }
+            if (query.NotPublished)
+            {
+                postQuery = postQuery.Where(p => !p.Published);
             }
             var tags = query.GetTag();
             if (tags.Count > 0)

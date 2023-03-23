@@ -10,10 +10,10 @@
             @if (Model.HasPreviousPage)
             {
                 <a asp-area="Admin"
-                    asp-controller="Posts"
-                    asp-action="@actionName"
-                    asp-route-p="@(Model.PageNumber -1)"
-                    asp-route-ps="@Model.PageSize"
+               asp-controller="Posts"
+               asp-action="@actionName"
+               asp-route-p="@(Model.PageNumber -1)"
+               asp-route-ps="@Model.PageSize"
                class="btn btn-info">
                     <i class="fa fa-arrow-left"></i>
                     Trang trước
@@ -31,10 +31,10 @@
             @if (Model.HasNextPage)
             {
                 <a asp-area="Admin"
-                asp-controller="Posts"
-                    asp-action="@actionName"
-                    asp-route-p="@(Model.PageNumber + 1)"
-                    asp-route-ps="@Model.PageSize"
+               asp-controller="Posts"
+               asp-action="@actionName"
+               asp-route-p="@(Model.PageNumber + 1)"
+               asp-route-ps="@Model.PageSize"
                class="btn btn-info">
                     Trang sau
                     <i class="fa fa-arrow-right"></i>

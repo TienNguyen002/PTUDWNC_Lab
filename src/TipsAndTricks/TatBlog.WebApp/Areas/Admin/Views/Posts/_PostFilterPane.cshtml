@@ -5,21 +5,21 @@
       asp-action="Index"
       method="get"
       class="row gy-2 gx-3 align-items-center">
-      <div class="col-auto">
-          <label class="visually-hidden" asp-for="KeyWord"></label>
-          <input type="text"
-                 class="form-control"
-                 asp-for="KeyWord"
-                 placeholder="Nhập từ khóa"/>
-      </div>
-      <div class="col-auto">
+    <div class="col-auto">
+        <label class="visually-hidden" asp-for="KeyWord"></label>
+        <input type="text"
+               class="form-control"
+               asp-for="KeyWord"
+               placeholder="Nhập từ khóa" />
+    </div>
+    <div class="col-auto">
         <label class="visually-hidden" asp-for="AuthorId"></label>
         <select class="form-select"
-               asp-for="AuthorId"
-               asp-items="Model.AuthorList">
+                asp-for="AuthorId"
+                asp-items="Model.AuthorList">
             <option value="" selected>-- Chọn tác giả --</option>
-        </select>   
-      </div>
+        </select>
+    </div>
     <div class="col-auto">
         <label class="visually-hidden" asp-for="CategoryId"></label>
         <select class="form-select"
@@ -45,25 +45,25 @@
     </div>
     <div class="col-auto">
         <div class="form-check">
-            <input class="form-check-input 
+            <input class="form-check-input
                    type="checkbox"
-                   asp-for="NotPublished"/>
+                   asp-for="NotPublished" />
             <label asp-for="NotPublished">Chưa xuất bản</label>
         </div>
     </div>
     <div class="col-auto">
         <a asp-area="Admin"
-        asp-controller="Posts"
-        asp-action="Index"
-        class="btn btn-danger">
-        Bỏ lọc
+           asp-controller="Posts"
+           asp-action="Index"
+           class="btn btn-danger">
+            Bỏ lọc
         </a>
         <button type="submit" class="btn btn-primary">Tìm/Lọc</button>
         <a asp-area="Admin"
            asp-controller="Posts"
            asp-action="Edit"
            class="btn btn-success">
-           Thêm mới
+            Thêm mới
         </a>
     </div>
 </form>

@@ -12,7 +12,9 @@ namespace TatBlog.Core.DTO
         public string Title { get; set; }
         public string ShortDescription { get; set; }
         public string UrlSlug { get; set; }
+        public string CategoryName { get; set; }
         public string ViewCount {get; set;}
+        public string Tags { get; set; }
 
         public override string ToString()
         {
