@@ -585,13 +585,14 @@ namespace TatBlog.Services.Blogs
         {
             var postDelete = await _context.Set<Post>()
                 .Include(p => p.Tags)
+                .Include(p => p.Comments)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
             if(postDelete == null)
             {
                 return false;
             }
-            _context.Set<Post>().Remove(postDelete);
+            _context.Remove(postDelete);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }

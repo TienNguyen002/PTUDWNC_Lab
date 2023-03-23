@@ -15,6 +15,9 @@ namespace TatBlog.WebApp.Areas.Admin.Models
         [DisplayName("Chủ đề")]
         public int? CategoryId { get; set; }
 
+        [DisplayName("Chưa xuất bản")]
+        public bool NotPublished { get; set; }
+
         [DisplayName("Năm")]
         public int? Year { get; set; }
 

@@ -43,7 +43,7 @@ namespace TatBlog.Data.Mappings
               .WithMany(p => p.Comments)
               .HasForeignKey(c => c.PostId)
               .HasConstraintName("FK_Comments_Posts")
-              .OnDelete(DeleteBehavior.Restrict);
+              .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
