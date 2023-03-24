@@ -45,7 +45,7 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region GetCategoryByIdAsync (Lấy ds Category bằng Id)
-        Task<Category> GetCategoryByIdAsync(int id, bool isDetail = false, CancellationToken cancellationToken = default);
+        Task<Category> GetCategoryByIdAsync(int id, CancellationToken cancellationToken = default);
         #endregion
 
         #region CheckExistCategorySlugAsync (Kiểm tra slug tồn tại - Category)

@@ -1,7 +1,7 @@
 ﻿@model TatBlog.WebApp.Areas.Admin.Models.CategoryFilterModel
 @{
     ViewData["PageTitle"] = "Danh sách chủ đề";
-    var categoriesList = ViewBag.CategoriesList as IPagedList<CategoryItem>;
+    var categoriesList = ViewBag.CategoriesList as IPagedList<Category>;
 }
 
 <h1>
@@ -37,7 +37,7 @@
                         @category.Description
                     </td>
                     <td>
-                        @category.PostCount
+                        0
                     </td>
                     <td>
                         <a asp-area="Admin"
@@ -49,19 +49,19 @@
                            class="btn change-status">
                             @if (category.ShowOnMenu)
                             {
-                                <i class="fa fa-toggle-on" style="color:red"></i>
-                                <span style="color:red">Ẩn</span>
+                                <i class="fa fa-toggle-on" style="color:deepskyblue"></i>
+                                <span style="color:deepskyblue">Đang hiện</span>
                             }
                             else
                             {
-                                <i class="fa fa-toggle-off" style="color:deepskyblue"></i>
-                                <span style="color:deepskyblue">Hiện</span>
+                                <i class="fa fa-toggle-off" style="color:red"></i>
+                                <span style="color:red">Đang ẩn</span>
                             }
                         </a>
                     </td>
                     <td>
                         <a asp-area="Admin"
-                           asp-controller="Posts"
+                           asp-controller="Categories"
                            asp-action="Delete"
                            asp-route-id="@category.Id"
                            asp-route-p="@categoriesList.PageNumber"

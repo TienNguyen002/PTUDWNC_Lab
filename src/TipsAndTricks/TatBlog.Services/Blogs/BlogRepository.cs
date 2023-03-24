@@ -131,18 +131,12 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region GetCategoryByIdAsync (Lấy ds Category bằng Id)
-        public async Task<Category> GetCategoryByIdAsync(int id, bool isDetail = false, CancellationToken cancellationToken = default)
+        public async Task<Category> GetCategoryByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            if (isDetail)
-            {
-                return await _context
-                  .Set<Category>()
+            return await _context.Set<Category>()
                   .Include(c => c.Posts)
                   .Where(c => c.Id == id)
                   .FirstOrDefaultAsync(cancellationToken);
-            }
-            return await _context.Set<Category>()
-                .FindAsync(cancellationToken);
         }
         #endregion
 
@@ -704,7 +698,6 @@ namespace TatBlog.Services.Blogs
         {
             var postDelete = await _context.Set<Post>()
                 .Include(p => p.Tags)
-                .Include(p => p.Comments)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
             if (postDelete == null)
