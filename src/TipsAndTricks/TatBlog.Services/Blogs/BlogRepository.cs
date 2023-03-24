@@ -481,6 +481,11 @@ namespace TatBlog.Services.Blogs
                 postQuery = postQuery
                     .Where(p => p.PostedDate.Month == query.PostMonth);
             }
+            if (query.PostYear > 0)
+            {
+                postQuery = postQuery
+                    .Where(p => p.PostedDate.Year == query.PostYear);
+            }
             if (query.CategoryId > 0)
             {
                 postQuery = postQuery

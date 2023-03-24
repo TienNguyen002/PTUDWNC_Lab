@@ -29,16 +29,16 @@
         </select>
     </div>
     <div class="col-auto">
-        <label class="visually-hidden" asp-for="Year"></label>
+        <label class="visually-hidden" asp-for="PostYear"></label>
         <input type="text"
                class="form-control"
-               asp-for="Year"
+               asp-for="PostYear"
                placeholder="Nhập năm..." />
     </div>
     <div class="col-auto">
-        <label class="visually-hidden" asp-for="Month"></label>
+        <label class="visually-hidden" asp-for="PostMonth"></label>
         <select class="form-select"
-                asp-for="Month"
+                asp-for="PostMonth"
                 asp-items="Model.MonthList">
             <option value="" selected>-- Chọn tháng --</option>
         </select>
