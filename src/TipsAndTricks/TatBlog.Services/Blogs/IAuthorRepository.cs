@@ -17,6 +17,8 @@ namespace TatBlog.Services.Blogs
 
     Task<Author> GetAuthorBySlugAsync(string slug, CancellationToken cancellationToken = default);
 
+    Task<IPagedList<AuthorItem>> GetPagesAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default);
+
     Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default);
 
     Task AddOrUpdateAuthorAsync(Author author, CancellationToken cancellationToken = default);

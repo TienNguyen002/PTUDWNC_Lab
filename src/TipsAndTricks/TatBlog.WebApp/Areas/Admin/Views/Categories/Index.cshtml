@@ -1,7 +1,86 @@
-﻿@{
-    ViewData["PageTitle"] = "Bảng điều khiển";
+﻿@model TatBlog.WebApp.Areas.Admin.Models.CategoryFilterModel
+@{
+    ViewData["PageTitle"] = "Danh sách chủ đề";
+    var categoriesList = ViewBag.CategoriesList as IPagedList<CategoryItem>;
 }
 
 <h1>
     Danh sách chủ đề
 </h1>
+<partial name="_CategoryFilterPane" model="Model" />
+@if (categoriesList != null && categoriesList.Count > 0)
+{
+    <table class="table table-responsive table-striped">
+        <thead>
+            <tr>
+                <th>Tên chủ đề</th>
+                <th>Mô tả</th>
+                <th>Số bài viết</th>
+                <th>Hiển thị trên Menu</th>
+                <th>Xóa bài viết</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in categoriesList)
+            {
+                <tr>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="Categories"
+                           asp-action="Edit"
+                           asp-route-id="@category.Id"
+                           class="text-bold">
+                            @category.Name
+                        </a>
+                    </td>
+                    <td>
+                        @category.Description
+                    </td>
+                    <td>
+                        @category.PostCount
+                    </td>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="Categories"
+                           asp-action="ChangeShowOnMenu"
+                           asp-route-id="@category.Id"
+                           asp-route-p="@categoriesList.PageNumber"
+                           asp-route-ps="@categoriesList.PageSize"
+                           class="btn change-status">
+                            @if (category.ShowOnMenu)
+                            {
+                                <i class="fa fa-toggle-on" style="color:red"></i>
+                                <span style="color:red">Ẩn</span>
+                            }
+                            else
+                            {
+                                <i class="fa fa-toggle-off" style="color:deepskyblue"></i>
+                                <span style="color:deepskyblue">Hiện</span>
+                            }
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="Posts"
+                           asp-action="Delete"
+                           asp-route-id="@category.Id"
+                           asp-route-p="@categoriesList.PageNumber"
+                           asp-route-ps="@categoriesList.PageSize"
+                           class="btn"
+                           onclick="return confirm('Bạn có thực sự muốn xóa chủ đề này không?')">
+                            <i class="fa fa-trash" style="color:red"></i>
+                            <span style="color:red">Xóa</span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <partial name="_Pager" model="categoriesList"></partial>
+}
+else
+{
+    <h1 class="text-danger">
+        Không tìm thấy chủ đề nào
+    </h1>
+}

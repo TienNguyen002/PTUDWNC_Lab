@@ -9,45 +9,45 @@
         <div class="text-center my-4">
             @if (Model.HasPreviousPage)
             {
-                <a asp-area="Admin"
+                            <a asp-area="Admin"
                asp-controller="Posts"
                asp-action="@actionName"
                asp-route-p="@(Model.PageNumber -1)"
                asp-route-ps="@Model.PageSize"
-               class="btn btn-info">
-                    <i class="fa fa-arrow-left"></i>
-                    Trang trước
-                </a>
+                       class="btn btn-info">
+                                <i class="fa fa-arrow-left"></i>
+                                Trang trước
+                            </a>
             }
             else
             {
-                <button type="button"
-                        class="btn btn-outline-secondary"
-                        disabled>
-                    Trang trước
-                </button>
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    disabled>
+                                Trang trước
+                            </button>
             }
 
             @if (Model.HasNextPage)
             {
-                <a asp-area="Admin"
+                            <a asp-area="Admin"
                asp-controller="Posts"
                asp-action="@actionName"
                asp-route-p="@(Model.PageNumber + 1)"
                asp-route-ps="@Model.PageSize"
-               class="btn btn-info">
-                    Trang sau
-                    <i class="fa fa-arrow-right"></i>
-                </a>
+                       class="btn btn-info">
+                                Trang sau
+                                <i class="fa fa-arrow-right"></i>
+                            </a>
             }
             else
             {
-                <button type="button"
-                        class="btn btn-outline-secondary"
-                        disabled>
-                    Trang sau
-                    <i class="fa fa-arrow-right"></i>
-                </button>
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    disabled>
+                                Trang sau
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
             }
         </div>
     }

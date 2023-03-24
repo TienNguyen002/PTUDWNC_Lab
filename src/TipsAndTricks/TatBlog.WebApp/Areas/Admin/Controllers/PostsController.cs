@@ -172,6 +172,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             await _blogRepository.AddOrUpdatePostAsync(post, model.GetSelectedTags());
             return RedirectToAction(nameof(Index));
         }
+
         [HttpPost]
         public async Task<IActionResult> VerifyPostSlug(int id, string urlSlug)
         {

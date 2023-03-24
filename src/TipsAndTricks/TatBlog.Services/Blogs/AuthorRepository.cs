@@ -84,7 +84,7 @@ namespace TatBlog.Services.Blogs
         .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(
+    public async Task<IPagedList<AuthorItem>> GetPagesAuthorsAsync(
       IPagingParams pagingParams,
       CancellationToken cancellationToken = default)
     {
@@ -135,6 +135,11 @@ namespace TatBlog.Services.Blogs
                 })
                 .OrderByDescending(s => s.PostsCount)
                 .ToListAsync(cancellationToken);
+        }
+
+        public Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
     }
 }
