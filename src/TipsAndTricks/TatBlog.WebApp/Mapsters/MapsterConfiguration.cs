@@ -32,6 +32,10 @@ namespace TatBlog.WebApp.Mapsters
 
             config.NewConfig<Tag, TagItem>()
                 .Map(dest => dest.PostCount, src => src.Posts.Count);
+
+            config.NewConfig<AuthorEditModel, Author>()
+               .Ignore(dest => dest.Id)
+               .Ignore(dest => dest.ImageUrl);
         }
     }
 }

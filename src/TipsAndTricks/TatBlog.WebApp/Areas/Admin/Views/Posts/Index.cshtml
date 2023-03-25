@@ -13,7 +13,7 @@
 {
     <table class="table table-responsive table-striped">
         <thead>
-            <tr>
+            <tr class="text-center">
                 <th>Tiêu đề</th>
                 <th>Tác giả</th>
                 <th>Chủ đề</th>
@@ -24,8 +24,9 @@
         <tbody>
             @foreach(var post in postsList)
             {
-                <tr>
-                    <td>
+                <tr class="text-center">
+                    <td class="text-md-start" 
+                    style="width:500px;height:80px;object-fit:cover">
                         <a asp-area="Admin"
                            asp-controller="Posts"
                            asp-action="Edit"
@@ -53,12 +54,12 @@
                            class="btn change-status">
                             @if (post.Published)
                             {
-                                <i class="fa fa-toggle-on" style="color:deepskyblue"></i>
+                                <i class="fa fa-eye" style="color:deepskyblue"></i>
                                 <span style="color:deepskyblue">Có</span>
                             }
                             else
                             {
-                                <i class="fa fa-toggle-off" style="color:red"></i>
+                                <i class="fa fa-eye-slash" style="color:red"></i>
                                 <span style="color:red">Không</span>
                             }
                         </a>

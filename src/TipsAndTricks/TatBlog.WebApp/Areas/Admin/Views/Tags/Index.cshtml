@@ -12,7 +12,7 @@
 {
     <table class="table table-responsive table-striped">
         <thead>
-            <tr>
+            <tr class="text-center">
                 <th>Tên thẻ</th>
                 <th>Mô tả</th>
                 <th>Số bài viết</th>
@@ -22,7 +22,7 @@
         <tbody>
             @foreach (var tag in tagsList)
             {
-                <tr>
+                <tr class="text-center">
                     <td>
                         <a asp-area="Admin"
                            asp-controller="Tags"

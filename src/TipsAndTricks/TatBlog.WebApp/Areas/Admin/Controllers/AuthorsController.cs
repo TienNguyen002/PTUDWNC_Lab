@@ -35,7 +35,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             var authorQuery = _mapper.Map<AuthorQuery>(model);
             ViewBag.AuthorsList = await _authorRepository.GetPagedAuthorsAsync(authorQuery, pageNumber: pageNumber, pageSize: pageSize);
             ViewBag.AuthorQuery = authorQuery;
-            return View();
+            return View(model);
         }
 
         [HttpGet]

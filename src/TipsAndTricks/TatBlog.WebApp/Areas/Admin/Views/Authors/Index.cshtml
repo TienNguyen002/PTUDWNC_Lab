@@ -7,22 +7,23 @@
 <h1>
     Danh sách tác giả
 </h1>
-
+<partial name="_AuthorFilterPane" model="Model" />
 @if(authorsList != null && authorsList.Count > 0)
 {
     <table class="table table-responsive table-striped">
         <thead>
-            <tr>
+            <tr class="text-center">
                 <th>Hình đại diện</th>
                 <th>Tên tác giả</th>
                 <th>Email</th>
+                <th>Thời gian tham gia</th>
                 <th>Xóa tác giả</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var author in authorsList)
             {
-                <tr>
+                <tr class="text-center">
                     <td>
                         @if (!string.IsNullOrWhiteSpace(author.ImageUrl))
                         {
@@ -32,7 +33,7 @@
                         }
                         else
                         {
-                            <img src="~/images/author.jpg"
+                            <img src="~/images/icon_author.png"
                                  class="rounded-circle object-fit-cover "
                                  style="width:80px;height:80px;object-fit:cover" />
                         }
@@ -51,6 +52,9 @@
                     </td>
                     <td>
                         @author.Email
+                    </td>
+                    <td>
+                        @author.JoinedDate
                     </td>
                     <td>
                         <a asp-area="Admin"
