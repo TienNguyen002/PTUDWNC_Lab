@@ -21,9 +21,9 @@ namespace TatBlog.Services.Blogs
         }
 
         #region Tag
-        #region GetPagedTagsAsync (Lấy ds Tag và phân trang theo pagingParams)
+        #region GetPagesTagsAsync (Lấy ds Tag và phân trang theo pagingParams)
         //Lấy danh sách từ khóa/thẻ và phân trang theo các tham số pagingParams
-        public async Task<IPagedList<TagItem>> GetPagedTagsAsync(
+        public async Task<IPagedList<TagItem>> GetPagesTagsAsync(
             IPagingParams pagingParams,
             CancellationToken cancellationToken = default)
         {
@@ -54,6 +54,16 @@ namespace TatBlog.Services.Blogs
         }
         #endregion
 
+        #region GetTagByIdAsync (Lấy ds Tag bằng Id)
+        public async Task<Tag> GetTagByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Tag>()
+                  .Include(c => c.Posts)
+                  .Where(c => c.Id == id)
+                  .FirstOrDefaultAsync(cancellationToken);
+        }
+        #endregion
+
         #region GetAllTagsAsync (Lấy ds tất cả các Tag)
         public async Task<IList<TagItem>> GetAllTagsAsync(CancellationToken cancellationToken = default)
         {
@@ -72,6 +82,22 @@ namespace TatBlog.Services.Blogs
         }
         #endregion
 
+        #region AddOrUpdateTagAsync (Thêm/Cập nhật Tag)
+        public async Task<Tag> AddOrUpdateTagAsync(Tag tag, CancellationToken cancellationToken = default)
+        {
+            if (tag.Id > 0)
+            {
+                _context.Set<Tag>().Update(tag);
+            }
+            else
+            {
+                _context.Set<Tag>().Add(tag);
+            }
+            await _context.SaveChangesAsync(cancellationToken);
+            return tag;
+        }
+        #endregion
+
         #region DeleteTagByIdAsync (Xóa Tag theo Id)
         public async Task<bool> DeleteTagByIdAsync(int id, CancellationToken cancellationToken = default)
         {
@@ -86,6 +112,49 @@ namespace TatBlog.Services.Blogs
             _context.Set<Tag>().Remove(tagToDelete);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
+        }
+        #endregion
+
+        #region CheckExistTagSlugByIdAsync (Kiểm tra slug tồn tại bằng id - Tag)
+        public async Task<bool> CheckExistTagSlugByIdAsync(int id, string slug, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Tag>()
+                .AnyAsync(c => c.Id != id && c.UrlSlug == slug, cancellationToken);
+        }
+        #endregion
+
+        #region FindTagByQueryable (Tìm Tag theo Queryable)
+        private IQueryable<Tag> FindTagByQueryable(TagQuery query)
+        {
+            IQueryable<Tag> tagQuery = _context.Set<Tag>()
+                .Include(c => c.Posts);
+            if (!string.IsNullOrWhiteSpace(query.KeyWord))
+            {
+                tagQuery = tagQuery.Where(c => c.Name.Contains(query.KeyWord)
+                || c.Description.Contains(query.KeyWord)
+                || c.UrlSlug.Contains(query.KeyWord));
+            }
+            return tagQuery;
+        }
+        #endregion
+
+        #region GetPagedTagsAsync (Lấy ds Tag và phân trang theo các tham số Paging)
+        public async Task<IPagedList<Tag>> GetPagedTagsAsync(TagQuery tagQuery,
+            int pageNumber,
+            int pageSize,
+            string sortColumn = "Id",
+            string sortOrder = "ASC",
+            CancellationToken cancellationToken = default)
+        {
+            var pagingParams = new PagingParams()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder
+            };
+            IQueryable<Tag> tagResult = FindTagByQueryable(tagQuery);
+            return await tagResult.ToPagedListAsync(pagingParams, cancellationToken);
         }
         #endregion
         #endregion
@@ -176,6 +245,7 @@ namespace TatBlog.Services.Blogs
         public async Task<bool> DeleteCategoryByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var categoryToDelete = await _context.Set<Category>()
+               .Include(c => c.Posts)
                .Where(c => c.Id == id)
                .FirstOrDefaultAsync(cancellationToken);
             if (categoryToDelete == null)

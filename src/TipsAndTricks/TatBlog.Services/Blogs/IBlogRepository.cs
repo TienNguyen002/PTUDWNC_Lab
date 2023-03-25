@@ -12,9 +12,9 @@ namespace TatBlog.Services.Blogs
     public interface IBlogRepository
     {
         #region Tag
-        #region GetPagedTagsAsync (Lấy ds Tag và phân trang theo pagingParams)
+        #region GetPagesTagsAsync (Lấy ds Tag và phân trang theo pagingParams)
         //Lấy danh sách từ khóa/thẻ và phân trang theo các tham số pagingParams
-        Task<IPagedList<TagItem>> GetPagedTagsAsync(
+        Task<IPagedList<TagItem>> GetPagesTagsAsync(
             IPagingParams pagingParams,
             CancellationToken cancellationToken = default);
         #endregion
@@ -23,12 +23,33 @@ namespace TatBlog.Services.Blogs
         Task<Tag> GetTagBySlugAsync(string slug, CancellationToken cancellationToken = default);
         #endregion
 
+        #region GetTagByIdAsync (Lấy ds Tag bằng Id)
+        Task<Tag> GetTagByIdAsync(int id, CancellationToken cancellationToken = default);
+        #endregion
+
         #region GetAllTagsAsync (Lấy ds tất cả các Tag)
         Task<IList<TagItem>> GetAllTagsAsync(CancellationToken cancellationToken = default);
         #endregion
 
         #region DeleteTagByIdAsync (Xóa Tag theo Id)
         Task<bool> DeleteTagByIdAsync(int id, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region AddOrUpdateTagAsync (Thêm/Cập nhật Tag)
+        Task<Tag> AddOrUpdateTagAsync(Tag tag, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region CheckExistTagSlugByIdAsync (Kiểm tra slug tồn tại bằng id - Tag)
+        Task<bool> CheckExistTagSlugByIdAsync(int id, string slug, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region GetPagedTagsAsync (Lấy ds Tag và phân trang theo các tham số Paging)
+        Task<IPagedList<Tag>> GetPagedTagsAsync(TagQuery tagQuery,
+            int pageNumber,
+            int pageSize,
+            string sortColumn = "Id",
+            string sortOrder = "ASC",
+            CancellationToken cancellationToken = default);
         #endregion
         #endregion
 

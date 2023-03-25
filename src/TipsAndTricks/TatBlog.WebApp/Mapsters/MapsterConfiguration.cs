@@ -29,6 +29,9 @@ namespace TatBlog.WebApp.Mapsters
 
             config.NewConfig<Category, CategoryItem>()
                 .Map(dest => dest.PostCount, src => src.Posts.Count);
+
+            config.NewConfig<Tag, TagItem>()
+                .Map(dest => dest.PostCount, src => src.Posts.Count);
         }
     }
 }
