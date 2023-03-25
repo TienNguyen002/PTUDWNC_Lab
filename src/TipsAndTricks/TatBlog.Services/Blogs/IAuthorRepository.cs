@@ -19,10 +19,19 @@ namespace TatBlog.Services.Blogs
 
     Task<IPagedList<AuthorItem>> GetPagesAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default);
 
-    Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default);
+    Task<IPagedList<Author>> GetPagedAuthorsAsync(AuthorQuery authorQuery,
+        int pageNumber,
+        int pageSize,
+        string sortColumn = "Id",
+        string sortOrder = "ASC", 
+        CancellationToken cancellationToken = default);
 
-    Task AddOrUpdateAuthorAsync(Author author, CancellationToken cancellationToken = default);
+    Task<Author> AddOrUpdateAuthorAsync(Author author, CancellationToken cancellationToken = default);
 
     Task<IPagedList<Author>> GetNPopularAuthors(int n, IPagingParams pagingParams, CancellationToken cancellationToken = default);
-  }
+
+    Task<bool> DeleteAuthorByIdAsync(int id, CancellationToken cancellationToken = default);
+
+    Task<bool> CheckExistAuthorSlugByIdAsync(int id, string slug, CancellationToken cancellationToken = default);
+    }
 }

@@ -14,10 +14,10 @@ namespace TatBlog.WebApp.Areas.Admin.Models
 
         [DisplayName("Tháng")]
         public int? JoinedMonth { get; set; }
-        public IEnumerable<SelectListItem>? MonthList { get; set; }
+        public IEnumerable<SelectListItem>? Months { get; set; }
         public AuthorFilterModel() 
         {
-            MonthList = Enumerable.Range(1,12)
+            Months = Enumerable.Range(1,12)
                 .Select(m => new SelectListItem()
                 {
                     Value = m.ToString(),

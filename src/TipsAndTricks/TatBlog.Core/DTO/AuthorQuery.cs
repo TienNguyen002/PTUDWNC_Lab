@@ -8,6 +8,7 @@ namespace TatBlog.Core.DTO
 {
     public class AuthorQuery
     {
+        public int Id { get; set; }
         public string KeyWord { get; set; }
         public int? JoinedMonth { get; set; }
         public int? JoinedYear { get; set; }
