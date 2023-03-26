@@ -534,7 +534,8 @@ namespace TatBlog.Services.Blogs
                 || p.Description.Contains(query.KeyWord)
                 || p.ShortDescription.Equals(query.KeyWord)
                 || p.UrlSlug.Equals(query.KeyWord)
-                || p.Tags.Any(t => t.Name.Contains(query.KeyWord))
+                || p.Tags.Any(t => t.Name.Contains(query.KeyWord)
+                || p.Author.UrlSlug.Contains(query.KeyWord))
                 );
             }
             if (!string.IsNullOrWhiteSpace(query.CategorySlug))
