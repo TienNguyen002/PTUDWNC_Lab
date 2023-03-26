@@ -1,7 +1,13 @@
-﻿@model TatBlog.WebApp.Areas.Admin.Models.AuthorFilterModel
+﻿@using TatBlog.WebApp.Extensions;
+@model AuthorFilterModel
 @{
     ViewData["PageTitle"] = "Danh sách tác giả";
-    var authorsList = ViewBag.AuthorsList as IPagedList<Author>;
+    var authorsList = ViewBag.Items as IPagedList<Author>;
+    var filter = "";
+    if (Model != null)
+    {
+        filter = Model.GetURLQueryString();
+    }
 }
 
 <h1>
@@ -54,13 +60,14 @@
                         @author.Email
                     </td>
                     <td>
-                        @author.JoinedDate
+                        @author.JoinedDate.ToString("dd/MM/yyyy")
                     </td>
                     <td>
                         <a asp-area="Admin"
                            asp-controller="Posts"
                            asp-action="Delete"
                            asp-route-id="@author.Id"
+                           asp-route-filter="@filter"
                            asp-route-p="@authorsList.PageNumber"
                            asp-route-ps="@authorsList.PageSize"
                            class="btn"
@@ -73,7 +80,7 @@
             }
         </tbody>
     </table>
-    <partial name="_Pager" model="authorsList"></partial>
+    <partial name="_Pager" model="filter"></partial>
 }
 else
 {

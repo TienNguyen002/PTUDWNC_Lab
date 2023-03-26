@@ -32,7 +32,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             [FromQuery(Name = "ps")] int pageSize = 10)
         {
             var categoryQuery = _mapper.Map<CategoryQuery>(model);
-            ViewBag.CategoriesList = await _blogRepository.GetPagedCategoriesAsync(categoryQuery: categoryQuery, pageNumber: pageNumber, pageSize: pageSize);
+            ViewBag.Items = await _blogRepository.GetPagedCategoriesAsync(categoryQuery: categoryQuery, pageNumber: pageNumber, pageSize: pageSize);
             ViewBag.CategoryQuery = categoryQuery;
             return View(model);
         }
@@ -40,21 +40,23 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangeShowOnMenu(
             int id,
+            [FromQuery(Name = "filter")] string filter,
             [FromQuery(Name = "p")] int pageNumber,
             [FromQuery(Name = "ps")] int pageSize)
         {
             await _blogRepository.ChangeShowOnMenuCategoryAsync(id);
-            return RedirectToAction(nameof(Index), new {p = pageNumber, ps = pageSize});
+            return Redirect($"{Url.ActionLink("Index", "Categories", new { p = pageNumber, ps = pageSize })}&{filter}");
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(
             int id,
+            [FromQuery(Name = "filter")] string filter,
             [FromQuery(Name = "p")] int pageNumber,
             [FromQuery(Name = "ps")] int pageSize)
         {
             await _blogRepository.DeleteCategoryByIdAsync(id);
-            return RedirectToAction(nameof(Index), new { p = pageNumber, ps = pageSize });
+            return Redirect($"{Url.ActionLink("Index", "Categories", new { p = pageNumber, ps = pageSize })}&{filter}");
         }
 
         [HttpGet]

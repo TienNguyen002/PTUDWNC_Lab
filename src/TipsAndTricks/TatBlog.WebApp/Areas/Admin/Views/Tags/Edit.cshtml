@@ -1,4 +1,4 @@
-﻿@model TatBlog.WebApp.Areas.Admin.Models.TagEditModel
+﻿@model TagEditModel
 
 @{
     ViewData["PageTitle"] = "Thêm/Cập nhật thẻ";
@@ -44,9 +44,7 @@
             <button type="submit" class="btn btn-primary">
                 Lưu các thay đổi
             </button>
-            <a asp-area="Admin"
-               asp-controller="Tags"
-               asp-action="Index"
+            <a onclick="history.go(-1)"
                class="btn btn-danger">
                Hủy & Quay lại
             </a>

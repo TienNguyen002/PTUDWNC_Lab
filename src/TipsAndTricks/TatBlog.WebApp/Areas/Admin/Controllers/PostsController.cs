@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NLog.Filters;
 using System.Drawing.Printing;
 using System.Text.Json;
 using TatBlog.Core;
@@ -81,7 +82,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             var postQuery = _mapper.Map<PostQuery>(model);
 
             _logger.LogInformation("Lấy danh sách bài viết từ CSDL");
-            ViewBag.PostsList = await _blogRepository.GetAllPagedPostQueryAsync(postQuery, pageNumber: pageNumber, pageSize: pageSize);
+            ViewBag.Items = await _blogRepository.GetAllPagedPostQueryAsync(postQuery, pageNumber: pageNumber, pageSize: pageSize);
             ViewBag.PostQuery = postQuery;
             _logger.LogInformation("Chuẩn bị dữ liệu cho ViewModel");
             await PopulatePostFilterModelAsync(model);
@@ -109,21 +110,23 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangeStatus(
             int id,
+            [FromQuery(Name = "filter")] string filter,
             [FromQuery(Name = "p")] int pageNumber,
             [FromQuery(Name = "ps")] int pageSize)
         {
             await _blogRepository.ChangePublishedPostAsync(id);
-            return RedirectToAction(nameof(Index), new {p = pageNumber, ps = pageSize});
+            return Redirect($"{Url.ActionLink("Index", "Posts", new { p = pageNumber, ps = pageSize })}&{filter}");
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(
             int id,
+            [FromQuery(Name = "filter")] string filter,
             [FromQuery(Name = "p")] int pageNumber,
             [FromQuery(Name = "ps")] int pageSize)
         {
             await _blogRepository.DeletePostByIdAsync(id);
-            return RedirectToAction(nameof(Index), new { p = pageNumber, ps = pageSize });
+            return Redirect($"{Url.ActionLink("Index", "Posts", new { p = pageNumber, ps = pageSize })}&{filter}");
         }
 
         [HttpPost]

@@ -1,0 +1,47 @@
+﻿@model string
+
+@{
+    var items = ViewBag.Items;
+    string actionName = null;
+    string controllerName = null;
+
+    if (items.PageCount > 1)
+    {
+        <div class="text-center my-4">
+            @if (items.HasPreviousPage)
+            {
+                <a href="@Url.Action(actionName, controllerName,new { p=items.PageNumber - 1, ps = items.PageSize})@Model"
+               class="btn btn-info">
+                    <i class="fa fa-arrow-left"></i>
+                    Trang trước
+                </a>
+            }
+            else
+            {
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        disabled>
+                    Trang trước
+                </button>
+            }
+
+            @if (items.HasNextPage)
+            {
+                <a href="@Url.Action(actionName, controllerName,new { p=items.PageNumber + 1, ps = items.PageSize})@Model"
+               class="btn btn-info">
+                    Trang sau
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+            }
+            else
+            {
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        disabled>
+                    Trang sau
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+            }
+        </div>
+    }
+}

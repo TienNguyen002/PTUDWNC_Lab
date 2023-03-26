@@ -1,4 +1,4 @@
-﻿@model TatBlog.WebApp.Areas.Admin.Models.AuthorEditModel
+﻿@model AuthorEditModel
 
 @{
     ViewData["PageTitle"] = "Thêm/Cập nhật tác giả";
@@ -75,9 +75,7 @@
             <button type="submit" class="btn btn-primary">
                 Lưu các thay đổi
             </button>
-            <a asp-area="Admin"
-               asp-controller="Authors"
-               asp-action="Index"
+            <a onclick="history.go(-1)"
                class="btn btn-danger">
                Hủy & Quay lại
             </a>

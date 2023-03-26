@@ -1,7 +1,13 @@
-﻿@model TatBlog.WebApp.Areas.Admin.Models.PostFilterModel
+﻿@using TatBlog.WebApp.Extensions;
+@model PostFilterModel
 @{
     ViewData["PageTitle"] = "Danh sách bài viết";
-    var postsList = ViewBag.PostsList as IPagedList<Post>;
+    var postsList = ViewBag.Items as IPagedList<Post>;
+    var filter = "";
+    if (Model != null)
+    {
+        filter = Model.GetURLQueryString();
+    }
 }
 
 <h1>
@@ -49,6 +55,7 @@
                            asp-controller="Posts"
                            asp-action="ChangeStatus"
                            asp-route-id="@post.Id"
+                           asp-route-filter="@filter"
                            asp-route-p="@postsList.PageNumber"
                            asp-route-ps="@postsList.PageSize"
                            class="btn change-status">
@@ -69,6 +76,7 @@
                            asp-controller="Posts"
                            asp-action="Delete"
                            asp-route-id="@post.Id"
+                           asp-route-filter="@filter"
                            asp-route-p="@postsList.PageNumber"
                            asp-route-ps="@postsList.PageSize"
                            class="btn"
@@ -81,7 +89,7 @@
             }
         </tbody>
     </table>
-    <partial name="_Pager" model="postsList"></partial>
+    <partial name="_Pager" model="@filter"></partial>
 }
 else
 {

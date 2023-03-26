@@ -1,4 +1,4 @@
-﻿@model TatBlog.WebApp.Areas.Admin.Models.CategoryEditModel
+﻿@model CategoryEditModel
 
 @{
     ViewData["PageTitle"] = "Thêm/Cập nhật thể loại";
@@ -55,9 +55,7 @@
             <button type="submit" class="btn btn-primary">
                 Lưu các thay đổi
             </button>
-            <a asp-area="Admin"
-               asp-controller="Categories"
-               asp-action="Index"
+            <a onclick="history.go(-1)"
                class="btn btn-danger">
                Hủy & Quay lại
             </a>

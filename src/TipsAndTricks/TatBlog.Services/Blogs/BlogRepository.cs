@@ -166,11 +166,12 @@ namespace TatBlog.Services.Blogs
             bool showOnMenu = true,
             CancellationToken cancellationToken = default)
         {
-            IQueryable<Category> categories = _context.Set<Category>();
-            if (showOnMenu)
-            {
-                categories = categories.Where(x => x.ShowOnMenu);
-            }
+            IQueryable<Category> categories = _context.Set<Category>()
+                .Where(c => c.ShowOnMenu == true);
+            //if (showOnMenu)
+            //{
+            //    categories = categories.Where(x => x.ShowOnMenu);
+            //}
             return await categories
                 .OrderBy(x => x.Name)
                 .Select(x => new CategoryItem()

@@ -1,7 +1,13 @@
-﻿@model TatBlog.WebApp.Areas.Admin.Models.CategoryFilterModel
+﻿@using TatBlog.WebApp.Extensions;
+@model CategoryFilterModel
 @{
     ViewData["PageTitle"] = "Danh sách chủ đề";
-    var categoriesList = ViewBag.CategoriesList as IPagedList<Category>;
+    var categoriesList = ViewBag.Items as IPagedList<Category>;
+    var filter = "";
+    if (Model != null)
+    {
+        filter = Model.GetURLQueryString();
+    }
 }
 
 <h1>
@@ -44,6 +50,7 @@
                            asp-controller="Categories"
                            asp-action="ChangeShowOnMenu"
                            asp-route-id="@category.Id"
+                           asp-route-filter="@filter"
                            asp-route-p="@categoriesList.PageNumber"
                            asp-route-ps="@categoriesList.PageSize"
                            class="btn change-status">
@@ -64,6 +71,7 @@
                            asp-controller="Categories"
                            asp-action="Delete"
                            asp-route-id="@category.Id"
+                           asp-route-filter="@filter"
                            asp-route-p="@categoriesList.PageNumber"
                            asp-route-ps="@categoriesList.PageSize"
                            class="btn"
@@ -76,7 +84,7 @@
             }
         </tbody>
     </table>
-    <partial name="_Pager" model="categoriesList"></partial>
+    <partial name="_Pager" model="filter"></partial>
 }
 else
 {

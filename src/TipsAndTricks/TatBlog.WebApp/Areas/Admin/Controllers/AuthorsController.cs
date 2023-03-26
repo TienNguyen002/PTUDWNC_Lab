@@ -33,7 +33,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             [FromQuery(Name = "ps")] int pageSize = 10)
         {
             var authorQuery = _mapper.Map<AuthorQuery>(model);
-            ViewBag.AuthorsList = await _authorRepository.GetPagedAuthorsAsync(authorQuery, pageNumber: pageNumber, pageSize: pageSize);
+            ViewBag.Items = await _authorRepository.GetPagedAuthorsAsync(authorQuery, pageNumber: pageNumber, pageSize: pageSize);
             ViewBag.AuthorQuery = authorQuery;
             return View(model);
         }
@@ -53,11 +53,12 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(
             int id,
+            [FromQuery(Name = "filter")] string filter,
             [FromQuery(Name = "p")] int pageNumber,
             [FromQuery(Name = "ps")] int pageSize)
         {
             await _authorRepository.DeleteAuthorByIdAsync(id);
-            return RedirectToAction(nameof(Index), new { p = pageNumber, ps = pageSize });
+            return Redirect($"{Url.ActionLink("Index", "Authors", new { p = pageNumber, ps = pageSize })}&{filter}");
         }
 
         [HttpPost]

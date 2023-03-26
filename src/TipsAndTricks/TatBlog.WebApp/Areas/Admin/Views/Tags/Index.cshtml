@@ -1,7 +1,13 @@
-﻿@model TatBlog.WebApp.Areas.Admin.Models.TagFilterModel
+﻿@using TatBlog.WebApp.Extensions;
+@model TagFilterModel
 @{
     ViewData["PageTitle"] = "Danh sách thẻ";
-    var tagsList = ViewBag.TagsList as IPagedList<Tag>;
+    var tagsList = ViewBag.Items as IPagedList<Tag>;
+    var filter = "";
+    if (Model != null)
+    {
+        filter = Model.GetURLQueryString();
+    }
 }
 
 <h1>
@@ -43,6 +49,7 @@
                            asp-controller="Tags"
                            asp-action="Delete"
                            asp-route-id="@tag.Id"
+                           asp-route-filter="@filter"
                            asp-route-p="@tagsList.PageNumber"
                            asp-route-ps="@tagsList.PageSize"
                            class="btn"
@@ -55,7 +62,7 @@
             }
         </tbody>
     </table>
-    <partial name="_Pager" model="tagsList"></partial>
+    <partial name="_Pager" model="filter"></partial>
 }
 else
 {
