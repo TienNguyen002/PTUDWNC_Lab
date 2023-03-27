@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,12 @@ namespace TatBlog.Services.Blogs
 {
     public class AuthorRepository : IAuthorRepository
     {
-
         private readonly BlogDbContext _context;
-        public AuthorRepository(BlogDbContext context)
+        private readonly IMemoryCache _memoryCache;
+        public AuthorRepository(BlogDbContext context, IMemoryCache memoryCache)
         {
             _context = context;
+            _memoryCache = memoryCache;
         }
 
         public async Task<bool> IsAuthorExistBySlugAsync(
@@ -41,6 +43,7 @@ namespace TatBlog.Services.Blogs
             if (author.Id > 0)
             {
                 _context.Set<Author>().Update(author);
+                _memoryCache.Remove($"author.by-id.{author.Id}");
             }
             else
             {
@@ -65,6 +68,29 @@ namespace TatBlog.Services.Blogs
             return await _context.Set<Author>()
               .Where(a => a.UrlSlug == slug)
               .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<Author> GetCachedAuthorBySlugAsync(
+        string slug, CancellationToken cancellationToken = default)
+        {
+            return await _memoryCache.GetOrCreateAsync(
+                $"author.by-slug.{slug}",
+                async (entry) =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+                    return await GetAuthorBySlugAsync(slug, cancellationToken);
+                });
+        }
+
+        public async Task<Author> GetCachedAuthorByIdAsync(int authorId)
+        {
+            return await _memoryCache.GetOrCreateAsync(
+                $"author.by-id.{authorId}",
+                async (entry) =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+                    return await GetAuthorByIdAsync(authorId);
+                });
         }
 
         public async Task<IPagedList<AuthorItem>> GetPagesAuthorsAsync(
@@ -120,7 +146,6 @@ namespace TatBlog.Services.Blogs
                 .ToListAsync(cancellationToken);
         }
 
-
         private IQueryable<Author> FindAuthorByQueryable(AuthorQuery query)
         {
             IQueryable<Author> authorQuery = _context.Set<Author>();
@@ -172,6 +197,45 @@ namespace TatBlog.Services.Blogs
         {
             return await _context.Set<Author>()
                 .AnyAsync(a => a.Id != id && a.UrlSlug == slug, cancellationToken);
+        }
+
+        public async Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(
+        IPagingParams pagingParams,
+        string name = null,
+        CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Author>()
+                .AsNoTracking()
+                .WhereIf(!string.IsNullOrWhiteSpace(name),
+                    x => x.FullName.Contains(name))
+                .Select(a => new AuthorItem()
+                {
+                    Id = a.Id,
+                    FullName = a.FullName,
+                    Email = a.Email,
+                    JoinedDate = a.JoinedDate,
+                    ImageUrl = a.ImageUrl,
+                    UrlSlug = a.UrlSlug,
+                    PostsCount = a.Posts.Count(p => p.Published)
+                })
+                .ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
+        public async Task<IPagedList<T>> GetPagedAuthorsAsync<T>(
+        Func<IQueryable<Author>, IQueryable<T>> mapper,
+        IPagingParams pagingParams,
+        string name = null,
+        CancellationToken cancellationToken = default)
+        {
+            var authorQuery = _context.Set<Author>().AsNoTracking();
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                authorQuery = authorQuery.Where(x => x.FullName.Contains(name));
+            }
+
+            return await mapper(authorQuery)
+                .ToPagedListAsync(pagingParams, cancellationToken);
         }
     }
 }
