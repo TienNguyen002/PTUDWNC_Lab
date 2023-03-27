@@ -1,7 +1,91 @@
-﻿@{
-    ViewData["PageTitle"] = "Bảng điều khiển";
+﻿@using TatBlog.WebApp.Extensions;
+@model AuthorFilterModel
+@{
+    ViewData["PageTitle"] = "Danh sách tác giả";
+    var authorsList = ViewBag.Items as IPagedList<Author>;
+    var filter = "";
+    if (Model != null)
+    {
+        filter = Model.GetURLQueryString();
+    }
 }
 
 <h1>
     Danh sách tác giả
 </h1>
+<partial name="_AuthorFilterPane" model="Model" />
+@if(authorsList != null && authorsList.Count > 0)
+{
+    <table class="table table-responsive table-striped">
+        <thead>
+            <tr class="text-center">
+                <th>Hình đại diện</th>
+                <th>Tên tác giả</th>
+                <th>Email</th>
+                <th>Thời gian tham gia</th>
+                <th>Xóa tác giả</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var author in authorsList)
+            {
+                <tr class="text-center">
+                    <td>
+                        @if (!string.IsNullOrWhiteSpace(author.ImageUrl))
+                        {
+                            <img src="/@author.ImageUrl"
+                                 class="rounded-circle"
+                                 style="width:80px;height:80px;object-fit:cover" />
+                        }
+                        else
+                        {
+                            <img src="~/images/icon_author.png"
+                                 class="rounded-circle object-fit-cover "
+                                 style="width:80px;height:80px;object-fit:cover" />
+                        }
+                    </td>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="Authors"
+                           asp-action="Edit"
+                           asp-route-id="@author.Id"
+                           class="text-bold">
+                            @author.FullName
+                        </a>
+                        <p class="text-muted">
+                            @author.Notes
+                        </p>
+                    </td>
+                    <td>
+                        @author.Email
+                    </td>
+                    <td>
+                        @author.JoinedDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="Posts"
+                           asp-action="Delete"
+                           asp-route-id="@author.Id"
+                           asp-route-filter="@filter"
+                           asp-route-p="@authorsList.PageNumber"
+                           asp-route-ps="@authorsList.PageSize"
+                           class="btn"
+                           onclick="return confirm('Bạn có thực sự muốn xóa tác giả này không?')">
+                            <i class="fa fa-trash" style="color:red"></i>
+                            <span style="color:red">Xóa</span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <partial name="_Pager" model="filter"></partial>
+}
+else
+{
+    <h1 class="text-danger">
+        Không tìm thấy tác giả nào
+    </h1>
+}
+

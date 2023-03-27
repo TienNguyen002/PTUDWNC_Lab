@@ -10,10 +10,12 @@ namespace TatBlog.WebApp.Controllers
     {
         private readonly IBlogRepository _blogRepository;
         private readonly IAuthorRepository _authorRepository;
+        private readonly ICommentRepository _commentRepository;
         public BlogController(IBlogRepository blogRepository, IAuthorRepository authorRepository)
         {
             _blogRepository = blogRepository;
             _authorRepository = authorRepository;
+
         }
         //Action này xử lý HTTP request đến trang chủ của
         //ứng dụng web hoặc tìm kiếm bài viết theo từ khóa
@@ -40,7 +42,7 @@ namespace TatBlog.WebApp.Controllers
         public async Task<IActionResult> Category(
             string slug,
             [FromQuery(Name = "p")] int pageNumber = 1,
-            [FromQuery(Name = "ps")] int pageSize = 2)
+            [FromQuery(Name = "ps")] int pageSize = 5)
         {
             var category = await _blogRepository.GetCategoryBySlugAsync(slug);
             var postQuery = new PostQuery()
@@ -102,7 +104,7 @@ namespace TatBlog.WebApp.Controllers
             {
                 ViewBag.Title = $"Không có bài viết nào có '{slug}'";
             }
-            if(!posts.Published)
+            if (!posts.Published)
             {
                 ViewBag.Title = $"Bài viết có '{slug}' chưa được công bố";
             }
@@ -111,8 +113,8 @@ namespace TatBlog.WebApp.Controllers
         }
 
         public async Task<IActionResult> Archive(
-            [FromQuery(Name = "month")] int month,
-            [FromQuery(Name = "year")] int year,
+            int month,
+            int year,
             [FromQuery(Name = "p")] int pageNumber = 1,
             [FromQuery(Name = "ps")] int pageSize = 10)
         {

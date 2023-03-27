@@ -20,6 +20,10 @@
         actionName = "Tag";
         slug = postQuery.TagSlug;
     }
+    else if (postQuery.PostMonth > 0 && postQuery.PostYear > 0)
+    {
+        actionName = "Archive";
+    }
 
     if (Model.PageCount > 1)
     {

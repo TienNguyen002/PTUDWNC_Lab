@@ -20,93 +20,10 @@ namespace TatBlog.Services.Blogs
             _context = context;
         }
 
-        //Tìm bài viết có tên định danh là 'slug' và được đăng vào tháng 'month' năm 'year'
-        public async Task<Post> GetPostAsync(
-            int year,
-            int month,
-            string slug,
-            CancellationToken cancellationToken = default)
-        {
-            IQueryable<Post> postsQuery = _context.Set<Post>()
-                .Include(x => x.Category)
-                .Include(x => x.Author)
-                .Include(x => x.Tags);
-            if (year > 0)
-            {
-                postsQuery = postsQuery.Where(x => x.PostedDate.Year == year);
-            }
-            if (month > 0)
-            {
-                postsQuery = postsQuery.Where(x => x.PostedDate.Month == month);
-            }
-            if (!string.IsNullOrWhiteSpace(slug))
-            {
-                postsQuery = postsQuery.Where(x => x.UrlSlug == slug);
-            }
-
-            return await postsQuery.FirstOrDefaultAsync(cancellationToken);
-        }
-
-        //Tìm Top N bài viết phổ được nhiều người xem nhất
-        public async Task<IList<Post>> GetPopularArticlesAsync(
-            int numPosts,
-            CancellationToken cancellationToken = default)
-        {
-            return await _context.Set<Post>()
-                .Include(x => x.Author)
-                .Include(x => x.Category)
-                .Where(x => x.Published)
-                .OrderByDescending(p => p.ViewCount)
-                .Take(numPosts)
-                .ToListAsync(cancellationToken);
-        }
-
-        //Kiểm tra xem tên định danh của bài viết đã có hay chưa
-        public async Task<bool> IsPostSlugExistedAsync(
-            int postId, string slug,
-            CancellationToken cancellationToken = default)
-        {
-            return await _context.Set<Post>()
-                .AnyAsync(x => x.Id != postId && x.UrlSlug == slug, cancellationToken);
-        }
-
-        //Tăng số lượt xem của một bài viết
-        public async Task IncreaseViewCountAsync(
-            int postId,
-            CancellationToken cancellationToken = default)
-        {
-            await _context.Set<Post>()
-                .Where(x => x.Id == postId)
-                .ExecuteUpdateAsync(p =>
-                    p.SetProperty(x => x.ViewCount, x => x.ViewCount + 1), cancellationToken);
-        }
-
-        //Lấy danh sách chuyên mục và số lượng bài viết nằm thuộc từng chuyên mục/chủ đề
-        public async Task<IList<CategoryItem>> GetCategoriesAsync(
-            bool showOnMenu = false,
-            CancellationToken cancellationToken = default)
-        {
-            IQueryable<Category> categories = _context.Set<Category>();
-            if (showOnMenu)
-            {
-                categories = categories.Where(x => x.ShowOnMenu);
-            }
-            return await categories
-                .OrderBy(x => x.Name)
-                .Select(x => new CategoryItem()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    UrlSlug = x.UrlSlug,
-                    Description = x.Description,
-                    ShowOnMenu = x.ShowOnMenu,
-                    PostCount = x.Posts.Count(p => p.Published)
-                })
-                .ToListAsync(cancellationToken);
-        }
-
+        #region Tag
+        #region GetPagesTagsAsync (Lấy ds Tag và phân trang theo pagingParams)
         //Lấy danh sách từ khóa/thẻ và phân trang theo các tham số pagingParams
-        public async Task<IPagedList<TagItem>> GetPagedTagsAsync(
+        public async Task<IPagedList<TagItem>> GetPagesTagsAsync(
             IPagingParams pagingParams,
             CancellationToken cancellationToken = default)
         {
@@ -122,7 +39,9 @@ namespace TatBlog.Services.Blogs
             return await tagQuery
                 .ToPagedListAsync(pagingParams, cancellationToken);
         }
+        #endregion
 
+        #region GetTagBySlugAsync (Lấy ds Tag bằng slug)
         public async Task<Tag> GetTagBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
             IQueryable<Tag> tagsQuery = _context.Set<Tag>()
@@ -133,7 +52,19 @@ namespace TatBlog.Services.Blogs
             }
             return await tagsQuery.FirstOrDefaultAsync(cancellationToken);
         }
+        #endregion
 
+        #region GetTagByIdAsync (Lấy ds Tag bằng Id)
+        public async Task<Tag> GetTagByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Tag>()
+                  .Include(c => c.Posts)
+                  .Where(c => c.Id == id)
+                  .FirstOrDefaultAsync(cancellationToken);
+        }
+        #endregion
+
+        #region GetAllTagsAsync (Lấy ds tất cả các Tag)
         public async Task<IList<TagItem>> GetAllTagsAsync(CancellationToken cancellationToken = default)
         {
             IQueryable<Tag> tags = _context.Set<Tag>();
@@ -149,7 +80,25 @@ namespace TatBlog.Services.Blogs
                 })
                 .ToListAsync(cancellationToken);
         }
+        #endregion
 
+        #region AddOrUpdateTagAsync (Thêm/Cập nhật Tag)
+        public async Task<Tag> AddOrUpdateTagAsync(Tag tag, CancellationToken cancellationToken = default)
+        {
+            if (tag.Id > 0)
+            {
+                _context.Set<Tag>().Update(tag);
+            }
+            else
+            {
+                _context.Set<Tag>().Add(tag);
+            }
+            await _context.SaveChangesAsync(cancellationToken);
+            return tag;
+        }
+        #endregion
+
+        #region DeleteTagByIdAsync (Xóa Tag theo Id)
         public async Task<bool> DeleteTagByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var tagToDelete = await _context.Set<Tag>()
@@ -164,7 +113,81 @@ namespace TatBlog.Services.Blogs
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
+        #endregion
 
+        #region CheckExistTagSlugByIdAsync (Kiểm tra slug tồn tại bằng id - Tag)
+        public async Task<bool> CheckExistTagSlugByIdAsync(int id, string slug, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Tag>()
+                .AnyAsync(c => c.Id != id && c.UrlSlug == slug, cancellationToken);
+        }
+        #endregion
+
+        #region FindTagByQueryable (Tìm Tag theo Queryable)
+        private IQueryable<Tag> FindTagByQueryable(TagQuery query)
+        {
+            IQueryable<Tag> tagQuery = _context.Set<Tag>()
+                .Include(c => c.Posts);
+            if (!string.IsNullOrWhiteSpace(query.KeyWord))
+            {
+                tagQuery = tagQuery.Where(c => c.Name.Contains(query.KeyWord)
+                || c.Description.Contains(query.KeyWord)
+                || c.UrlSlug.Contains(query.KeyWord));
+            }
+            return tagQuery;
+        }
+        #endregion
+
+        #region GetPagedTagsAsync (Lấy ds Tag và phân trang theo các tham số Paging)
+        public async Task<IPagedList<Tag>> GetPagedTagsAsync(TagQuery tagQuery,
+            int pageNumber,
+            int pageSize,
+            string sortColumn = "Id",
+            string sortOrder = "ASC",
+            CancellationToken cancellationToken = default)
+        {
+            var pagingParams = new PagingParams()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder
+            };
+            IQueryable<Tag> tagResult = FindTagByQueryable(tagQuery);
+            return await tagResult.ToPagedListAsync(pagingParams, cancellationToken);
+        }
+        #endregion
+        #endregion
+
+        #region Category
+        #region GetCategoriesAsync (Lấy ds Category và số lượng bài viết thuộc Category)
+        //Lấy danh sách chuyên mục và số lượng bài viết nằm thuộc từng chuyên mục/chủ đề
+        public async Task<IList<CategoryItem>> GetCategoriesAsync(
+            bool showOnMenu = true,
+            CancellationToken cancellationToken = default)
+        {
+            IQueryable<Category> categories = _context.Set<Category>()
+                .Where(c => c.ShowOnMenu == true);
+            //if (showOnMenu)
+            //{
+            //    categories = categories.Where(x => x.ShowOnMenu);
+            //}
+            return await categories
+                .OrderBy(x => x.Name)
+                .Select(x => new CategoryItem()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    UrlSlug = x.UrlSlug,
+                    Description = x.Description,
+                    ShowOnMenu = x.ShowOnMenu,
+                    PostCount = x.Posts.Count(/*p => p.Published*/)
+                })
+                .ToListAsync(cancellationToken);
+        }
+        #endregion
+
+        #region GetCategoryBySlugAsync (Lấy ds Category bằng Slug)
         public async Task<Category> GetCategoryBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
             IQueryable<Category> categoriesQuery = _context.Set<Category>()
@@ -175,57 +198,55 @@ namespace TatBlog.Services.Blogs
             }
             return await categoriesQuery.FirstOrDefaultAsync(cancellationToken);
         }
+        #endregion
 
+        #region GetCategoryByIdAsync (Lấy ds Category bằng Id)
         public async Task<Category> GetCategoryByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Category>()
-                .Where(c => c.Id == id)
-                .FirstOrDefaultAsync(cancellationToken);
+                  .Include(c => c.Posts)
+                  .Where(c => c.Id == id)
+                  .FirstOrDefaultAsync(cancellationToken);
         }
+        #endregion
 
+        #region CheckExistCategorySlugAsync (Kiểm tra slug tồn tại - Category)
         public Task<bool> CheckExistCategorySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
             return _context.Set<Category>()
                 .AnyAsync(c => c.UrlSlug == slug, cancellationToken);
         }
+        #endregion
 
-        public async Task<bool> CheckExistCategorySlugAsync(int id, string slug, CancellationToken cancellationToken = default)
+        #region CheckExistCategorySlugByIdAsync (Kiểm tra slug tồn tại bằng id - Category)
+        public async Task<bool> CheckExistCategorySlugByIdAsync(int id, string slug, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Category>()
                 .AnyAsync(c => c.Id != id && c.UrlSlug == slug, cancellationToken);
         }
+        #endregion
 
-        public async Task AddOrUpdateCategoryAsync(Category category, CancellationToken cancellationToken = default)
+        #region AddOrUpdateCategoryAsync (Thêm/Cập nhật Category)
+        public async Task<Category> AddOrUpdateCategoryAsync(Category category, CancellationToken cancellationToken = default)
         {
             if (category.Id > 0)
             {
-                Category categoryEdit = await _context.Set<Category>()
-                    .Where(c => c.Id == category.Id)
-                    .FirstOrDefaultAsync(cancellationToken);
-                if (categoryEdit == null)
-                { return; }
-                if (categoryEdit.UrlSlug != category.UrlSlug && CheckExistCategorySlugAsync(category.Id, category.UrlSlug).Result)
-                {
-                    await Console.Out.WriteLineAsync("Da ton tai UrlSlug");
-                    return;
-                }
-                _context.Entry(categoryEdit).CurrentValues.SetValues(category);
+                _context.Set<Category>().Update(category);
             }
             else
             {
-                if (await CheckExistCategorySlugAsync(category.Id, category.UrlSlug))
-                {
-                    await Console.Out.WriteLineAsync("Da ton tai UrlSlug");
-                    return;
-                }
                 _context.Set<Category>().Add(category);
             }
             await _context.SaveChangesAsync(cancellationToken);
+            return category;
         }
+        #endregion
 
+        #region DeleteCategoryByIdAsync (Xóa Category bằng Id)
         public async Task<bool> DeleteCategoryByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var categoryToDelete = await _context.Set<Category>()
+               .Include(c => c.Posts)
                .Where(c => c.Id == id)
                .FirstOrDefaultAsync(cancellationToken);
             if (categoryToDelete == null)
@@ -236,8 +257,38 @@ namespace TatBlog.Services.Blogs
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
+        #endregion
 
-        public async Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(
+        #region FindCategoryByQueryable (Tìm Category theo Queryable)
+        private IQueryable<Category> FindCategoryByQueryable(CategoryQuery query)
+        {
+            IQueryable<Category> categoryQuery = _context.Set<Category>()
+                .Include(c => c.Posts);
+            if (!string.IsNullOrWhiteSpace(query.KeyWord))
+            {
+                categoryQuery = categoryQuery.Where(c => c.Name.Contains(query.KeyWord)
+                || c.Description.Contains(query.KeyWord)
+                || c.UrlSlug.Contains(query.KeyWord));
+            }
+            if (query.NotShowOnMenu)
+            {
+                categoryQuery = categoryQuery.Where(c => !c.ShowOnMenu);
+            }
+            return categoryQuery;
+        }
+        #endregion
+
+        #region ChangeShowOnMenuCategoryAsync
+        public async Task ChangeShowOnMenuCategoryAsync(int id, CancellationToken cancellationToken = default)
+        {
+            await _context.Set<Category>()
+                .Where(c => c.Id == id)
+                .ExecuteUpdateAsync(c => c.SetProperty(c => c.ShowOnMenu, c => !c.ShowOnMenu), cancellationToken);
+        }
+        #endregion
+
+        #region GetPagesCategoriesAsync (Lấy ds Category và phân trang theo pagingParams)
+        public async Task<IPagedList<CategoryItem>> GetPagesCategoriesAsync(
             IPagingParams pagingParams,
             CancellationToken cancellationToken = default)
         {
@@ -253,24 +304,129 @@ namespace TatBlog.Services.Blogs
             return await categoriesQuery
                 .ToPagedListAsync(pagingParams, cancellationToken);
         }
+        #endregion
 
+        #region GetPagedCategoriesAsync (Lấy ds Category và phân trang theo các tham số của Paging)
+        public async Task<IPagedList<Category>> GetPagedCategoriesAsync(
+            CategoryQuery categoryQuery,
+            int pageNumber,
+            int pageSize,
+            string sortColumn = "Id",
+            string sortOrder = "ASC",
+            CancellationToken cancellationToken = default)
+        {
+            var pagingParams = new PagingParams()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder
+            };
+            IQueryable<Category> categoryResult = FindCategoryByQueryable(categoryQuery);
+            return await categoryResult.ToPagedListAsync(pagingParams, cancellationToken);
+        }
+        #endregion
+        #endregion
+
+        #region Post
+        #region GetPostAsync (Tìm Post theo slug và month year)
+        //Tìm bài viết có tên định danh là 'slug' và được đăng vào tháng 'month' năm 'year'
+        public async Task<Post> GetPostAsync(
+            int year,
+            int month,
+            string slug,
+            CancellationToken cancellationToken = default)
+        {
+            IQueryable<Post> postsQuery = _context.Set<Post>()
+                .Include(x => x.Category)
+                .Include(x => x.Author)
+                .Include(x => x.Tags)
+                .Include(x => x.Comments);
+            if (year > 0)
+            {
+                postsQuery = postsQuery.Where(x => x.PostedDate.Year == year);
+            }
+            if (month > 0)
+            {
+                postsQuery = postsQuery.Where(x => x.PostedDate.Month == month);
+            }
+            if (!string.IsNullOrWhiteSpace(slug))
+            {
+                postsQuery = postsQuery.Where(x => x.UrlSlug == slug);
+            }
+
+            return await postsQuery.FirstOrDefaultAsync(cancellationToken);
+        }
+        #endregion
+
+        #region GetPopularArticlesAsync (Tìm N Post dc nhiều ng xem nhất)
+        //Tìm Top N bài viết phổ được nhiều người xem nhất
+        public async Task<IList<Post>> GetPopularArticlesAsync(
+            int numPosts,
+            CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Post>()
+                .Include(x => x.Author)
+                .Include(x => x.Category)
+                .Where(x => x.Published)
+                .OrderByDescending(p => p.ViewCount)
+                .Take(numPosts)
+                .ToListAsync(cancellationToken);
+        }
+        #endregion
+
+        #region IsPostSlugExistedAsync (Kiểm tra Post đã có slug chưa)
+        //Kiểm tra xem tên định danh của bài viết đã có hay chưa
+        public async Task<bool> IsPostSlugExistedAsync(
+            int postId, string slug,
+            CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Post>()
+                .AnyAsync(x => x.Id != postId && x.UrlSlug == slug, cancellationToken);
+        }
+        #endregion
+
+        #region IncreaseViewCountAsync (Tăng lượt xem của Post)
+        //Tăng số lượt xem của một bài viết
+        public async Task IncreaseViewCountAsync(
+            int postId,
+            CancellationToken cancellationToken = default)
+        {
+            await _context.Set<Post>()
+                .Where(x => x.Id == postId)
+                .ExecuteUpdateAsync(p =>
+                    p.SetProperty(x => x.ViewCount, x => x.ViewCount + 1), cancellationToken);
+        }
+        #endregion
+
+        #region GetNRandomPostsAsync (Lấy ngẫu nhiên N Post)
+        public async Task<IList<Post>> GetNRandomPostsAsync(int numPosts, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Post>()
+                    .OrderBy(p => Guid.NewGuid())
+                    .Take(numPosts)
+                    .ToListAsync(cancellationToken);
+        }
+        #endregion
+
+        #region GetPostInNMonthAsync (Lấy ds Post theo tháng)
         public async Task<IList<PostItems>> GetPostInNMonthAsync(int n, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>()
+                .GroupBy(p => new { p.PostedDate.Year, p.PostedDate.Month })
                 .Select(p => new PostItems()
                 {
-                    Year = p.PostedDate.Year,
-                    Month = p.PostedDate.Month,
-                    PostCount = _context.Set<Post>()
-                    .Where(x => x.PostedDate == p.PostedDate)
-                    .Count()
+                    Year = p.Key.Year,
+                    Month = p.Key.Month,
+                    PostCount = p.Count()
                 })
-                .Distinct()
                 .OrderByDescending(p => p.Year).ThenByDescending(p => p.Month)
                 .Take(n)
                 .ToListAsync(cancellationToken);
         }
+        #endregion
 
+        #region GetPostInMonthAndYearAsync (Lấy ds Post theo tháng và năm)
         public async Task<IList<PostItemsByMonth>> GetPostInMonthAndYearAsync(int n, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>()
@@ -279,7 +435,8 @@ namespace TatBlog.Services.Blogs
                     Year = p.PostedDate.Year,
                     Month = p.PostedDate.Month,
                     PostCount = _context.Set<Post>()
-                    .Where(x => x.PostedDate == p.PostedDate)
+                    .Where(x => x.PostedDate.Month == p.PostedDate.Month)
+                    .Where(x => x.PostedDate.Year == p.PostedDate.Year)
                     .Count()
                 })
                 .Distinct()
@@ -287,7 +444,9 @@ namespace TatBlog.Services.Blogs
                 .Take(n)
                 .ToListAsync(cancellationToken);
         }
+        #endregion
 
+        #region GetPostByIdAsync (Lấy ds Post bằng Id)
         public async Task<Post> GetPostByIdAsync(int id, bool includeDetails = false, CancellationToken cancellationToken = default)
         {
             if (!includeDetails)
@@ -301,7 +460,9 @@ namespace TatBlog.Services.Blogs
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
+        #endregion
 
+        #region AddOrUpdatePostAsync (Thêm/Cập nhật Post)
         public async Task<Post> AddOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default)
         {
             if (post.Id > 0)
@@ -348,39 +509,36 @@ namespace TatBlog.Services.Blogs
 
             return post;
         }
+        #endregion
 
-        public async Task ChangePublishedPostAsync(int id, bool published, CancellationToken cancellationToken = default)
+        #region ChangePublishedPostAsync (Thay đổi trạng thái Publish/NotPushlish của Post)
+        public async Task ChangePublishedPostAsync(int id, CancellationToken cancellationToken = default)
         {
             await _context.Set<Post>()
                 .Where(p => p.Id == id)
-                .ExecuteUpdateAsync(p => p.SetProperty(p => p.Published, published), cancellationToken);
+                .ExecuteUpdateAsync(p => p.SetProperty(p => p.Published, p => !p.Published), cancellationToken);
         }
+        #endregion
 
-        public async Task<IList<Post>> GetNRandomPostsAsync(int numPosts, CancellationToken cancellationToken = default)
-        {
-            return await _context.Set<Post>()
-                    .OrderBy(p => Guid.NewGuid())
-                    .Take(numPosts)
-                    .ToListAsync(cancellationToken);
-        }
-
-        private IQueryable<Post> FindPostByQueryable(PostQuery query) 
+        #region Find(All)PostByQueryable (Tìm Post theo Queryable)
+        private IQueryable<Post> FindPostByQueryable(PostQuery query)
         {
             IQueryable<Post> postQuery = _context.Set<Post>()
                 .Include(p => p.Author)
                 .Include(p => p.Tags)
                 .Include(p => p.Category)
-                .Where(p => p.Published); 
-            if(!string.IsNullOrEmpty(query.KeyWord))
+                .Where(p => p.Published);
+            if (!string.IsNullOrEmpty(query.KeyWord))
             {
-                postQuery = postQuery.Where(p => p.Title.Contains(query.KeyWord) 
-                || p.Description.Contains(query.KeyWord) 
+                postQuery = postQuery.Where(p => p.Title.Contains(query.KeyWord)
+                || p.Description.Contains(query.KeyWord)
                 || p.ShortDescription.Equals(query.KeyWord)
                 || p.UrlSlug.Equals(query.KeyWord)
-                || p.Tags.Any(t => t.Name.Contains(query.KeyWord))
+                || p.Tags.Any(t => t.Name.Contains(query.KeyWord)
+                || p.Author.UrlSlug.Contains(query.KeyWord))
                 );
             }
-            if(!string.IsNullOrWhiteSpace(query.CategorySlug)) 
+            if (!string.IsNullOrWhiteSpace(query.CategorySlug))
             {
                 postQuery = postQuery
                     .Where(p => p.Category.UrlSlug == query.CategorySlug);
@@ -405,30 +563,34 @@ namespace TatBlog.Services.Blogs
                 postQuery = postQuery
                     .Where(p => p.PostedDate.Month == query.PostMonth);
             }
-            if(query.PostYear > 0)
+            if (query.PostYear > 0)
             {
                 postQuery = postQuery
                     .Where(p => p.PostedDate.Year == query.PostYear);
             }
-            if(query.CategoryId > 0)
+            if (query.CategoryId > 0)
             {
                 postQuery = postQuery
                     .Where(p => p.CategoryId == query.CategoryId);
             }
-            if(query.AuthorId > 0)
+            if (query.AuthorId > 0)
             {
                 postQuery = postQuery
                     .Where(p => p.AuthorId == query.AuthorId);
             }
-            if(!string.IsNullOrEmpty(query.CategoryName))
+            if (!string.IsNullOrEmpty(query.CategoryName))
             {
                 postQuery = postQuery
                     .Where(p => p.Category.Name == query.CategoryName);
             }
-            var tags = query.GetTag();
-            if(tags.Count > 0)
+            if (query.NotPublished)
             {
-                foreach( var tag in tags)
+                postQuery = postQuery.Where(p => !p.Published);
+            }
+            var tags = query.GetTag();
+            if (tags.Count > 0)
+            {
+                foreach (var tag in tags)
                 {
                     postQuery = postQuery.Include(p => p.Tags)
                         .Where(p => p.Tags.Any(t => t.Name == tag));
@@ -477,6 +639,11 @@ namespace TatBlog.Services.Blogs
                 postQuery = postQuery
                     .Where(p => p.PostedDate.Month == query.PostMonth);
             }
+            if (query.PostYear > 0)
+            {
+                postQuery = postQuery
+                    .Where(p => p.PostedDate.Year == query.PostYear);
+            }
             if (query.CategoryId > 0)
             {
                 postQuery = postQuery
@@ -492,6 +659,10 @@ namespace TatBlog.Services.Blogs
                 postQuery = postQuery
                     .Where(p => p.Category.Name == query.CategoryName);
             }
+            if (query.NotPublished)
+            {
+                postQuery = postQuery.Where(p => !p.Published);
+            }
             var tags = query.GetTag();
             if (tags.Count > 0)
             {
@@ -503,7 +674,9 @@ namespace TatBlog.Services.Blogs
             }
             return postQuery;
         }
+        #endregion
 
+        #region Find(All)PostByQueryAsync (Tìm ds Post bằng Query)
         public async Task<IList<Post>> FindPostByQueryAsync(PostQuery query, CancellationToken cancellationToken = default)
         {
             IQueryable<Post> posts = FindPostByQueryable(query);
@@ -515,13 +688,17 @@ namespace TatBlog.Services.Blogs
             IQueryable<Post> posts = FindAllPostByQueryable(query);
             return await posts.ToListAsync(cancellationToken);
         }
+        #endregion
 
+        #region CountPostQueryAsync (Đếm số lượng Post)
         public async Task<int> CountPostQueryAsync(PostQuery query, CancellationToken cancellationToken = default)
         {
             IQueryable<Post> posts = await Task.Run(() => FindPostByQueryable(query));
             return posts.Count();
         }
+        #endregion
 
+        #region GetPages(All)PostQueryAsync (Lấy ds Post và phân trang theo pagingParams)
         public async Task<IPagedList<Post>> GetPagesAllPostQueryAsync(PostQuery query, IPagingParams pagingParams, CancellationToken cancellationToken = default)
         {
             IQueryable<Post> posts = FindAllPostByQueryable(query);
@@ -535,10 +712,12 @@ namespace TatBlog.Services.Blogs
             return await posts
                 .ToPagedListAsync(pagingParams, cancellationToken);
         }
+        #endregion
 
-        public async Task<IPagedList<T>> GetPagesPostsAsync<T>(PostQuery query, 
-            IPagingParams pagingParams, 
-            Func<IQueryable<Post>, IQueryable<T>> mapper, 
+        #region GetPagesPostsAsync<T> (Lấy ds Post theo T)
+        public async Task<IPagedList<T>> GetPagesPostsAsync<T>(PostQuery query,
+            IPagingParams pagingParams,
+            Func<IQueryable<Post>, IQueryable<T>> mapper,
             CancellationToken cancellationToken = default)
         {
             IQueryable<Post> postsFindResultQuery = FindPostByQueryable(query);
@@ -546,11 +725,21 @@ namespace TatBlog.Services.Blogs
             return await result
               .ToPagedListAsync(pagingParams, cancellationToken);
         }
+<<<<<<< HEAD
 
         public async Task<IPagedList<Post>> GetPagedPostQueryAsync(PostQuery postQuery,
             int pageNumber,
             int pageSize,
             string sortColumn = "id",
+=======
+        #endregion
+
+        #region Get(All)PagedPostQueryAsync (Lấy ds Post và phân trang theo các tham số của Paging)
+        public async Task<IPagedList<Post>> GetPagedPostQueryAsync(PostQuery postQuery,
+            int pageNumber,
+            int pageSize,
+            string sortColumn = "Id",
+>>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default)
         {
@@ -568,7 +757,11 @@ namespace TatBlog.Services.Blogs
         public async Task<IPagedList<Post>> GetAllPagedPostQueryAsync(PostQuery postQuery,
             int pageNumber,
             int pageSize,
+<<<<<<< HEAD
             string sortColumn = "id",
+=======
+            string sortColumn = "Id",
+>>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default)
         {
@@ -582,5 +775,27 @@ namespace TatBlog.Services.Blogs
             IQueryable<Post> postResult = FindAllPostByQueryable(postQuery);
             return await postResult.ToPagedListAsync(pagingParams, cancellationToken);
         }
+<<<<<<< HEAD
+=======
+        #endregion
+
+        #region DeletePostByIdAsync (Xóa Post theo Id)
+        public async Task<bool> DeletePostByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var postDelete = await _context.Set<Post>()
+                .Include(p => p.Tags)
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
+            if (postDelete == null)
+            {
+                return false;
+            }
+            _context.Remove(postDelete);
+            await _context.SaveChangesAsync(cancellationToken);
+            return true;
+        }
+        #endregion
+        #endregion   
+>>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
     }
 }

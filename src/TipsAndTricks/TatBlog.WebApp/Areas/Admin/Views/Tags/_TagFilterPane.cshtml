@@ -1,0 +1,30 @@
+﻿@model TagFilterModel
+
+<form asp-area="Admin"
+      asp-controller="Tags"
+      asp-action="Index"
+      method="get"
+      class="row gy-2 gx-3 align-items-center">
+    <div class="col-auto">
+        <label class="visually-hidden" asp-for="KeyWord"></label>
+        <input type="text"
+               class="form-control"
+               asp-for="KeyWord"
+               placeholder="Nhập từ khóa" />
+    </div>
+    <div class="col-auto">
+        <a asp-area="Admin"
+           asp-controller="Tags"
+           asp-action="Index"
+           class="btn btn-danger">
+            Bỏ lọc
+        </a>
+        <button type="submit" class="btn btn-primary">Tìm/Lọc</button>
+        <a asp-area="Admin"
+           asp-controller="Tags"
+           asp-action="Edit"
+           class="btn btn-success">
+            Thêm mới
+        </a>
+    </div>
+</form>

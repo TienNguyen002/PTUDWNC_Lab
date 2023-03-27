@@ -15,11 +15,14 @@ namespace TatBlog.WebApp.Areas.Admin.Models
         [DisplayName("Chủ đề")]
         public int? CategoryId { get; set; }
 
+        [DisplayName("Chưa xuất bản")]
+        public bool NotPublished { get; set; }
+
         [DisplayName("Năm")]
-        public int? Year { get; set; }
+        public int? PostYear { get; set; }
 
         [DisplayName("Tháng")]
-        public int? Month { get; set; }
+        public int? PostMonth { get; set; }
 
         public IEnumerable<SelectListItem>? AuthorList { get; set; }
         public IEnumerable<SelectListItem>? CategoryList { get; set; }
