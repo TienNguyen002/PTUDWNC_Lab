@@ -199,27 +199,27 @@ namespace TatBlog.Services.Blogs
                 .AnyAsync(a => a.Id != id && a.UrlSlug == slug, cancellationToken);
         }
 
-        public async Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(
-        IPagingParams pagingParams,
-        string name = null,
-        CancellationToken cancellationToken = default)
-        {
-            return await _context.Set<Author>()
-                .AsNoTracking()
-                .WhereIf(!string.IsNullOrWhiteSpace(name),
-                    x => x.FullName.Contains(name))
-                .Select(a => new AuthorItem()
-                {
-                    Id = a.Id,
-                    FullName = a.FullName,
-                    Email = a.Email,
-                    JoinedDate = a.JoinedDate,
-                    ImageUrl = a.ImageUrl,
-                    UrlSlug = a.UrlSlug,
-                    PostsCount = a.Posts.Count(p => p.Published)
-                })
-                .ToPagedListAsync(pagingParams, cancellationToken);
-        }
+        //public async Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(
+        //IPagingParams pagingParams,
+        //string name = null,
+        //CancellationToken cancellationToken = default)
+        //{
+        //    return await _context.Set<Author>()
+        //        .AsNoTracking()
+        //        .WhereIf(!string.IsNullOrWhiteSpace(name),
+        //            x => x.FullName.Contains(name))
+        //        .Select(a => new AuthorItem()
+        //        {
+        //            Id = a.Id,
+        //            FullName = a.FullName,
+        //            Email = a.Email,
+        //            JoinedDate = a.JoinedDate,
+        //            ImageUrl = a.ImageUrl,
+        //            UrlSlug = a.UrlSlug,
+        //            PostsCount = a.Posts.Count(p => p.Published)
+        //        })
+        //        .ToPagedListAsync(pagingParams, cancellationToken);
+        //}
 
         public async Task<IPagedList<T>> GetPagedAuthorsAsync<T>(
         Func<IQueryable<Author>, IQueryable<T>> mapper,
