@@ -157,6 +157,29 @@ namespace TatBlog.Services.Blogs
             return await tagResult.ToPagedListAsync(pagingParams, cancellationToken);
         }
         #endregion
+
+        #region GetPagedTagsAsync<T>
+        public async Task<IPagedList<T>> GetPagedTagsAsync<T>(
+        TagQuery query,
+        int pageNumber,
+        int pageSize,
+        Func<IQueryable<Tag>, IQueryable<T>> mapper,
+        string sortColumn = "Id",
+        string sortOrder = "ASC",
+        CancellationToken cancellationToken = default)
+        {
+            IQueryable<Tag> tagsQuery = FindTagByQueryable(query);
+
+            IQueryable<T> result = mapper(tagsQuery);
+
+            return await result.ToPagedListAsync<T>(
+              pageNumber,
+              pageSize,
+              sortColumn,
+              sortOrder,
+              cancellationToken);
+        }
+        #endregion
         #endregion
 
         #region Category
@@ -324,6 +347,25 @@ namespace TatBlog.Services.Blogs
             };
             IQueryable<Category> categoryResult = FindCategoryByQueryable(categoryQuery);
             return await categoryResult.ToPagedListAsync(pagingParams, cancellationToken);
+        }
+        #endregion
+
+        #region GetPagedCategoriesAsync<T>
+        public async Task<IPagedList<T>> GetPagedCategoriesAsync<T>(
+      CategoryQuery query,
+      int pageNumber,
+      int pageSize,
+      Func<IQueryable<Category>, IQueryable<T>> mapper,
+      string sortColumn = "Id",
+      string sortOrder = "ASC",
+      CancellationToken cancellationToken = default)
+        {
+            IQueryable<Category> categoryFilter = FindCategoryByQueryable(query);
+
+            IQueryable<T> resultQuery = mapper(categoryFilter);
+
+            return await resultQuery
+              .ToPagedListAsync<T>(pageNumber, pageSize, sortColumn, sortOrder, cancellationToken);
         }
         #endregion
         #endregion

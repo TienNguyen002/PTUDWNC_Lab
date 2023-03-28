@@ -51,6 +51,17 @@ namespace TatBlog.Services.Blogs
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default);
         #endregion
+
+        #region GetPagedTagsAsync<T>
+        Task<IPagedList<T>> GetPagedTagsAsync<T>(
+        TagQuery query,
+        int pageNumber,
+        int pageSize,
+        Func<IQueryable<Tag>, IQueryable<T>> mapper,
+        string sortColumn = "Id",
+        string sortOrder = "ASC",
+        CancellationToken cancellationToken = default);
+        #endregion
         #endregion
 
         #region Category
@@ -103,6 +114,17 @@ namespace TatBlog.Services.Blogs
             string sortColumn = "Id",
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default);
+        #endregion
+
+        #region GetPagedCategoriesAsync<T>
+        Task<IPagedList<T>> GetPagedCategoriesAsync<T>(
+      CategoryQuery query,
+      int pageNumber,
+      int pageSize,
+      Func<IQueryable<Category>, IQueryable<T>> mapper,
+      string sortColumn = "Id",
+      string sortOrder = "ASC",
+      CancellationToken cancellationToken = default);
         #endregion
         #endregion
 

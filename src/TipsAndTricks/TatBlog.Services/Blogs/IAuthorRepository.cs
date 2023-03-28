@@ -38,12 +38,12 @@ namespace TatBlog.Services.Blogs
         Task<bool> DeleteAuthorByIdAsync(int id, CancellationToken cancellationToken = default);
 
         Task<bool> CheckExistAuthorSlugByIdAsync(int id, string slug, CancellationToken cancellationToken = default);
-        
-        //Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(
-        //IPagingParams pagingParams,
-        //string name = null,
-        //CancellationToken cancellationToken = default);
-        
+
+        Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(
+        IPagingParams pagingParams,
+        string name = null,
+        CancellationToken cancellationToken = default);
+
         Task<IPagedList<T>> GetPagedAuthorsAsync<T>(
             Func<IQueryable<Author>, IQueryable<T>> mapper,
             IPagingParams pagingParams,
