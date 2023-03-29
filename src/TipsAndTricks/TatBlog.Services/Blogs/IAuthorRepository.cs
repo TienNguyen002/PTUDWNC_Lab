@@ -31,7 +31,7 @@ namespace TatBlog.Services.Blogs
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default);
 
-        Task<Author> AddOrUpdateAuthorAsync(Author author, CancellationToken cancellationToken = default);
+        Task<bool> AddOrUpdateAuthorAsync(Author author, CancellationToken cancellationToken = default);
 
         Task<IPagedList<Author>> GetNPopularAuthors(int n, IPagingParams pagingParams, CancellationToken cancellationToken = default);
 
@@ -55,5 +55,9 @@ namespace TatBlog.Services.Blogs
           string slug,
         CancellationToken cancellationToken = default
         );
+
+        Task<bool> SetImageUrlAsync(
+        int authorId, string imageUrl,
+        CancellationToken cancellationToken = default);
     }
 }

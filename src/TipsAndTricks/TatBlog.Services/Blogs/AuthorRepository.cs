@@ -36,22 +36,20 @@ namespace TatBlog.Services.Blogs
               .AnyAsync(a => a.Id != id && a.UrlSlug == slug, cancellationToken);
         }
 
-        public async Task<Author> AddOrUpdateAuthorAsync(
+        public async Task<bool> AddOrUpdateAuthorAsync(
           Author author,
           CancellationToken cancellationToken = default)
         {
             if (author.Id > 0)
             {
                 _context.Set<Author>().Update(author);
-                _memoryCache.Remove($"author.by-id.{author.Id}");
             }
             else
             {
                 _context.Set<Author>().Add(author);
             }
-            await _context.SaveChangesAsync(cancellationToken);
 
-            return author;
+            return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
 
         public async Task<Author> GetAuthorByIdAsync(
@@ -236,6 +234,17 @@ namespace TatBlog.Services.Blogs
 
             return await mapper(authorQuery)
                 .ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
+        public async Task<bool> SetImageUrlAsync(
+        int authorId, string imageUrl,
+        CancellationToken cancellationToken = default)
+        {
+            return await _context.Authors
+                .Where(x => x.Id == authorId)
+                .ExecuteUpdateAsync(x =>
+                    x.SetProperty(a => a.ImageUrl, a => imageUrl),
+                    cancellationToken) > 0;
         }
     }
 }
