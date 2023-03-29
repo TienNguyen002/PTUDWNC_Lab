@@ -2,6 +2,7 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using System.ComponentModel.DataAnnotations;
 using TatBlog.Core.Collections;
 using TatBlog.Core.DTO;
@@ -9,6 +10,7 @@ using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
 using TatBlog.WebApi.Extensions;
+using TatBlog.WebApi.Filters;
 using TatBlog.WebApi.Models;
 
 namespace TatBlog.WebApi.Endpoints
@@ -31,7 +33,7 @@ namespace TatBlog.WebApi.Endpoints
               .Produces(404);
 
 
-            routeGroupBuilder.MapGet("/{id:int}/posts", GetPostsByAuthorId)
+            routeGroupBuilder.MapGet("/{id:int}/postsList", GetPostsByAuthorId)
               .WithName("GetPostsByAuthorId")
               .Produces<PaginationResult<PostDto>>();
 
@@ -43,6 +45,7 @@ namespace TatBlog.WebApi.Endpoints
 
             routeGroupBuilder.MapPost("/", AddAuthor)
               .WithName("AddAuthor")
+              .AddEndpointFilter<ValidatorFilter<AuthorEditModel>>()
               .Produces(201)
               .Produces(400)
               .Produces(409);
@@ -56,6 +59,7 @@ namespace TatBlog.WebApi.Endpoints
 
             routeGroupBuilder.MapPut("/{id:int}", UpdateAuthor)
               .WithName("UpdateAnAuthor")
+              .AddEndpointFilter<ValidatorFilter<AuthorEditModel>>()
               .Produces(204)
               .Produces(400)
               .Produces(409);
@@ -64,6 +68,10 @@ namespace TatBlog.WebApi.Endpoints
               .WithName("DeleteAnAuthor")
               .Produces(204)
               .Produces(404);
+
+            routeGroupBuilder.MapGet("/best/{limit:int}", GetNPopularAuthors)
+                .WithName("GetNPopularAuthors")
+                .Produces<PaginationResult<AuthorItem>>();
 
             return app;
         }
@@ -134,17 +142,11 @@ namespace TatBlog.WebApi.Endpoints
 
         private static async Task<IResult> AddAuthor(
             AuthorEditModel model,
-            IValidator<AuthorEditModel> validator,
             IAuthorRepository authorRepository,
             IMapper mapper,
             ILogger<IResult> logger)
         {
-            var validationResult = await validator.ValidateAsync(model);
-            if (!validationResult.IsValid) 
-            {
-                 return Results.BadRequest(validationResult.Errors.ToResponse());
-            }
-            if(await authorRepository.IsAuthorExistBySlugAsync(0, model.UrlSlug))
+            if (await authorRepository.IsAuthorExistBySlugAsync(0, model.UrlSlug))
             {
                 return Results.Conflict($"Slug '{model.UrlSlug}' đã được sử dụng");
             }
@@ -177,15 +179,9 @@ namespace TatBlog.WebApi.Endpoints
 
         private static async Task<IResult> UpdateAuthor(
           int id, AuthorEditModel model,
-          IValidator<AuthorEditModel> validator,
           IAuthorRepository authorRepository,
           IMapper mapper)
-        {
-            var validationResult = await validator.ValidateAsync(model);
-            if (!validationResult.IsValid)
-            {
-                return Results.BadRequest(validationResult.Errors.ToResponse());
-            }
+        {            
             if (await authorRepository.IsAuthorExistBySlugAsync(0, model.UrlSlug))
             {
                 return Results.Conflict($"Slug '{model.UrlSlug}' đã được sử dụng");
@@ -206,6 +202,16 @@ namespace TatBlog.WebApi.Endpoints
             return await authorRepository.DeleteAuthorByIdAsync(id)
               ? Results.NoContent()
               : Results.NotFound($"Không tìm thấy tác giả có id = {id}");
+        }
+
+        private static async Task<IResult> GetNPopularAuthors(int limit,
+            [AsParameters] PagingModel pagingModel,
+            IAuthorRepository authorRepository)
+        {
+            var popularAuthors = await authorRepository.GetNPopularAuthorAsync<AuthorItem>(limit, pagingModel,
+                popularAuthors => popularAuthors.ProjectToType<AuthorItem>());
+            var paginationResult = new PaginationResult<AuthorItem>(popularAuthors);
+            return Results.Ok(paginationResult);
         }
     }
 }

@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\uploads\pictures\" />
-    <Folder Include="Filters\" />
     <Folder Include="wwwroot\uploads\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
