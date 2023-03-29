@@ -2,6 +2,7 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using TatBlog.Core.Collections;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
@@ -72,13 +73,8 @@ namespace TatBlog.WebApi.Endpoints
           IAuthorRepository authorRepository,
           ILogger<IResult> logger)
         {
-            logger.LogInformation("Lấy DS tác giả");
             var authors = await authorRepository.GetPagedAuthorsAsync(model, model.Name);
-
-            logger.LogInformation("Tạo DS AuthorItem");
             var paginationResult = new PaginationResult<AuthorItem>(authors);
-
-            logger.LogInformation("Trả về kết quả");
             return Results.Ok(paginationResult);
         }
 
@@ -101,15 +97,12 @@ namespace TatBlog.WebApi.Endpoints
           IBlogRepository blogRepository,
           ILogger<IResult> logger)
         {
-            logger.LogInformation("Tạo điều kiện truy vấn");
             var postQuery = new PostQuery()
             {
                 AuthorId = id,
                 PublishedOnly = true,
             };
-
-            logger.LogInformation("Lấy DS Post và Map qua PostDto");
-            var posts = await blogRepository.GetPagedPostsAsync<PostDto>(
+            var posts = await blogRepository.GetPagedPostsAsync(
               postQuery, pagingModel,
               posts => posts.ProjectToType<PostDto>());
 
@@ -124,15 +117,12 @@ namespace TatBlog.WebApi.Endpoints
             IBlogRepository blogRepository,
             ILogger<IResult> logger)
         {
-            logger.LogInformation("Tạo điều kiện truy vấn");
             var postQuery = new PostQuery()
             {
                 AuthorSlug = slug,
                 PublishedOnly = true,
             };
-
-            logger.LogInformation("Lấy DS Post và Map qua PostDto");
-            var posts = await blogRepository.GetPagedPostsAsync<PostDto>(
+            var posts = await blogRepository.GetPagedPostsAsync(
               postQuery, pagingModel,
               posts => posts.ProjectToType<PostDto>());
 
@@ -144,24 +134,26 @@ namespace TatBlog.WebApi.Endpoints
 
         private static async Task<IResult> AddAuthor(
             AuthorEditModel model,
+            IValidator<AuthorEditModel> validator,
             IAuthorRepository authorRepository,
             IMapper mapper,
             ILogger<IResult> logger)
         {
-            logger.LogInformation("Kiểm tra dữ liệu");
-            if (await authorRepository
-              .IsAuthorExistBySlugAsync(0, model.UrlSlug))
+            var validationResult = await validator.ValidateAsync(model);
+            if (!validationResult.IsValid) 
             {
-                return Results.Conflict(
-                  $"Slug '{model.UrlSlug}' đã được sử dụng");
+                 return Results.BadRequest(validationResult.Errors.ToResponse());
             }
-
+            if(await authorRepository.IsAuthorExistBySlugAsync(0, model.UrlSlug))
+            {
+                return Results.Conflict($"Slug '{model.UrlSlug}' đã được sử dụng");
+            }
             var author = mapper.Map<Author>(model);
             await authorRepository.AddOrUpdateAuthorAsync(author);
 
-            logger.LogInformation("Trả về Author vừa tạo");
-            return Results.CreatedAtRoute("GetAuthorDetails", new { author.Id },
-              mapper.Map<AuthorItem>(author));
+            return Results.CreatedAtRoute(
+                "GetAuthorDetails", new { author.Id },
+                mapper.Map<AuthorItem>(author));
         }
 
         private static async Task<IResult> SetAuthorPicture(
@@ -171,7 +163,6 @@ namespace TatBlog.WebApi.Endpoints
            IMediaManager mediaManager,
            ILogger<IResult> logger)
         {
-            logger.LogInformation("Lưu hình");
             var imageUrl = await mediaManager.SaveFileAsync(
               imagefile.OpenReadStream(),
               imagefile.FileName, imagefile.ContentType);
@@ -186,14 +177,18 @@ namespace TatBlog.WebApi.Endpoints
 
         private static async Task<IResult> UpdateAuthor(
           int id, AuthorEditModel model,
+          IValidator<AuthorEditModel> validator,
           IAuthorRepository authorRepository,
           IMapper mapper)
         {
-            if (await authorRepository
-              .IsAuthorExistBySlugAsync(id, model.UrlSlug))
+            var validationResult = await validator.ValidateAsync(model);
+            if (!validationResult.IsValid)
             {
-                return Results.Conflict(
-                  $"Slug '{model.UrlSlug}' đã được sử dụng");
+                return Results.BadRequest(validationResult.Errors.ToResponse());
+            }
+            if (await authorRepository.IsAuthorExistBySlugAsync(0, model.UrlSlug))
+            {
+                return Results.Conflict($"Slug '{model.UrlSlug}' đã được sử dụng");
             }
 
             var author = mapper.Map<Author>(model);
