@@ -51,6 +51,17 @@ namespace TatBlog.Services.Blogs
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default);
         #endregion
+
+        #region GetPagedTagsAsync<T>
+        Task<IPagedList<T>> GetPagedTagsAsync<T>(
+        TagQuery query,
+        int pageNumber,
+        int pageSize,
+        Func<IQueryable<Tag>, IQueryable<T>> mapper,
+        string sortColumn = "Id",
+        string sortOrder = "ASC",
+        CancellationToken cancellationToken = default);
+        #endregion
         #endregion
 
         #region Category
@@ -103,6 +114,17 @@ namespace TatBlog.Services.Blogs
             string sortColumn = "Id",
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default);
+        #endregion
+
+        #region GetPagedCategoriesAsync<T>
+        Task<IPagedList<T>> GetPagedCategoriesAsync<T>(
+      CategoryQuery query,
+      int pageNumber,
+      int pageSize,
+      Func<IQueryable<Category>, IQueryable<T>> mapper,
+      string sortColumn = "Id",
+      string sortOrder = "ASC",
+      CancellationToken cancellationToken = default);
         #endregion
         #endregion
 
@@ -179,16 +201,8 @@ namespace TatBlog.Services.Blogs
         Task<IPagedList<Post>> GetPagesAllPostQueryAsync(PostQuery postQuery, IPagingParams pagingParams, CancellationToken cancellationToken = default);
         #endregion
 
-        #region GetPagesPostsAsync<T> (Lấy ds Post theo T)
-        Task<IPagedList<T>> GetPagesPostsAsync<T>(PostQuery postQuery, IPagingParams pagingParams, Func<IQueryable<Post>, IQueryable<T>> mapper, CancellationToken cancellationToken = default);
-<<<<<<< HEAD
-        
-        Task<IPagedList<Post>> GetPagedPostQueryAsync(PostQuery postQuery, 
-            int pageNumber, 
-            int pageSize, 
-            string sortColumn = "Id", 
-            string sortOrder = "ASC", 
-=======
+        #region GetPagedPostsAsync<T> (Lấy ds Post theo T)
+        Task<IPagedList<T>> GetPagedPostsAsync<T>(PostQuery postQuery, IPagingParams pagingParams, Func<IQueryable<Post>, IQueryable<T>> mapper, CancellationToken cancellationToken = default);
         #endregion
 
         #region Get(All)PagedPostQueryAsync (Lấy ds Post và phân trang theo các tham số của Paging)
@@ -197,7 +211,6 @@ namespace TatBlog.Services.Blogs
             int pageSize,
             string sortColumn = "Id",
             string sortOrder = "ASC",
->>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
             CancellationToken cancellationToken = default);
 
         Task<IPagedList<Post>> GetAllPagedPostQueryAsync(PostQuery postQuery,
@@ -206,14 +219,11 @@ namespace TatBlog.Services.Blogs
             string sortColumn = "Id",
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default);
-<<<<<<< HEAD
-=======
         #endregion
 
         #region DeletePostByIdAsync (Xóa Post theo Id)
         Task<bool> DeletePostByIdAsync(int id, CancellationToken cancellationToken = default);
         #endregion
         #endregion
->>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
     }
 }
