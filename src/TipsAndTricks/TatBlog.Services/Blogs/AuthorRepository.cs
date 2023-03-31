@@ -189,6 +189,7 @@ namespace TatBlog.Services.Blogs
                     JoinedDate = a.JoinedDate,
                     ImageUrl = a.ImageUrl,
                     UrlSlug = a.UrlSlug,
+                    Notes = a.Notes,
                     PostsCount = a.Posts.Count(p => p.Published)
                 })
                 .ToPagedListAsync(pagingParams, cancellationToken);

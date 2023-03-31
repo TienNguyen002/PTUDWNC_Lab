@@ -54,7 +54,7 @@ namespace TatBlog.Services.Blogs
             CancellationToken cancellationToken = default);
         #endregion
 
-        #region GetPagedAuthorsAsync <AuthorItem> (Lấy ds tác giả theo các tham số paging)
+        #region GetPagedAuthorsAsync <AuthorItem> (Lấy ds tác giả with name theo các tham số paging)
         Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(
             IPagingParams pagingParams,
             string name = null,

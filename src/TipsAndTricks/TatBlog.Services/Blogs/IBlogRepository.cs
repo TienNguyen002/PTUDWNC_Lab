@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TatBlog.Core;
 using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
@@ -72,12 +73,21 @@ namespace TatBlog.Services.Blogs
             CancellationToken cancellationToken = default);
         #endregion
 
+        #region IsCategoryExistBySlugAsync (Kiểm tra slug tồn tại của chủ đề)
+        Task<bool> IsCategoryExistBySlugAsync(int id, string slug, CancellationToken cancellationToken = default
+        );
+        #endregion
+
         #region GetCategoryBySlugAsync (Lấy ds Category bằng Slug)
         Task<Category> GetCategoryBySlugAsync(string slug, CancellationToken cancellationToken = default);
         #endregion
 
         #region GetCategoryByIdAsync (Lấy ds Category bằng Id)
         Task<Category> GetCategoryByIdAsync(int id, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region GetCachedCategoryByIdAsync
+        Task<Category> GetCachedCategoryByIdAsync(int categoryId);
         #endregion
 
         #region CheckExistCategorySlugAsync (Kiểm tra slug tồn tại - Category)
@@ -89,7 +99,7 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region AddOrUpdateCategoryAsync (Thêm/Cập nhật Category)
-        Task<Category> AddOrUpdateCategoryAsync(Category category, CancellationToken cancellationToken = default);
+        Task<bool> AddOrUpdateCategoryAsync(Category category, CancellationToken cancellationToken = default);
         #endregion
 
         #region DeleteCategoryByIdAsync (Xóa Category bằng Id)
@@ -103,6 +113,13 @@ namespace TatBlog.Services.Blogs
         #region GetPagesCategoriesAsync (Lấy ds Category và phân trang theo pagingParams)
         Task<IPagedList<CategoryItem>> GetPagesCategoriesAsync(
             IPagingParams pagingParams,
+            CancellationToken cancellationToken = default);
+        #endregion
+
+        #region GetPagedCategoriesAsync <CategoryItem> (Lấy ds Category và phân trang theo các tham số của Paging)
+        Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(
+            IPagingParams pagingParams,
+            string name = null,
             CancellationToken cancellationToken = default);
         #endregion
 

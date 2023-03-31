@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using SlugGenerator;
 using TatBlog.Core;
 using TatBlog.Core.Contracts;
@@ -14,10 +15,11 @@ namespace TatBlog.Services.Blogs
     public class BlogRepository : IBlogRepository
     {
         private readonly BlogDbContext _context;
-
-        public BlogRepository(BlogDbContext context)
+        private readonly IMemoryCache _memoryCache;
+        public BlogRepository(BlogDbContext context, IMemoryCache memoryCache)
         {
             _context = context;
+            _memoryCache = memoryCache;
         }
 
         #region Tag
@@ -210,6 +212,18 @@ namespace TatBlog.Services.Blogs
         }
         #endregion
 
+        #region IsCategoryExistBySlugAsync (Kiểm tra slug tồn tại của chủ đề)
+        public async Task<bool> IsCategoryExistBySlugAsync(
+            int id, 
+            string slug, 
+            CancellationToken cancellationToken = default
+        )
+        {
+            return await _context.Set<Category>()
+              .AnyAsync(c => c.Id != id && c.UrlSlug == slug, cancellationToken);
+        }
+        #endregion
+
         #region GetCategoryBySlugAsync (Lấy ds Category bằng Slug)
         public async Task<Category> GetCategoryBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
@@ -233,6 +247,19 @@ namespace TatBlog.Services.Blogs
         }
         #endregion
 
+        #region GetCachedCategoryByIdAsync
+        public async Task<Category> GetCachedCategoryByIdAsync(int categoryId)
+        {
+            return await _memoryCache.GetOrCreateAsync(
+                $"category.by-id.{categoryId}",
+                async (entry) =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+                    return await GetCategoryByIdAsync(categoryId);
+                });
+        }
+        #endregion
+
         #region CheckExistCategorySlugAsync (Kiểm tra slug tồn tại - Category)
         public Task<bool> CheckExistCategorySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
@@ -250,7 +277,7 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region AddOrUpdateCategoryAsync (Thêm/Cập nhật Category)
-        public async Task<Category> AddOrUpdateCategoryAsync(Category category, CancellationToken cancellationToken = default)
+        public async Task<bool> AddOrUpdateCategoryAsync(Category category, CancellationToken cancellationToken = default)
         {
             if (category.Id > 0)
             {
@@ -260,8 +287,7 @@ namespace TatBlog.Services.Blogs
             {
                 _context.Set<Category>().Add(category);
             }
-            await _context.SaveChangesAsync(cancellationToken);
-            return category;
+            return await _context.SaveChangesAsync(cancellationToken) > 0;
         }
         #endregion
 
@@ -325,6 +351,29 @@ namespace TatBlog.Services.Blogs
                     PostCount = x.Posts.Count(p => p.Published)
                 });
             return await categoriesQuery
+                .ToPagedListAsync(pagingParams, cancellationToken);
+        }
+        #endregion
+
+        #region GetPagedCategoriesAsync <CategoryItem> (Lấy ds Category with name và phân trang theo các tham số của Paging)
+        public async Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(
+            IPagingParams pagingParams,
+            string name = null,
+            CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Category>()
+                .AsNoTracking()
+                .WhereIf(!string.IsNullOrWhiteSpace(name),
+                    x => x.Name.Contains(name))
+                .Select(a => new CategoryItem()
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    Description = a.Description,
+                    UrlSlug = a.UrlSlug,
+                    ShowOnMenu = a.ShowOnMenu,
+                    PostCount = a.Posts.Count(p => p.Published)
+                })
                 .ToPagedListAsync(pagingParams, cancellationToken);
         }
         #endregion

@@ -4,6 +4,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using TatBlog.Core.Collections;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
@@ -24,79 +25,70 @@ namespace TatBlog.WebApi.Endpoints
 
             routeGroupBuilder.MapGet("/", GetAuthors)
               .WithName("GetAuthors")
-              .Produces<PaginationResult<AuthorItem>>();
+              .Produces<ApiResponse<PaginationResult<AuthorItem>>>();
 
 
             routeGroupBuilder.MapGet("/{id:int}", GetAuthorDetails)
               .WithName("GetAuthorDetails")
-              .Produces<AuthorItem>()
-              .Produces(404);
+              .Produces<ApiResponse<AuthorItem>>();
 
 
             routeGroupBuilder.MapGet("/{id:int}/postsList", GetPostsByAuthorId)
               .WithName("GetPostsByAuthorId")
-              .Produces<PaginationResult<PostDto>>();
+              .Produces<ApiResponse<PaginationResult<PostDto>>>();
 
 
             routeGroupBuilder.MapGet("/{slug:regex(^[a-z0-9_-]+$)}/posts", GetPostsByAuthorSlug)
               .WithName("GetPostsByAuthorSlug")
-              .Produces<PaginationResult<PostDto>>();
+              .Produces<ApiResponse<PaginationResult<PostDto>>>();
 
 
             routeGroupBuilder.MapPost("/", AddAuthor)
               .WithName("AddAuthor")
               .AddEndpointFilter<ValidatorFilter<AuthorEditModel>>()
-              .Produces(201)
-              .Produces(400)
-              .Produces(409);
+              .Produces<ApiResponse<AuthorItem>>();
 
             routeGroupBuilder.MapPost("/{id:int}/avatar", SetAuthorPicture)
               .WithName("SetAuthorPicture")
               .Accepts<IFormFile>("multipart/form-data")
-              .Produces<string>()
-              .Produces(400);
+              .Produces<ApiResponse<string>>();
 
 
             routeGroupBuilder.MapPut("/{id:int}", UpdateAuthor)
-              .WithName("UpdateAnAuthor")
+              .WithName("UpdateAuthor")
               .AddEndpointFilter<ValidatorFilter<AuthorEditModel>>()
-              .Produces(204)
-              .Produces(400)
-              .Produces(409);
+              .Produces<ApiResponse<string>>();
 
             routeGroupBuilder.MapDelete("/{id:int}", DeleteAuthor)
-              .WithName("DeleteAnAuthor")
-              .Produces(204)
-              .Produces(404);
+              .WithName("DeleteAuthor")
+              .Produces<ApiResponse<string>>();
 
             routeGroupBuilder.MapGet("/best/{limit:int}", GetNPopularAuthors)
                 .WithName("GetNPopularAuthors")
-                .Produces<PaginationResult<AuthorItem>>();
+                .Produces<ApiResponse<PaginationResult<AuthorItem>>>();
 
             return app;
         }
 
         private static async Task<IResult> GetAuthors(
           [AsParameters] AuthorFilterModel model,
-          IAuthorRepository authorRepository,
-          ILogger<IResult> logger)
+          IAuthorRepository authorRepository)
         {
             var authors = await authorRepository.GetPagedAuthorsAsync(model, model.Name);
             var paginationResult = new PaginationResult<AuthorItem>(authors);
-            return Results.Ok(paginationResult);
+            return Results.Ok(ApiResponse.Success(paginationResult));
         }
 
         private static async Task<IResult> GetAuthorDetails(
           int id,
           IAuthorRepository authorRepository,
-          IMapper mapper,
-          ILogger<IResult> logger)
+          IMapper mapper)
         {
             var author = await authorRepository.GetCachedAuthorByIdAsync(id);
 
             return author == null
-              ? Results.NotFound($"Không tìm thấy tác giả có mã số {id}")
-              : Results.Ok(mapper.Map<AuthorItem>(author));
+              ? Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, $"Không tìm thấy tác giả có mã số {id}"))
+              : Results.Ok(ApiResponse.Success(mapper.Map<AuthorItem>(author)));
         }
 
         private static async Task<IResult> GetPostsByAuthorId(
@@ -116,7 +108,7 @@ namespace TatBlog.WebApi.Endpoints
 
             var paginationResult = new PaginationResult<PostDto>(posts);
 
-            return Results.Ok(paginationResult);
+            return Results.Ok(ApiResponse.Success(paginationResult));
         }
 
         private static async Task<IResult> GetPostsByAuthorSlug(
@@ -136,8 +128,7 @@ namespace TatBlog.WebApi.Endpoints
 
             var paginationResult = new PaginationResult<PostDto>(posts);
 
-            logger.LogInformation("Trả về kết quả");
-            return Results.Ok(paginationResult);
+            return Results.Ok(ApiResponse.Success(paginationResult));
         }
 
         private static async Task<IResult> AddAuthor(
@@ -148,14 +139,14 @@ namespace TatBlog.WebApi.Endpoints
         {
             if (await authorRepository.IsAuthorExistBySlugAsync(0, model.UrlSlug))
             {
-                return Results.Conflict($"Slug '{model.UrlSlug}' đã được sử dụng");
+                return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict, 
+                    $"Slug '{model.UrlSlug}' đã được sử dụng"));
             }
             var author = mapper.Map<Author>(model);
             await authorRepository.AddOrUpdateAuthorAsync(author);
 
-            return Results.CreatedAtRoute(
-                "GetAuthorDetails", new { author.Id },
-                mapper.Map<AuthorItem>(author));
+            return Results.Ok(ApiResponse.Success(
+                mapper.Map<AuthorItem>(author), HttpStatusCode.Created));
         }
 
         private static async Task<IResult> SetAuthorPicture(
@@ -171,10 +162,10 @@ namespace TatBlog.WebApi.Endpoints
 
             if (string.IsNullOrWhiteSpace(imageUrl))
             {
-                return Results.BadRequest("Không lưu được tập tin");
+                return Results.Ok(ApiResponse.Fail(HttpStatusCode.BadRequest, "Không lưu được tập tin"));
             }
             await authorRepository.SetImageUrlAsync(id, imageUrl);
-            return Results.Ok(imageUrl);
+            return Results.Ok(ApiResponse.Success(imageUrl));
         }
 
         private static async Task<IResult> UpdateAuthor(
@@ -184,15 +175,16 @@ namespace TatBlog.WebApi.Endpoints
         {            
             if (await authorRepository.IsAuthorExistBySlugAsync(0, model.UrlSlug))
             {
-                return Results.Conflict($"Slug '{model.UrlSlug}' đã được sử dụng");
+                return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
+                    $"Slug '{model.UrlSlug}' đã được sử dụng"));
             }
 
             var author = mapper.Map<Author>(model);
             author.Id = id;
 
             return await authorRepository.AddOrUpdateAuthorAsync(author)
-              ? Results.NoContent()
-              : Results.NotFound();
+              ? Results.Ok(ApiResponse.Success("Cập nhật tác giả thành công", HttpStatusCode.NoContent))
+              : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, $"Không tìm thấy tác giả có id = {id}"));
         }
 
         private static async Task<IResult> DeleteAuthor(
@@ -200,8 +192,8 @@ namespace TatBlog.WebApi.Endpoints
           IAuthorRepository authorRepository)
         {
             return await authorRepository.DeleteAuthorByIdAsync(id)
-              ? Results.NoContent()
-              : Results.NotFound($"Không tìm thấy tác giả có id = {id}");
+              ? Results.Ok(ApiResponse.Success("Xóa tác giả thành công", HttpStatusCode.NoContent))
+              : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, $"Không tìm thấy tác giả có id = {id}"));
         }
 
         private static async Task<IResult> GetNPopularAuthors(int limit,
@@ -211,7 +203,7 @@ namespace TatBlog.WebApi.Endpoints
             var popularAuthors = await authorRepository.GetNPopularAuthorAsync<AuthorItem>(limit, pagingModel,
                 popularAuthors => popularAuthors.ProjectToType<AuthorItem>());
             var paginationResult = new PaginationResult<AuthorItem>(popularAuthors);
-            return Results.Ok(paginationResult);
+            return Results.Ok(ApiResponse.Success(paginationResult));
         }
     }
 }

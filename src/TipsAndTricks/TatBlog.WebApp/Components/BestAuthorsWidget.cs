@@ -19,7 +19,7 @@ namespace TatBlog.WebApp.Components
         };
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var authors = await _authorRepository.GetNPopularAuthors(4, pagingParams);
+            var authors = await _authorRepository.GetNPopularAuthorAsync(4, pagingParams);
             return View(authors);
         }
     }

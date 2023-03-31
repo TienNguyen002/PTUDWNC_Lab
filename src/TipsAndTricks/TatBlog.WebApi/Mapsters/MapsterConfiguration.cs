@@ -19,7 +19,12 @@ namespace TatBlog.WebApi.Mapsters
             config.NewConfig<Category, CategoryItem>()
                 .Map(desc => desc.PostCount,
                     src => src.Posts == null ? 0 : src.Posts.Count);
-            
+
+            config.NewConfig<Tag, TagDto>();
+            config.NewConfig<Tag, TagItem>()
+                .Map(desc => desc.PostCount,
+                    src => src.Posts == null ? 0 : src.Posts.Count);
+
             config.NewConfig<Post, PostDto>();
             config.NewConfig<Post, PostDetail>();
         }

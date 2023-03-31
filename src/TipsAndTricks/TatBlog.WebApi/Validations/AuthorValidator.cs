@@ -26,6 +26,7 @@ namespace TatBlog.WebApi.Validations
             RuleFor(a => a.Email)
                 .NotEmpty()
                 .WithMessage("Email không được để trống")
+                .EmailAddress()
                 .MaximumLength(100)
                 .WithMessage("Email tối đa 100 ký tự");
 
