@@ -1,10 +1,9 @@
-﻿namespace TatBlog.WebApi.Models
+﻿namespace TatBlog.WebApi.Models.Tag
 {
-    public class CategoryEditModel
+    public class TagEditModel
     {
         public string Name { get; set; }
         public string UrlSlug { get; set; }
         public string Description { get; set; }
-        public bool ShowOnMenu { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Mapster;
 using TatBlog.Core.Contracts;
-using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Post;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
 using TatBlog.Data.Seeders;

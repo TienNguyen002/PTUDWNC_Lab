@@ -5,19 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TatBlog.Core.DTO
+namespace TatBlog.Core.DTO.Post
 {
     public class PostItemsByMonth
     {
-        public int Year { get; set; }
-        public int Month { get; set; }
+        public int PostYear { get; set; }
+        public int PostMonth { get; set; }
         public int PostCount { get; set; }
         public string MonthName
         {
             get => CultureInfo
               .CurrentCulture
               .DateTimeFormat
-              .GetMonthName(Month);
+              .GetMonthName(PostMonth);
         }
     }
 }

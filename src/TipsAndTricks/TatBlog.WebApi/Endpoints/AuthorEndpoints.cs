@@ -6,13 +6,16 @@ using Microsoft.Extensions.Hosting;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TatBlog.Core.Collections;
-using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Author;
+using TatBlog.Core.DTO.Post;
 using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
 using TatBlog.WebApi.Extensions;
 using TatBlog.WebApi.Filters;
 using TatBlog.WebApi.Models;
+using TatBlog.WebApi.Models.Author;
+using TatBlog.WebApi.Models.Post;
 
 namespace TatBlog.WebApi.Endpoints
 {
@@ -27,21 +30,17 @@ namespace TatBlog.WebApi.Endpoints
               .WithName("GetAuthors")
               .Produces<ApiResponse<PaginationResult<AuthorItem>>>();
 
-
             routeGroupBuilder.MapGet("/{id:int}", GetAuthorDetails)
               .WithName("GetAuthorDetails")
               .Produces<ApiResponse<AuthorItem>>();
-
 
             routeGroupBuilder.MapGet("/{id:int}/postsList", GetPostsByAuthorId)
               .WithName("GetPostsByAuthorId")
               .Produces<ApiResponse<PaginationResult<PostDto>>>();
 
-
             routeGroupBuilder.MapGet("/{slug:regex(^[a-z0-9_-]+$)}/posts", GetPostsByAuthorSlug)
               .WithName("GetPostsByAuthorSlug")
               .Produces<ApiResponse<PaginationResult<PostDto>>>();
-
 
             routeGroupBuilder.MapPost("/", AddAuthor)
               .WithName("AddAuthor")
@@ -52,7 +51,6 @@ namespace TatBlog.WebApi.Endpoints
               .WithName("SetAuthorPicture")
               .Accepts<IFormFile>("multipart/form-data")
               .Produces<ApiResponse<string>>();
-
 
             routeGroupBuilder.MapPut("/{id:int}", UpdateAuthor)
               .WithName("UpdateAuthor")

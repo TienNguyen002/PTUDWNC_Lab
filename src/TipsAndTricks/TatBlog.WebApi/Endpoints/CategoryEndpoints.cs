@@ -7,12 +7,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TatBlog.Core.Collections;
 using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Author;
+using TatBlog.Core.DTO.Category;
+using TatBlog.Core.DTO.Post;
 using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
 using TatBlog.WebApi.Extensions;
 using TatBlog.WebApi.Filters;
 using TatBlog.WebApi.Models;
+using TatBlog.WebApi.Models.Category;
+using TatBlog.WebApi.Models.Post;
 
 namespace TatBlog.WebApi.Endpoints
 {
@@ -27,21 +32,17 @@ namespace TatBlog.WebApi.Endpoints
               .WithName("GetCategories")
               .Produces<ApiResponse<PaginationResult<CategoryItem>>>();
 
-
             routeGroupBuilder.MapGet("/{id:int}", GetCategoryDetails)
               .WithName("GetCategoryDetails")
               .Produces<ApiResponse<CategoryItem>>();
-
 
             routeGroupBuilder.MapGet("/{id:int}/postsList", GetPostsByCategoryId)
               .WithName("GetPostsByCategoryId")
               .Produces<ApiResponse<PaginationResult<PostDto>>>();
 
-
             routeGroupBuilder.MapGet("/{slug:regex(^[a-z0-9_-]+$)}/posts", GetPostsByCategorySlug)
               .WithName("GetPostsByCategorySlug")
               .Produces<ApiResponse<PaginationResult<PostDto>>>();
-
 
             routeGroupBuilder.MapPost("/", AddCategory)
               .WithName("AddCategory")

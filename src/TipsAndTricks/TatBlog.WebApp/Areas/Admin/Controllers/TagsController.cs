@@ -2,7 +2,7 @@
 using FluentValidation.AspNetCore;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
-using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Tag;
 using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.WebApp.Areas.Admin.Models;
@@ -31,7 +31,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             [FromQuery(Name = "ps")] int pageSize = 10)
         {
             var tagQuery = _mapper.Map<TagQuery>(model);
-            ViewBag.Items = await _blogRepository.GetPagedTagsAsync(tagQuery: tagQuery, pageNumber: pageNumber, pageSize: pageSize);
+            ViewBag.Items = await _blogRepository.GetPagesTagsAsync(tagQuery: tagQuery, pageNumber: pageNumber, pageSize: pageSize);
             ViewBag.TagQuery = tagQuery;
             return View(model);
         }

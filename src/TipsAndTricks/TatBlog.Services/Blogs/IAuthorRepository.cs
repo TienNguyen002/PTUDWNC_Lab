@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TatBlog.Core.Contracts;
-using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Author;
 using TatBlog.Core.Entities;
 
 namespace TatBlog.Services.Blogs

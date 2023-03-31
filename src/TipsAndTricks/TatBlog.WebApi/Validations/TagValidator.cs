@@ -1,17 +1,17 @@
 ﻿using FluentValidation;
-using TatBlog.WebApi.Models.Category;
+using TatBlog.WebApi.Models.Tag;
 
 namespace TatBlog.WebApi.Validations
 {
-    public class CategoryValidator : AbstractValidator<CategoryEditModel>
+    public class TagValidator : AbstractValidator<TagEditModel>
     {
-        public CategoryValidator()
+        public TagValidator()
         {
             RuleFor(a => a.Name)
                 .NotEmpty()
-                .WithMessage("Tên chủ đề không được để trống")
+                .WithMessage("Tên thẻ không được để trống")
                 .MaximumLength(100)
-                .WithMessage("Tên chủ đề tối đa 100 ký tự");
+                .WithMessage("Tên thẻ tối đa 100 ký tự");
 
             RuleFor(a => a.UrlSlug)
                 .NotEmpty()
@@ -22,8 +22,8 @@ namespace TatBlog.WebApi.Validations
             RuleFor(a => a.Description)
                 .NotEmpty()
                 .WithMessage("Mô tả không được để trống")
-                .MaximumLength(2000)
-                .WithMessage("Mô tả tối đa 2000 ký tự");
+                .MaximumLength(500)
+                .WithMessage("Tên thẻ tối đa 500 ký tự");
         }
     }
 }

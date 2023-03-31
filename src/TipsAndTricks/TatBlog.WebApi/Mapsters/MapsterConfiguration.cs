@@ -1,7 +1,13 @@
 ﻿using Mapster;
-using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Author;
+using TatBlog.Core.DTO.Category;
+using TatBlog.Core.DTO.Post;
+using TatBlog.Core.DTO.Tag;
 using TatBlog.Core.Entities;
-using TatBlog.WebApi.Models;
+using TatBlog.WebApi.Models.Author;
+using TatBlog.WebApi.Models.Category;
+using TatBlog.WebApi.Models.Post;
+using TatBlog.WebApi.Models.Tag;
 
 namespace TatBlog.WebApi.Mapsters
 {
@@ -27,6 +33,10 @@ namespace TatBlog.WebApi.Mapsters
 
             config.NewConfig<Post, PostDto>();
             config.NewConfig<Post, PostDetail>();
+            config.NewConfig<PostFilterModel, PostQuery>()
+                .Map(desc => desc.PublishedOnly, src => false);
+            config.NewConfig<PostEditModel, Post>()
+                .Ignore(desc => desc.ImageUrl);
         }
     }
 }

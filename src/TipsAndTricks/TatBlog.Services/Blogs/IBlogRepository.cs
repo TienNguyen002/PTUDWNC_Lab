@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TatBlog.Core;
 using TatBlog.Core.Contracts;
-using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Category;
+using TatBlog.Core.DTO.Post;
+using TatBlog.Core.DTO.Tag;
 using TatBlog.Core.Entities;
 
 namespace TatBlog.Services.Blogs
@@ -18,6 +20,11 @@ namespace TatBlog.Services.Blogs
         Task<IPagedList<TagItem>> GetPagesTagsAsync(
             IPagingParams pagingParams,
             CancellationToken cancellationToken = default);
+        #endregion
+
+        #region IsTagExistBySlugAsync (Kiểm tra slug tồn tại của Tag)
+        Task<bool> IsTagExistBySlugAsync(int id, string slug, CancellationToken cancellationToken = default
+        );
         #endregion
 
         #region GetTagBySlugAsync (Lấy ds Tag bằng slug)
@@ -37,7 +44,7 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region AddOrUpdateTagAsync (Thêm/Cập nhật Tag)
-        Task<Tag> AddOrUpdateTagAsync(Tag tag, CancellationToken cancellationToken = default);
+        Task<bool> AddOrUpdateTagAsync(Tag tag, CancellationToken cancellationToken = default);
         #endregion
 
         #region CheckExistTagSlugByIdAsync (Kiểm tra slug tồn tại bằng id - Tag)
@@ -45,7 +52,7 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region GetPagedTagsAsync (Lấy ds Tag và phân trang theo các tham số Paging)
-        Task<IPagedList<Tag>> GetPagedTagsAsync(TagQuery tagQuery,
+        Task<IPagedList<Tag>> GetPagesTagsAsync(TagQuery tagQuery,
             int pageNumber,
             int pageSize,
             string sortColumn = "Id",
@@ -56,11 +63,8 @@ namespace TatBlog.Services.Blogs
         #region GetPagedTagsAsync<T>
         Task<IPagedList<T>> GetPagedTagsAsync<T>(
         TagQuery query,
-        int pageNumber,
-        int pageSize,
+        IPagingParams pagagingParams,
         Func<IQueryable<Tag>, IQueryable<T>> mapper,
-        string sortColumn = "Id",
-        string sortOrder = "ASC",
         CancellationToken cancellationToken = default);
         #endregion
         #endregion
@@ -135,13 +139,10 @@ namespace TatBlog.Services.Blogs
 
         #region GetPagedCategoriesAsync<T>
         Task<IPagedList<T>> GetPagedCategoriesAsync<T>(
-      CategoryQuery query,
-      int pageNumber,
-      int pageSize,
-      Func<IQueryable<Category>, IQueryable<T>> mapper,
-      string sortColumn = "Id",
-      string sortOrder = "ASC",
-      CancellationToken cancellationToken = default);
+                  CategoryQuery query,
+                  IPagingParams pagingParams,
+                  Func<IQueryable<Category>, IQueryable<T>> mapper,
+                  CancellationToken cancellationToken = default);
         #endregion
         #endregion
 
@@ -194,8 +195,12 @@ namespace TatBlog.Services.Blogs
         Task<Post> GetPostByIdAsync(int id, bool includeDetails = false, CancellationToken cancellationToken = default);
         #endregion
 
+        #region GetPostBySlugAsync (Lấy ds Post bằng Slug)
+        Task<Post> GetPostBySlugAsync(string slug, bool includeDetails = false, CancellationToken cancellationToken = default);
+        #endregion
+
         #region AddOrUpdatePostAsync (Thêm/Cập nhật Post)
-        Task<Post> AddOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default);
+        Task<bool> AddOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default);
         #endregion
 
         #region ChangePublishedPostAsync (Thay đổi trạng thái Publish/NotPushlish của Post)
@@ -240,6 +245,18 @@ namespace TatBlog.Services.Blogs
 
         #region DeletePostByIdAsync (Xóa Post theo Id)
         Task<bool> DeletePostByIdAsync(int id, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region SetImageUrlPostAsync (Đặt hình ảnh cho Post)
+        Task<bool> SetImageUrlPostAsync(int id, string imageUrl, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region GetNRandomPostsAsync<T> (Lấy N ngẫu nhiên bài viết)
+        Task<IList<T>> GetNRandomPostsAsync<T>(int n, Func<IQueryable<Post>, IQueryable<T>> mapper, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region GetNPopularPostsAsync<T> (Lấy N bài viết có nhiều lượt xem nhất)
+        Task<IList<T>> GetNPopularPostsAsync<T>(int n, Func<IQueryable<Post>, IQueryable<T>> mapper, CancellationToken cancellationToken = default);
         #endregion
         #endregion
     }

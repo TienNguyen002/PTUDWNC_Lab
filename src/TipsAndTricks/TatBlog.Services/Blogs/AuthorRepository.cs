@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TatBlog.Core;
 using TatBlog.Core.Contracts;
-using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Author;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
 using TatBlog.Data.Mappings;
