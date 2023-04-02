@@ -95,7 +95,7 @@ namespace TatBlog.WebApi.Endpoints
             IBlogRepository blogRepository)
         {
             var posts = await blogRepository.GetNPopularPostsAsync(limit,
-                posts => posts.ProjectToType<PostItem>());
+                posts => posts.ProjectToType<PostDto>());
             return Results.Ok(ApiResponse.Success(posts));
         }
 
@@ -183,12 +183,57 @@ namespace TatBlog.WebApi.Endpoints
             return Results.Ok(ApiResponse.Success(imageUrl));
         }
 
+        //private static async Task<IResult> UpdatePost(
+        //    int id, PostEditModel model,
+        //    IBlogRepository blogRepository,
+        //    IAuthorRepository authorRepository,
+        //    IMapper mapper)
+        //{
+        //    var post = await blogRepository.GetPostByIdAsync(id);
+
+        //    if (post == null)
+        //    {
+        //        return Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound,
+        //                $"Không tìm thấy bài viết có id = {id}"));
+        //    }
+        //    if (await blogRepository.IsPostSlugExistedAsync(0, model.UrlSlug))
+        //    {
+        //        return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
+        //            $"Slug '{model.UrlSlug}' đã được sử dụng"));
+        //    }
+        //    if (await authorRepository.GetAuthorByIdAsync(model.AuthorId) == null)
+        //    {
+        //        return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
+        //            $"Không tìm thấy tác giả có id '{model.AuthorId}'"));
+        //    }
+        //    if (await blogRepository.GetCategoryByIdAsync(model.CategoryId) == null)
+        //    {
+        //        return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
+        //            $"Không tìm thấy chủ đề có id '{model.CategoryId}'"));
+        //    }
+        //    post = mapper.Map<Post>(model);
+        //    post.Id = id;
+        //    post.ModifiedDate = DateTime.Now;
+
+        //    return await blogRepository.AddOrUpdatePostAsync(post, model.GetSelectedTags())
+        //      ? Results.Ok(ApiResponse.Success("Cập nhật bài viết thành công", HttpStatusCode.NoContent))
+        //      : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, $"Không tìm thấy bài viết có id = {id}"));
+        //}
+
         private static async Task<IResult> UpdatePost(
-            int id, PostEditModel model,
-            IBlogRepository blogRepository,
-            IAuthorRepository authorRepository,
-            IMapper mapper)
+             int id,
+             PostEditModel model,
+             IMapper mapper,
+             IBlogRepository blogRepository,
+             IAuthorRepository authorRepository,
+             IMediaManager mediaManager)
         {
+            var post = await blogRepository.GetPostByIdAsync(id);
+            if (post == null)
+            {
+                return Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound,
+                        $"Không tìm thấy bài viết có id = {id}"));
+            }
             if (await blogRepository.IsPostSlugExistedAsync(0, model.UrlSlug))
             {
                 return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
@@ -197,20 +242,21 @@ namespace TatBlog.WebApi.Endpoints
             if (await authorRepository.GetAuthorByIdAsync(model.AuthorId) == null)
             {
                 return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
-                    $"Không tìm thấy tác giả có id '{model.AuthorId}'"));
+                    $"Không tìm thấy tác giả id = {model.AuthorId}"));
             }
             if (await blogRepository.GetCategoryByIdAsync(model.CategoryId) == null)
             {
                 return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
-                    $"Không tìm thấy chủ đề có id '{model.CategoryId}'"));
+                    $"Không tìm thấy chủ đề id = {model.CategoryId}"));
             }
-            var post = mapper.Map<Post>(model);
+
+            mapper.Map(model, post);
             post.Id = id;
             post.ModifiedDate = DateTime.Now;
 
             return await blogRepository.AddOrUpdatePostAsync(post, model.GetSelectedTags())
-              ? Results.Ok(ApiResponse.Success("Cập nhật bài viết thành công", HttpStatusCode.NoContent))
-              : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, $"Không tìm thấy bài viết có id = {id}"));
+               ? Results.Ok(ApiResponse.Success($"Thay đổi bài viết id = {id} thành công"))
+               : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound,$"Không tìm thấy bài viết có id = {id}"));
         }
 
         private static async Task<IResult> DeletePost(

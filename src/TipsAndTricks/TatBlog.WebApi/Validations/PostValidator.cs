@@ -42,7 +42,7 @@ namespace TatBlog.WebApi.Validations
                 .NotEmpty()
                 .WithMessage("Bạn phải chọn tác giả bài viết");
 
-            RuleFor(s => s.Tags)
+            RuleFor(s => s.SelectedTags)
                 .Must(HasAtLeastOneTag)
                 .WithMessage("Bạn phải nhập ít nhất một thẻ");
         }

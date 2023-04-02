@@ -10,11 +10,11 @@
         public bool Published { get; set; }
         public int CategoryId { get; set; }
         public int AuthorId { get; set; }
-        public string Tags { get; set; }
+        public string SelectedTags { get; set; }
 
         public List<string> GetSelectedTags()
         {
-            return (Tags ?? "")
+            return (SelectedTags ?? "")
                 .Split(new[] {',', ';', '\r', '\n'}, StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
         }
