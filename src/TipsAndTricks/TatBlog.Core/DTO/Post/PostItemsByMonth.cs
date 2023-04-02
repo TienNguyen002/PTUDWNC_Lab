@@ -9,15 +9,15 @@ namespace TatBlog.Core.DTO.Post
 {
     public class PostItemsByMonth
     {
-        public int PostYear { get; set; }
-        public int PostMonth { get; set; }
+        public int Year { get; set; }
+        public int Month { get; set; }
         public int PostCount { get; set; }
         public string MonthName
         {
             get => CultureInfo
               .CurrentCulture
               .DateTimeFormat
-              .GetMonthName(PostMonth);
+              .GetMonthName(Month);
         }
     }
 }

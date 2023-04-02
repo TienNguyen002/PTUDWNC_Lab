@@ -184,7 +184,7 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region GetPostInNMonthAsync (Lấy ds Post theo tháng)
-        Task<IList<PostItems>> GetPostInNMonthAsync(int month, CancellationToken cancellationToken = default);
+        Task<IList<PostItemsByMonth>> GetPostInNMonthAsync(int month, CancellationToken cancellationToken = default);
         #endregion
 
         #region GetPostInMonthAndYearAsync (Lấy ds Post theo tháng và năm)

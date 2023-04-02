@@ -33,11 +33,11 @@ namespace TatBlog.WebApi.Endpoints
 
             routeGroupBuilder.MapGet("/feature/{limit:int}", GetNPopularPosts)
               .WithName("GetNPopularPosts")
-              .Produces<ApiResponse<IList<PostItems>>>();
+              .Produces<ApiResponse<IList<PostDto>>>();
 
             routeGroupBuilder.MapGet("/random/{limit:int}", GetNRandomPosts)
               .WithName("GetNRandomPosts")
-              .Produces<ApiResponse<IList<PostItems>>>();
+              .Produces<ApiResponse<IList<PostDto>>>();
 
             routeGroupBuilder.MapGet("/archives/{limit:int}", GetPostsInNMonth)
               .WithName("GetPostsInNMonth")
@@ -95,7 +95,7 @@ namespace TatBlog.WebApi.Endpoints
             IBlogRepository blogRepository)
         {
             var posts = await blogRepository.GetNPopularPostsAsync(limit,
-                posts => posts.ProjectToType<PostItems>());
+                posts => posts.ProjectToType<PostItem>());
             return Results.Ok(ApiResponse.Success(posts));
         }
 

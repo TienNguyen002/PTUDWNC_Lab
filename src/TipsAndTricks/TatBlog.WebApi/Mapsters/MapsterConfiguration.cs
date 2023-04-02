@@ -33,6 +33,8 @@ namespace TatBlog.WebApi.Mapsters
 
             config.NewConfig<Post, PostDto>();
             config.NewConfig<Post, PostDetail>();
+            config.NewConfig<Post, PostItem>()
+                .Map(dest => dest.Tags, src => src.Tags.Select(t => t.Name));
             config.NewConfig<PostFilterModel, PostQuery>()
                 .Map(desc => desc.PublishedOnly, src => false);
             config.NewConfig<PostEditModel, Post>()

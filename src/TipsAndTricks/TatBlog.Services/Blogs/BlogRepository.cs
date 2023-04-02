@@ -504,17 +504,17 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region GetPostInNMonthAsync (Lấy ds Post theo tháng)
-        public async Task<IList<PostItems>> GetPostInNMonthAsync(int n, CancellationToken cancellationToken = default)
+        public async Task<IList<PostItemsByMonth>> GetPostInNMonthAsync(int n, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>()
                 .GroupBy(p => new { p.PostedDate.Year, p.PostedDate.Month })
-                .Select(p => new PostItems()
+                .Select(p => new PostItemsByMonth()
                 {
-                    PostYear = p.Key.Year,
-                    PostMonth = p.Key.Month,
-                    PostCount = p.Count()
+                    Year = p.Key.Year,
+                    Month = p.Key.Month,
+                    PostCount = p.Count(),
                 })
-                .OrderByDescending(p => p.PostYear).ThenByDescending(p => p.PostMonth)
+                .OrderByDescending(p => p.Year).ThenByDescending(p => p.Month)
                 .Take(n)
                 .ToListAsync(cancellationToken);
         }
@@ -526,15 +526,15 @@ namespace TatBlog.Services.Blogs
             return await _context.Set<Post>()
                 .Select(p => new PostItemsByMonth()
                 {
-                    PostYear = p.PostedDate.Year,
-                    PostMonth = p.PostedDate.Month,
+                    Year = p.PostedDate.Year,
+                    Month = p.PostedDate.Month,
                     PostCount = _context.Set<Post>()
                     .Where(x => x.PostedDate.Month == p.PostedDate.Month)
                     .Where(x => x.PostedDate.Year == p.PostedDate.Year)
                     .Count()
                 })
                 .Distinct()
-                .OrderByDescending(p => p.PostYear).ThenByDescending(p => p.PostMonth)
+                .OrderByDescending(p => p.Year).ThenByDescending(p => p.Month)
                 .Take(n)
                 .ToListAsync(cancellationToken);
         }
@@ -696,7 +696,7 @@ namespace TatBlog.Services.Blogs
             {
                 postQuery = postQuery.Where(p => !p.Published);
             }
-            var tags = query.GetTag();
+            var tags = query.GetSelectedTags();
             if (tags.Count > 0)
             {
                 foreach (var tag in tags)
@@ -772,7 +772,7 @@ namespace TatBlog.Services.Blogs
             {
                 postQuery = postQuery.Where(p => !p.Published);
             }
-            var tags = query.GetTag();
+            var tags = query.GetSelectedTags();
             if (tags.Count > 0)
             {
                 foreach (var tag in tags)
@@ -918,7 +918,7 @@ namespace TatBlog.Services.Blogs
         #region GetNPopularPosts (Lấy N bài viết có nhiều lượt xem nhất)
         public async Task<IList<T>> GetNPopularPostsAsync<T>(int n, Func<IQueryable<Post>, IQueryable<T>> mapper, CancellationToken cancellationToken = default)
         {
-            IQueryable<Post> popular = _context.Set<Post>()
+            var popular = _context.Set<Post>()
                 .Include(p => p.Author)
                 .Include(p => p.Tags)
                 .Include(p => p.Category)
