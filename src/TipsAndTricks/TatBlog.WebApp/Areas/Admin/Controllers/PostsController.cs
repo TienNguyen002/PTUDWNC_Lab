@@ -8,7 +8,7 @@ using System.Drawing.Printing;
 using System.Text.Json;
 using TatBlog.Core;
 using TatBlog.Core.Contracts;
-using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Post;
 using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;

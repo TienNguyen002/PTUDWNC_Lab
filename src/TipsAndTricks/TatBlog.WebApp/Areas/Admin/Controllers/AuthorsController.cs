@@ -2,7 +2,7 @@
 using FluentValidation.AspNetCore;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
-using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Author;
 using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
