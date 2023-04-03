@@ -2,6 +2,7 @@
 using TatBlog.Core;
 using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
+using TatBlog.Core.DTO.Post;
 using TatBlog.Services.Blogs;
 
 namespace TatBlog.WebApp.Controllers

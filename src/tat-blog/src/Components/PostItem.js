@@ -1,12 +1,12 @@
 import TagList from './TagList';
 import Card from 'react-bootstrap/Card';
 import {Link} from 'react-router-dom';
-import {isEmptyOrSpaces, IsEmptyOrSpaces} from '../Utils/Utils'
+import {isEmptyOrSpaces} from '../Utils/Utils'
 
 const PostList = ({postItem}) => {
     let imageUrl = isEmptyOrSpaces(postItem.imageUrl)
         ? process.env.PUBLIC_URL + '/images/nopicture.png'
-        : '${postItem.imageUrl}';
+        : `${postItem.imageUrl}`;
     let postedDate = new Date(postItem.postedDate);
     return (
         <article className='blog-entry mb-4'>
@@ -36,7 +36,7 @@ const PostList = ({postItem}) => {
                             </div>
                             <div className='text-end'>
                                 <Link
-                                to={'/blog/post?year=${postedDate.getFullYear()}&month=${postedDate.getMonth()}&day=${postedDate.getDay()}&slug=${postItem.urlSlug}'}
+                                to={`/blog/post?year=${postedDate.getFullYear()}&month=${postedDate.getMonth()}&day=${postedDate.getDay()}&slug=${postItem.urlSlug}`}
                                 className='btn btn-primary'
                                 title={postItem.title}>
                                     Xem chi tiết
