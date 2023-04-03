@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TatBlog.Core.Entities;
 
-namespace TatBlog.Core.DTO
+namespace TatBlog.Core.DTO.Category
 {
     public class CategoryItem
     {

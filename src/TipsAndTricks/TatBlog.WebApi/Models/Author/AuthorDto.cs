@@ -1,4 +1,4 @@
-﻿namespace TatBlog.WebApi.Models
+﻿namespace TatBlog.WebApi.Models.Author
 {
     public class AuthorDto
     {

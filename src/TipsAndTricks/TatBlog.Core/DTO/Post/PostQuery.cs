@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TatBlog.Core.DTO
+namespace TatBlog.Core.DTO.Post
 {
     public class PostQuery
     {
@@ -22,7 +22,7 @@ namespace TatBlog.Core.DTO
         public string Tags { get; set; }
         public bool PublishedOnly { get; set; }
         public bool NotPublished { get; set; }
-        public List<string> GetTag()
+        public List<string> GetSelectedTags()
         {
             return (Tags ?? "")
                 .Split(new[] { ',', ';', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
