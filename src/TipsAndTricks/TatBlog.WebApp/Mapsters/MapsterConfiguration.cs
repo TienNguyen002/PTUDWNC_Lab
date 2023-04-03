@@ -1,7 +1,5 @@
 ﻿using Mapster;
-using TatBlog.Core.DTO.Category;
-using TatBlog.Core.DTO.Post;
-using TatBlog.Core.DTO.Tag;
+using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
 using TatBlog.WebApp.Areas.Admin.Models;
 
