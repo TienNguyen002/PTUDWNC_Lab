@@ -2,18 +2,13 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TatBlog.Core.Collections;
-using TatBlog.Core.DTO;
 using TatBlog.Core.DTO.Author;
 using TatBlog.Core.DTO.Category;
 using TatBlog.Core.DTO.Post;
 using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
-using TatBlog.Services.Media;
-using TatBlog.WebApi.Extensions;
 using TatBlog.WebApi.Filters;
 using TatBlog.WebApi.Models;
 using TatBlog.WebApi.Models.Category;
@@ -28,9 +23,13 @@ namespace TatBlog.WebApi.Endpoints
         {
             var routeGroupBuilder = app.MapGroup("/api/categories");
 
-            routeGroupBuilder.MapGet("/", GetCategories)
+            routeGroupBuilder.MapGet("/pages", GetCategories)
               .WithName("GetCategories")
               .Produces<ApiResponse<PaginationResult<CategoryItem>>>();
+
+            routeGroupBuilder.MapGet("/", GetAllCategories)
+                .WithName("GetAllCategories")
+                .Produces<ApiResponse<PaginationResult<CategoryItem>>>();
 
             routeGroupBuilder.MapGet("/{id:int}", GetCategoryDetails)
               .WithName("GetCategoryDetails")
@@ -68,6 +67,13 @@ namespace TatBlog.WebApi.Endpoints
             var categories = await blogRepository.GetPagedCategoriesAsync(model, model.Name);
             var paginationResult = new PaginationResult<CategoryItem>(categories);
             return Results.Ok(ApiResponse.Success(paginationResult));
+        }
+
+        private static async Task<IResult> GetAllCategories(
+            IBlogRepository blogRepository)
+        {
+            var categories = await blogRepository.GetCategoriesAsync();
+            return Results.Ok(ApiResponse.Success(categories));
         }
 
         private static async Task<IResult> GetCategoryDetails(
