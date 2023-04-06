@@ -47,14 +47,14 @@ namespace TatBlog.WebApi.Models.Post
         [Required]
         public string SelectedTags { get; set; }
 
-        public IEnumerable<SelectListItem> AuthorList { get; set; }
+        //public IEnumerable<SelectListItem> AuthorList { get; set; }
 
-        public IEnumerable<SelectListItem> CategoryList { get; set; }
+        //public IEnumerable<SelectListItem> CategoryList { get; set; }
 
         public List<string> GetSelectedTags()
         {
             return (SelectedTags ?? "")
-                .Split(new[] {',', ';', '\r', '\n'}, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { ',', ';', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
         }
 
@@ -69,7 +69,7 @@ namespace TatBlog.WebApi.Models.Post
                 ShortDescription = form["ShortDescription"],
                 Description = form["Description"],
                 Meta = form["Meta"],
-                Published = form["Published"] != "false",
+                Published = bool.Parse(form["Published"]) != false,
                 CategoryId = int.Parse(form["CategoryId"]),
                 AuthorId = int.Parse(form["AuthorId"]),
                 SelectedTags = form["SelectedTags"]

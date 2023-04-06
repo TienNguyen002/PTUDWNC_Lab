@@ -51,7 +51,6 @@ namespace TatBlog.WebApi.Endpoints
             routeGroupBuilder.MapPost("/", AddPost)
               .WithName("AddPost")
               .Accepts<PostEditModel>("multipart/form-data")
-              .AddEndpointFilter<ValidatorFilter<PostEditModel>>()
               .Produces<ApiResponse<PostDto>>();
 
             routeGroupBuilder.MapPost("/{id:int}/picture", SetPostPicture)
