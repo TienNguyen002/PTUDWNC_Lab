@@ -187,7 +187,7 @@ namespace TatBlog.WebApi.Endpoints
             await blogRepository.AddOrUpdatePostAsync(post, model.GetSelectedTags());
 
             return Results.Ok(ApiResponse.Success(
-                mapper.Map<PostItem>(post), HttpStatusCode.Created));
+                mapper.Map<PostDto>(post), HttpStatusCode.Created));
         }
 
         private static async Task<IResult> SetPostPicture(
