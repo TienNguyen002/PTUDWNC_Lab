@@ -6,7 +6,7 @@ import {isEmptyOrSpaces} from '../Utils/Utils'
 const PostList = ({postItem}) => {
     let imageUrl = isEmptyOrSpaces(postItem.imageUrl)
         ? process.env.PUBLIC_URL + '/images/nopicture.png'
-        : `${postItem.imageUrl}`;
+        : `https://localhost:7251/${postItem.imageUrl}`;
     let postedDate = new Date(postItem.postedDate);
     return (
         <article className='blog-entry mb-4'>
