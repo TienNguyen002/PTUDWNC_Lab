@@ -3,6 +3,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SlugGenerator;
 using System;
 using System.Net;
 using TatBlog.Core.Collections;
@@ -49,6 +50,7 @@ namespace TatBlog.WebApi.Endpoints
 
             routeGroupBuilder.MapPost("/", AddPost)
               .WithName("AddPost")
+              .Accepts<PostEditModel>("multipart/form-data")
               .AddEndpointFilter<ValidatorFilter<PostEditModel>>()
               .Produces<ApiResponse<PostDto>>();
 
@@ -141,32 +143,52 @@ namespace TatBlog.WebApi.Endpoints
         }
 
         private static async Task<IResult> AddPost(
-            PostEditModel model,
+            HttpContext context,
             IBlogRepository blogRepository,
             IAuthorRepository authorRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IMediaManager mediaManager)
         {
-            if (await blogRepository.IsPostSlugExistedAsync(0, model.UrlSlug))
+            var model = await PostEditModel.BindAsync(context);
+            var slug = model.Title.GenerateSlug();
+            if (await blogRepository.IsPostSlugExistedAsync(0, slug))
             {
                 return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
-                    $"Slug '{model.UrlSlug}' đã được sử dụng"));
+                    $"Slug '{slug}' đã được sử dụng"));
             }
-            if (await authorRepository.GetAuthorByIdAsync(model.AuthorId) == null)
+            var post = model.Id > 0 ? await blogRepository.GetPostByIdAsync(model.Id) : null;
+            if(post == null)
             {
-                return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
-                    $"Không tìm thấy tác giả có id '{model.AuthorId}'"));
+                post = new Post()
+                {
+                    PostedDate = DateTime.Now,
+                };
             }
-            if (await blogRepository.GetCategoryByIdAsync(model.CategoryId) == null)
+            post.Title = model.Title;
+            post.AuthorId = model.AuthorId;
+            post.CategoryId = model.CategoryId;
+            post.ShortDescription = model.ShortDescription;
+            post.Description = model.Description;
+            post.Meta = model.Meta;
+            post.Published = model.Published;
+            post.ModifiedDate = DateTime.Now;
+            post.UrlSlug = model.Title.GenerateSlug();
+
+            if(model.ImageFile?.Length > 0)
             {
-                return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
-                    $"Không tìm thấy chủ đề có id '{model.CategoryId}'"));
+                string hostname = $"{context.Request.Scheme}://{context.Request.Host}{context.Request.PathBase}/",
+                    uploadedPath = await mediaManager.SaveFileAsync(model.ImageFile.OpenReadStream(),
+                    model.ImageFile.FileName,
+                    model.ImageFile.ContentType);
+                if (!string.IsNullOrWhiteSpace(uploadedPath))
+                {
+                    post.ImageUrl = uploadedPath;
+                }
             }
-            var post = mapper.Map<Post>(model);
-            post.PostedDate = DateTime.Now;
             await blogRepository.AddOrUpdatePostAsync(post, model.GetSelectedTags());
 
             return Results.Ok(ApiResponse.Success(
-                mapper.Map<PostDto>(post), HttpStatusCode.Created));
+                mapper.Map<PostItem>(post), HttpStatusCode.Created));
         }
 
         private static async Task<IResult> SetPostPicture(
@@ -237,11 +259,11 @@ namespace TatBlog.WebApi.Endpoints
                 return Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound,
                         $"Không tìm thấy bài viết có id = {id}"));
             }
-            if (await blogRepository.IsPostSlugExistedAsync(0, model.UrlSlug))
-            {
-                return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
-                    $"Slug '{model.UrlSlug}' đã được sử dụng"));
-            }
+            //if (await blogRepository.IsPostSlugExistedAsync(0, model.UrlSlug))
+            //{
+            //    return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
+            //        $"Slug '{model.slug}' đã được sử dụng"));
+            //}
             if (await authorRepository.GetAuthorByIdAsync(model.AuthorId) == null)
             {
                 return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
