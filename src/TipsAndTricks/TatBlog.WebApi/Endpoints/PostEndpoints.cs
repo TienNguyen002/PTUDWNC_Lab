@@ -2,20 +2,16 @@
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Net;
 using TatBlog.Core.Collections;
-using TatBlog.Core.DTO;
-using TatBlog.Core.DTO.Author;
 using TatBlog.Core.DTO.Post;
 using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
-using TatBlog.WebApi.Extensions;
 using TatBlog.WebApi.Filters;
 using TatBlog.WebApi.Models;
-using TatBlog.WebApi.Models.Author;
 using TatBlog.WebApi.Models.Post;
 
 namespace TatBlog.WebApi.Endpoints
@@ -71,6 +67,13 @@ namespace TatBlog.WebApi.Endpoints
               .WithName("DeletePost")
               .Produces<ApiResponse<string>>();
 
+            routeGroupBuilder.MapGet("/get-posts-filter", GetFilteredPosts)
+                .WithName("GetFilteredPost")
+                .Produces<ApiResponse<PaginationResult<PostDto>>>();
+
+            routeGroupBuilder.MapGet("/get-filter", GetFilter)
+                .WithName("GetFilter")
+                .Produces<ApiResponse<PostFilterModel>>();
             //routeGroupBuilder.MapGet("/{id:int}/comments", GetCommentsByPostId)
             //    .WithName("GetCommentsByPostId")
             //    .Produces<ApiResponse<IList<Comment>>>();
@@ -143,12 +146,12 @@ namespace TatBlog.WebApi.Endpoints
             IAuthorRepository authorRepository,
             IMapper mapper)
         {
-            if(await blogRepository.IsPostSlugExistedAsync(0, model.UrlSlug))
+            if (await blogRepository.IsPostSlugExistedAsync(0, model.UrlSlug))
             {
                 return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
                     $"Slug '{model.UrlSlug}' đã được sử dụng"));
             }
-            if(await authorRepository.GetAuthorByIdAsync(model.AuthorId) == null)
+            if (await authorRepository.GetAuthorByIdAsync(model.AuthorId) == null)
             {
                 return Results.Ok(ApiResponse.Fail(HttpStatusCode.Conflict,
                     $"Không tìm thấy tác giả có id '{model.AuthorId}'"));
@@ -256,7 +259,7 @@ namespace TatBlog.WebApi.Endpoints
 
             return await blogRepository.AddOrUpdatePostAsync(post, model.GetSelectedTags())
                ? Results.Ok(ApiResponse.Success($"Thay đổi bài viết id = {id} thành công"))
-               : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound,$"Không tìm thấy bài viết có id = {id}"));
+               : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, $"Không tìm thấy bài viết có id = {id}"));
         }
 
         private static async Task<IResult> DeletePost(
@@ -275,5 +278,39 @@ namespace TatBlog.WebApi.Endpoints
         //    var comments = await commentRepository.GetCommentByPostAsync(id);
         //    return Results.Ok(ApiResponse.Success(comments));
         //}
+
+        private static async Task<IResult> GetFilter(
+            IAuthorRepository authorRepository,
+            IBlogRepository blogRepository)
+        {
+            var model = new PostFilterModel()
+            {
+                AuthorList = (await authorRepository.GetAuthorAsync())
+                .Select(a => new SelectListItem()
+                {
+                    Text = a.FullName,
+                    Value = a.Id.ToString()
+                }),
+                CategoryList = (await blogRepository.GetCategoriesAsync())
+                .Select(c => new SelectListItem()
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                })
+            };
+            return Results.Ok(ApiResponse.Success(model));
+        }
+
+        private static async Task<IResult> GetFilteredPosts(
+            [AsParameters] PostFilterModel model,
+            IMapper mapper,
+            IBlogRepository blogRepository)
+        {
+            var postQuery = mapper.Map<PostQuery>(model);
+            var postsList = await blogRepository.GetPagedPostsAsync(postQuery, model, posts =>
+            posts.ProjectToType<PostDto>());
+            var paginationResult = new PaginationResult<PostDto>(postsList);
+            return Results.Ok(ApiResponse.Success(paginationResult));
+        }
     }
 }
