@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Link } from "react-router-dom";
-import { getBestAuthors } from "../Services/Widgets";
+import { getCategories } from "../../../Services/Widgets";
 
-const BestAuthorsWidget = () => {
-  const [authorList, setAuthorList] = useState([]);
+const CategoriesWidget = () => {
+  const [categoryList, setCategoryList] = useState([]);
   useEffect(() => {
-    getBestAuthors().then(data => {
+    getCategories().then(data => {
       if(data){
-        setAuthorList(data);
+        setCategoryList(data);
       }
       else{
-        setAuthorList([]);
+        setCategoryList([]);
       }
     });
   }, [])
@@ -19,19 +19,19 @@ const BestAuthorsWidget = () => {
   return (
     <div className="mb-4">
         <h3 className="text-success mb-2">
-          4 Tác giả phổ biến
+          Các chủ đề
         </h3>
 
-        {authorList.length > 0 && 
+        {categoryList.length > 0 && 
           <ListGroup>
-            {authorList.map((item, index) => {
+            {categoryList.map((item, index) => {
               return (
                 <ListGroup.Item key={index}>
-                  <Link to={`/blog/author/${item.urlSlug}`}
-                  title={item.fullName}
+                  <Link to={`/blog/category/${item.urlSlug}`}
+                  title={item.description}
                   key={index}>
-                  {item.fullName}
-                  <span>&nbsp;({item.postsCount})</span>
+                  {item.name}
+                  <span>&nbsp;({item.postCount})</span>
                   </Link>
                 </ListGroup.Item>
               );
@@ -42,4 +42,4 @@ const BestAuthorsWidget = () => {
   );
 }
 
-export default BestAuthorsWidget;
+export default CategoriesWidget;

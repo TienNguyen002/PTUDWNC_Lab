@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { useLocation } from "react-router-dom";
-import Pager from "../Components/Pager";
+import Pager from "../Components/Shared/Pager";
 import PostItem from '../Components/PostItem'
 import { getPosts } from "../Services/BlogRepository";
 
@@ -18,7 +18,7 @@ const Index = () => {
   let query = useQuery(),
   k = query.get('k') ?? '',
   p = query.get('p') ?? 1,
-  ps = query.get('ps') ?? 5;
+  ps = query.get('ps') ?? 10;
 
 
   useEffect(() => {

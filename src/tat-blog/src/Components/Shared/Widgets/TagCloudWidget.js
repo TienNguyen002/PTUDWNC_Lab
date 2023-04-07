@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Link } from "react-router-dom";
-import { getCategories } from "../Services/Widgets";
+import { getTags } from "../../../Services/Widgets";
 
-const CategoriesWidget = () => {
-  const [categoryList, setCategoryList] = useState([]);
+const TagCloudWidget = () => {
+  const [tagList, setTagList] = useState([]);
   useEffect(() => {
-    getCategories().then(data => {
+    getTags().then(data => {
       if(data){
-        setCategoryList(data);
+        setTagList(data);
       }
       else{
-        setCategoryList([]);
+        setTagList([]);
       }
     });
   }, [])
@@ -19,19 +19,18 @@ const CategoriesWidget = () => {
   return (
     <div className="mb-4">
         <h3 className="text-success mb-2">
-          Các chủ đề
+          Danh sách các thẻ
         </h3>
 
-        {categoryList.length > 0 && 
+        {tagList.length > 0 && 
           <ListGroup>
-            {categoryList.map((item, index) => {
+            {tagList.map((item, index) => {
               return (
                 <ListGroup.Item key={index}>
-                  <Link to={`/blog/category/${item.urlSlug}`}
+                  <Link to={`/blog/tag/${item.urlSlug}`}
                   title={item.description}
                   key={index}>
                   {item.name}
-                  <span>&nbsp;({item.postCount})</span>
                   </Link>
                 </ListGroup.Item>
               );
@@ -42,4 +41,4 @@ const CategoriesWidget = () => {
   );
 }
 
-export default CategoriesWidget;
+export default TagCloudWidget;
