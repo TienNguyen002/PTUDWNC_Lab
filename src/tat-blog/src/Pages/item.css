@@ -1,0 +1,20 @@
+.Form{
+    padding: 2px;
+}
+
+.custom{
+    background: blue;
+    color: white;
+}
+
+iframe{
+    display: block;       /* iframes are inline by default */
+    background: #000;
+    border: none;         /* Reset default border */
+    height: 70vh;        /* Viewport-relative units */
+    width: 70vw;
+}
+
+Button{
+    margin-left: 50%;
+}

@@ -1,62 +1,85 @@
-import React, { useEffect } from "react";
+import './item.css';
+import React, { useEffect, useState } from "react";
+import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMap, faPhone, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { FormControl } from "react-bootstrap";
 
 const Contact = () => {
     useEffect(() => {
         document.title = 'Liên hệ';
     }, []);
 
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        window.location = `/blog/contact`;
+    }
+
     return (
-        <div>
+        <div class="mb-4">
             <h2 class="h1-responsive font-weight-bold text-center my-4">Liên hệ với chúng tôi</h2>
             <p class="text-center w-responsive mx-auto mb-5">
                 Nếu các bạn có bất kỳ thắc mắc nào. Hãy liên hệ với chúng tôi bằng cách gửi thắc mắc đến cho chúng tôi ngay bên dưới!
                 <br />Chúng tôi sẽ sớm giải đáp thắc mắc của các bạn!
             </p>
             <div class="row">
-                <div class="col-md-9 mb-md-0 mb-5">
-                    <form id="contact-form" name="contact-form" action="mail.php" method="POST">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="md-form mb-0">
-                                    <label for="name" class="">Tên của bạn:</label>
-                                    <input type="text" id="name" name="name" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="md-form mb-0">
-                                    <label for="email" class="">Địa chỉ email:</label>
-                                    <input type="text" id="email" name="email" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="md-form mb-0">
-                                    <label for="subject" class="">Tiêu đề:</label>
-                                    <input type="text" id="subject" name="subject" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <div class="md-form">
-                                    <label for="message">Nội dung:</label>
-                                    <textarea type="text" id="message" name="message" rows="2" class="form-control md-textarea"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <div class="text-center text-md-left">
-                        <Button variant='outline-secondary'
-                            type='submit'>
+                <div id ="Form" class="col-md-9 mb-md-0 mb-5">
+                    <Form method="get" onSubmit={handleSubmit}>
+                        <label for="name" class="">Tên của bạn:</label>
+                        <Form.Group>
+                            <FormControl
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                aria-label='Nhập tên của bạn'
+                                aria-describedby="btnSend"
+                                placeholder="Nhập tên của bạn" />
+                        </Form.Group>
+                        <Form.Group>
+                            <label for="name" class="">Email của bạn:</label>
+                            <FormControl
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                aria-label='Nhập email của bạn'
+                                aria-describedby="btnSend"
+                                placeholder="Nhập email của bạn" />
+                        </Form.Group>
+                        <Form.Group>
+                            <label for="name" class="">Tiêu đề:</label>
+                            <FormControl
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                aria-label='Nhập tiêu đề'
+                                aria-describedby="btnSend"
+                                placeholder="Nhập tiêu đề" />
+                        </Form.Group>
+                        <Form.Group>
+                            <label for="name" class="">Nội dung:</label>
+                            <FormControl
+                                type="textarea"
+                                value={content}
+                                as={'textarea'}
+                                onChange={(e) => setContent(e.target.value)}
+                                aria-label='Nội dung bạn muốn gửi'
+                                aria-describedby="btnSend"
+                                placeholder="Nội dung bạn muốn gửi" />
+                        </Form.Group>
+                        <Button
+                            id='btnSend'
+                            variant='outline-secondary'
+                            type='submit'
+                            className="custom">
                             Gửi
                         </Button>
-                    </div>
+                    </Form>
                     <div class="status"></div>
                 </div>
                 <div class="col-md-3 text-center">
@@ -86,7 +109,6 @@ const Contact = () => {
                 <div class="card-header">
                 </div>
                 <div class="card-body">
-
                 </div>
             </div>
         </div>
