@@ -61,9 +61,9 @@ namespace TatBlog.WebApi.Endpoints
               .WithName("DeleteAuthor")
               .Produces<ApiResponse<string>>();
 
-            routeGroupBuilder.MapGet("/best/{limit:int}", GetNPopularAuthors)
+            routeGroupBuilder.MapGet("/best/{limit:int}", GetPagedNPopularAuthors)
                 .WithName("GetNPopularAuthors")
-                .Produces<ApiResponse<PaginationResult<AuthorItem>>>();
+                .Produces<ApiResponse<AuthorItem>>();
 
             return app;
         }
@@ -194,14 +194,11 @@ namespace TatBlog.WebApi.Endpoints
               : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, $"Không tìm thấy tác giả có id = {id}"));
         }
 
-        private static async Task<IResult> GetNPopularAuthors(int limit,
-            [AsParameters] PagingModel pagingModel,
+        private static async Task<IResult> GetPagedNPopularAuthors(int limit,
             IAuthorRepository authorRepository)
         {
-            var popularAuthors = await authorRepository.GetNPopularAuthorAsync<AuthorItem>(limit, pagingModel,
-                popularAuthors => popularAuthors.ProjectToType<AuthorItem>());
-            var paginationResult = new PaginationResult<AuthorItem>(popularAuthors);
-            return Results.Ok(ApiResponse.Success(paginationResult));
+            var popularAuthors = await authorRepository.GetNPopularAuthorsAsync(limit);
+            return Results.Ok(ApiResponse.Success(popularAuthors));
         }
     }
 }

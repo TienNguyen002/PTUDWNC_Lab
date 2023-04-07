@@ -1,19 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Text;
-using System.Threading.Tasks;
 using TatBlog.Core;
 using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO.Author;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
-using TatBlog.Data.Mappings;
 using TatBlog.Services.Extensions;
-using static Azure.Core.HttpHeader;
 
 namespace TatBlog.Services.Blogs
 {
@@ -264,7 +257,7 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region GetNPopularAuthorAsync (Lấy ds N tác giả có nhiều bài viết)
-        public async Task<IPagedList<Author>> GetNPopularAuthorAsync(
+        public async Task<IPagedList<Author>> GetPagedNPopularAuthorAsync(
           int n,
           IPagingParams pagingParams,
           CancellationToken cancellationToken = default
@@ -279,13 +272,34 @@ namespace TatBlog.Services.Blogs
         #endregion
 
         #region GetNPopularAuthorAsync<T> (Lấy ds N tác giả có nhiều bài viết)
-        public async Task<IPagedList<T>> GetNPopularAuthorAsync<T>(int n, IPagingParams pagingParams, Func<IQueryable<Author>, IQueryable<T>> mapper, CancellationToken cancellationToken = default)
+        public async Task<IPagedList<T>> GetPagedNPopularAuthorAsync<T>(int n, IPagingParams pagingParams, Func<IQueryable<Author>, IQueryable<T>> mapper, CancellationToken cancellationToken = default)
         {
             IQueryable<Author> authors = _context.Set<Author>()
               .Include(a => a.Posts)
               .OrderByDescending(a => a.Posts.Count(p => p.Published))
               .Take(n);
             return await mapper(authors).ToPagedListAsync(pagingParams, cancellationToken);
+        }
+        #endregion
+
+        #region GetNPopularAuthorsAsync (Lấy ds N tác giả có nhiều bài viết)
+        public async Task<List<AuthorItem>> GetNPopularAuthorsAsync(int limit, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Author>().Select(a => new AuthorItem()
+            {
+                Id = a.Id,
+                FullName = a.FullName,
+                Email = a.Email,
+                UrlSlug = a.UrlSlug,
+                ImageUrl = a.ImageUrl,
+                JoinedDate = a.JoinedDate,
+                Notes = a.Notes,
+                PostsCount = a.Posts.Count(p => p.Published)
+
+            })
+                .OrderByDescending(p => p.PostsCount)
+               .Take(limit)
+               .ToListAsync(cancellationToken);
         }
         #endregion
     }

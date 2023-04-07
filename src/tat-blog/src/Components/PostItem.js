@@ -18,7 +18,12 @@ const PostList = ({postItem}) => {
                     </div>
                     <div className='col-md-8'>
                         <Card.Body>
-                            <Card.Title>{title}</Card.Title>
+                            <Card.Title>
+                                <Link className="text-decoration-none"
+                                    to={`/blog/post/${postedDate.getFullYear()}/${postedDate.getMonth()}/${postedDate.getDay()}/${postItem.urlSlug}`}>
+                                        {title}
+                                </Link>
+                            </Card.Title>
                             <Card.Text>
                                 <small className='text-muted'>Tác giả:</small>
                                 <span className='text-primary m-1 '>
@@ -43,7 +48,7 @@ const PostList = ({postItem}) => {
                             </div>
                             <div className='text-end'>
                                 <Link
-                                to={`/blog/post/year=${postedDate.getFullYear()}/${postedDate.getMonth()}/${postedDate.getDay()}/${postItem.urlSlug}`}
+                                to={`/blog/post/${postedDate.getFullYear()}/${postedDate.getMonth()}/${postedDate.getDay()}/${postItem.urlSlug}`}
                                 className='btn btn-primary'
                                 title={title}>
                                     Xem chi tiết

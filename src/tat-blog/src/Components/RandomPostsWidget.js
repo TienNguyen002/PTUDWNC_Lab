@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Link } from "react-router-dom";
-import { getCategories } from "../Services/Widgets";
+import { getRandomPosts } from "../Services/Widgets";
 
-const CategoriesWidget = () => {
-  const [categoryList, setCategoryList] = useState([]);
+const RandomPostsWidget = () => {
+  const [randomList, setRandomList] = useState([]);
   useEffect(() => {
-    getCategories().then(data => {
+    getRandomPosts().then(data => {
       if(data){
-        setCategoryList(data);
+        setRandomList(data);
       }
       else{
-        setCategoryList([]);
+        setRandomList([]);
       }
     });
   }, [])
@@ -19,19 +19,18 @@ const CategoriesWidget = () => {
   return (
     <div className="mb-4">
         <h3 className="text-success mb-2">
-          Các chủ đề
+          5 bài viết ngẫu nhiên
         </h3>
 
-        {categoryList.length > 0 && 
+        {randomList.length > 0 && 
           <ListGroup>
-            {categoryList.map((item, index) => {
+            {randomList.map((item, index) => {
               return (
                 <ListGroup.Item key={index}>
-                  <Link to={`/blog/category/${item.urlSlug}`}
-                  title={item.description}
+                  <Link to={`/blog/post/${item.urlSlug}`}
+                  title="Xem chi tiết"
                   key={index}>
-                  {item.name}
-                  <span>&nbsp;({item.postCount})</span>
+                  {item.title}
                   </Link>
                 </ListGroup.Item>
               );
@@ -42,4 +41,4 @@ const CategoriesWidget = () => {
   );
 }
 
-export default CategoriesWidget;
+export default RandomPostsWidget;

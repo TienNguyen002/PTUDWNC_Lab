@@ -83,12 +83,16 @@ namespace TatBlog.Services.Blogs
             CancellationToken cancellationToken = default);
         #endregion
 
-        #region GetNPopularAuthorAsync (Lấy ds N tác giả có nhiều bài viết)
-        Task<IPagedList<Author>> GetNPopularAuthorAsync(int n, IPagingParams pagingParams, CancellationToken cancellationToken = default);
+        #region GetPagedNPopularAuthorAsync (Lấy ds N tác giả có nhiều bài viết)
+        Task<IPagedList<Author>> GetPagedNPopularAuthorAsync(int n, IPagingParams pagingParams, CancellationToken cancellationToken = default);
         #endregion
 
         #region GetNPopularAuthorAsync<T> (Lấy ds N tác giả có nhiều bài viết)
-        Task<IPagedList<T>> GetNPopularAuthorAsync<T>(int n, IPagingParams pagingParams, Func<IQueryable<Author>, IQueryable<T>> mapper, CancellationToken cancellationToken = default);
+        Task<IPagedList<T>> GetPagedNPopularAuthorAsync<T>(int n, IPagingParams pagingParams, Func<IQueryable<Author>, IQueryable<T>> mapper, CancellationToken cancellationToken = default);
+        #endregion
+
+        #region GetNPopularAuthorsAsync (Lấy ds N tác giả có nhiều bài viết)
+        Task<List<AuthorItem>> GetNPopularAuthorsAsync(int limit, CancellationToken cancellationToken = default);
         #endregion
     }
 }

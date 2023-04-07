@@ -34,6 +34,10 @@ namespace TatBlog.WebApi.Endpoints
               .WithName("GetTags")
               .Produces<ApiResponse<PaginationResult<TagItem>>>();
 
+            routeGroupBuilder.MapGet("/alltags", GetAllTags)
+              .WithName("GetAllTags")
+              .Produces<ApiResponse<PaginationResult<TagItem>>>();
+
             routeGroupBuilder.MapGet("/{id:int}", GetTagDetails)
               .WithName("GetTagDetails")
               .Produces<ApiResponse<TagItem>>();
@@ -69,6 +73,13 @@ namespace TatBlog.WebApi.Endpoints
                 tags => tags.ProjectToType<TagItem>());
             var paginationResult = new PaginationResult<TagItem>(tags);
             return Results.Ok(ApiResponse.Success(paginationResult));
+        }
+
+        private static async Task<IResult> GetAllTags(
+            IBlogRepository blogRepository)
+        {
+            var tags = await blogRepository.GetAllTagsAsync();
+            return Results.Ok(ApiResponse.Success(tags));
         }
 
         private static async Task<IResult> GetTagDetails(

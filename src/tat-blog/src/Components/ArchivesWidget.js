@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Link } from "react-router-dom";
-import { getCategories } from "../Services/Widgets";
+import { getArchives } from "../Services/Widgets";
 
-const CategoriesWidget = () => {
-  const [categoryList, setCategoryList] = useState([]);
+const ArchivesWidget = () => {
+  const [archiveList, setArchiveList] = useState([]);
   useEffect(() => {
-    getCategories().then(data => {
+    getArchives().then(data => {
       if(data){
-        setCategoryList(data);
+        setArchiveList(data);
       }
       else{
-        setCategoryList([]);
+        setArchiveList([]);
       }
     });
   }, [])
@@ -19,18 +19,18 @@ const CategoriesWidget = () => {
   return (
     <div className="mb-4">
         <h3 className="text-success mb-2">
-          Các chủ đề
+          Danh sách lưu trữ
         </h3>
 
-        {categoryList.length > 0 && 
+        {archiveList.length > 0 && 
           <ListGroup>
-            {categoryList.map((item, index) => {
+            {archiveList.map((item, index) => {
               return (
                 <ListGroup.Item key={index}>
-                  <Link to={`/blog/category/${item.urlSlug}`}
-                  title={item.description}
+                  <Link to={`/blog/archives/${item.year}/${item.month}`}
+                  title={item.monthName}
                   key={index}>
-                  {item.name}
+                  {item.monthName} {item.year}
                   <span>&nbsp;({item.postCount})</span>
                   </Link>
                 </ListGroup.Item>
@@ -42,4 +42,4 @@ const CategoriesWidget = () => {
   );
 }
 
-export default CategoriesWidget;
+export default ArchivesWidget;
