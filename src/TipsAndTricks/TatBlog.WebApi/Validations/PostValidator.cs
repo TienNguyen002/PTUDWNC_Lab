@@ -28,12 +28,6 @@ namespace TatBlog.WebApi.Validations
                 .MaximumLength(1000)
                 .WithMessage("Metadata chỉ được tối đa 1000 ký tự");
 
-            RuleFor(a => a.UrlSlug)
-                .NotEmpty()
-                .WithMessage("UrlSlug không được để trống")
-                .MaximumLength(100)
-                .WithMessage("UrlSlug tối đa 100 ký tự");
-
             RuleFor(s => s.CategoryId)
                .NotEmpty()
                .WithMessage("Bạn phải chọn chủ đề cho bài viết");

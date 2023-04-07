@@ -27,6 +27,7 @@ namespace TatBlog.WebApi.Models.Post
         //Đường dẫn đến tập tin hình ảnh
         public string ImageUrl { get; set; }
 
+        public bool Published { get; set; }
         //Số lượt xem, đọc bài viết
         public int ViewCount { get; set; }
 
