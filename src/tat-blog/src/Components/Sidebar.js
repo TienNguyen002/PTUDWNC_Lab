@@ -6,21 +6,19 @@ import RandomPostsWidget from "./RandomPostsWidget";
 import TagCloudWidget from "./TagCloudWidget";
 import BestAuthorsWidget from "./BestAuthorsWidget";
 import ArchivesWidget from "./ArchivesWidget";
+import NewsletterForm from "./NewsletterForm";
 
 const Sidebar = () => {
     return (
         <div className="pt-4 ps-2">
             <SearchForm/>
+            <NewsletterForm/>
             <CategoriesWidget/>
             <FeaturedPostsWidget/>
             <RandomPostsWidget/>
             <TagCloudWidget/>
             <BestAuthorsWidget/>
-            <ArchivesWidget/>
-            <h1>
-                Đăng ký nhận tin mới
-            </h1>
-            
+            <ArchivesWidget/>   
         </div>
     )
 }

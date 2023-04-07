@@ -2,38 +2,37 @@ import { useState } from "react";
 import Form from 'react-bootstrap/Form'
 import  Button  from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FormControl } from "react-bootstrap";
 
-const SearchForm = () => {
-  const [keyword, setKeyword] = useState('');
+const NewsletterForm = () => {
+  const [email, setEmail] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    window.location = `/blog?k=${keyword}`;
+    window.location = `/blog`;
   }
 
   return(
     <div className="mb-4">
       <h3 className="text-success mb-2">
-          Tìm kiếm bài viết
+          Đăng ký nhận thông báo
         </h3>
       <Form method="get" onSubmit={handleSubmit}>
         <Form.Group className="input-group mb-3">
           <FormControl
-          type="text"
-          name="k"
-          value={keyword}
-          onChange = {(e) => setKeyword(e.target.value)}
-          aria-label = 'Nhập vào từ khoá'
-          aria-describedby="btnSearchPost"
-          placeholder="Nhập vào từ khoá"/>
+          type="email"
+          value={email}
+          onChange = {(e) => setEmail(e.target.value)}
+          aria-label = 'Nhập email để đăng ký'
+          aria-describedby="btnSend"
+          placeholder="Nhập email để đăng ký"/>
 
           <Button
-          id='btnSearchPost'
+          id='btnSend'
           variant = 'outline-secondary'
           type='submit'>
-            <FontAwesomeIcon icon={faSearch}/>
+            <FontAwesomeIcon icon={faPaperPlane}/>
           </Button>
 
         </Form.Group>
@@ -43,4 +42,4 @@ const SearchForm = () => {
   )
 }
 
-export default SearchForm;
+export default NewsletterForm;
