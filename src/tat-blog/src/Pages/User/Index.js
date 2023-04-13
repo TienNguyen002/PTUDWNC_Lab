@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { useLocation } from "react-router-dom";
-import Pager from "../Components/Shared/Pager";
-import PostItem from '../Components/Posts/PostItem'
-import { getPosts } from "../Services/BlogRepository";
+import Pager from "../../Components/Shared/Pager";
+import PostItem from '../../Components/Posts/PostItem'
+import { getPosts } from "../../Services/BlogRepository";
 
 const Index = () => {
   const[postList, setPostList] = useState([]);
