@@ -1,97 +1,25 @@
-import axios from "axios";
+import { get_api } from "./Methods";
 
-export async function getCategories(){
-  try {
-    const response = await axios.get(`https://localhost:7251/api/categories`);
-    const data = response.data;
-    if(data.isSuccess){
-      return data.result;
-    }
-    else{
-      return null;
-    }
-  } catch (error) {
-    console.log('Error', error.message);
-    return null;
-  }
+export function getCategories(){
+  return get_api(`https://localhost:7251/api/categories`)
 }
 
-export async function getFeaturedPosts(){
-  try {
-    const response = await axios.get(`https://localhost:7251/api/posts/feature/3`);
-    const data = response.data;
-    if(data.isSuccess){
-      return data.result;
-    }
-    else{
-      return null;
-    }
-  } catch (error) {
-    console.log('Error', error.message);
-    return null;
-  }
+export function getFeaturedPosts(){
+  return get_api(`https://localhost:7251/api/posts/feature/3`)
 }
 
-export async function getRandomPosts(){
-  try {
-    const response = await axios.get(`https://localhost:7251/api/posts/random/5`);
-    const data = response.data;
-    if(data.isSuccess){
-      return data.result;
-    }
-    else{
-      return null;
-    }
-  } catch (error) {
-    console.log('Error', error.message);
-    return null;
-  }
+export function getRandomPosts(){
+  return get_api(`https://localhost:7251/api/posts/random/5`)
 }
 
-export async function getTags(){
-  try {
-    const response = await axios.get(`https://localhost:7251/api/tags/alltags`);
-    const data = response.data;
-    if(data.isSuccess){
-      return data.result;
-    }
-    else{
-      return null;
-    }
-  } catch (error) {
-    console.log('Error', error.message);
-    return null;
-  }
+export function getTags(){
+  return get_api(`https://localhost:7251/api/tags/alltags`)
 }
 
-export async function getBestAuthors(){
-  try {
-    const response = await axios.get(`https://localhost:7251/api/authors/best/4`);
-    const data = response.data;
-    if(data.isSuccess){
-      return data.result;
-    }
-    else{
-      return null;
-    }
-  } catch (error) {
-    console.log('Error', error.message);
-    return null;
-  }
+export function getBestAuthors(){
+  return get_api(`https://localhost:7251/api/authors/best/4`)
 }
 
-export async function getArchives(){
-  try {
-    const response = await axios.get(`https://localhost:7251/api/posts/archives/12`);
-    const data = response.data;
-    if(data.isSuccess){
-      return data.result;
-    }
-    else{
-      return null;
-    }
-  } catch (error) {
-    console.log('Error', error.message);
-    return null;
-  }
+export function getArchives(){
+  return get_api(`https://localhost:7251/api/posts/archives/12`)
 }
