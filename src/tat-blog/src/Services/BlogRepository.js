@@ -34,11 +34,11 @@ export function getPostsFilter(keyword = '',
     keyword !== '' && url.searchParams.append('Keyword', keyword);
     authorId !== '' && url.searchParams.append('AuthorId', authorId);
     categoryId !== '' && url.searchParams.append('CategoryId', categoryId);
-    year !== '' && url.searchParams.append('Year', year);
-    month !== '' && url.searchParams.append('Month', month);
+    year !== '' && url.searchParams.append('PostYear', year);
+    month !== '' && url.searchParams.append('PostMonth', month);
     sortColumn !== '' && url.searchParams.append('SortColumn', sortColumn);
     sortOrder !== '' && url.searchParams.append('SortOrder', sortOrder);
-    url.searchParams.append('PageSiz', pageSize);
+    url.searchParams.append('PageSize', pageSize);
     url.searchParams.append('PageNumber', pageNumber);
     return get_api(url.href);
 }
