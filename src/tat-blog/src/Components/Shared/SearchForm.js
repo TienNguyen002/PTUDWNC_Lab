@@ -15,6 +15,9 @@ const SearchForm = () => {
 
   return(
     <div className="mb-4">
+      <h3 className="text-success mb-2">
+          Tìm kiếm bài viết
+        </h3>
       <Form method="get" onSubmit={handleSubmit}>
         <Form.Group className="input-group mb-3">
           <FormControl
@@ -24,7 +27,7 @@ const SearchForm = () => {
           onChange = {(e) => setKeyword(e.target.value)}
           aria-label = 'Nhập vào từ khoá'
           aria-describedby="btnSearchPost"
-          placeholder="Enter keyword"/>
+          placeholder="Nhập vào từ khoá"/>
 
           <Button
           id='btnSearchPost'
