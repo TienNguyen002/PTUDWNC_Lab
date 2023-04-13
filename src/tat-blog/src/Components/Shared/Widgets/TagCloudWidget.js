@@ -29,8 +29,9 @@ const TagCloudWidget = () => {
                 <ListGroup.Item key={index}>
                   <Link to={`/blog/tag/${item.urlSlug}`}
                   title={item.description}
-                  key={index}>
+                  key={index} className="btn">
                   {item.name}
+                  <span>&nbsp;({item.postCount})</span>
                   </Link>
                 </ListGroup.Item>
               );
