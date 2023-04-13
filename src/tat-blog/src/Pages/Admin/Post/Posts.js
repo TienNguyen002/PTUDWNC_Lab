@@ -3,6 +3,7 @@ import Table from "react-bootstrap/Table"
 import { Link } from "react-router-dom";
 import { getPosts } from "../../../Services/BlogRepository";
 import Loading from "../../../Components/Shared/Loading"; 
+import PostFilterPane from "../../../Components/Admin/Posts/PostFilterPane";
 
 const Posts = () => {
     const [postsList, setPostsList] = useState([]);
@@ -12,7 +13,7 @@ const Posts = () => {
     
     useEffect(() => {
         document.title = 'Danh sách bài viết';
-        
+        <PostFilterPane/>
         getPosts(k, ps, p).then(data => {
             if(data)
                 setPostsList(data.items);

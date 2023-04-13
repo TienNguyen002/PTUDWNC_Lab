@@ -75,7 +75,7 @@ const Contact = () => {
                         <div className="text-center">
                             <Button
                                 id='btnSend'
-                                variant='outline-secondary'
+                                variant='primary'
                                 type='submit'>
                                 Gửi
                             </Button>
