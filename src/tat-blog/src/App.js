@@ -15,11 +15,15 @@ import Categories from './Pages/Admin/Categories';
 import Comments from './Pages/Admin/Comments';
 import Posts from './Pages/Admin/Post/Posts';
 import Tags from './Pages/Admin/Tags';
+import NotFound from './Pages/NotFound';
+import BadRequest from './Pages/BadRequest';
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path='*' element={<NotFound/>}/>
+        <Route path='/400' element={<BadRequest/>}/>
         <Route path='/' element={<Layout />}>
           <Route path='/' element={<Index />} />
           <Route path='blog' element={<Index />} />

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import { useLocation } from "react-router-dom";
+import { useQuery } from "../../Utils/Utils";
+
 import Pager from "../../Components/Shared/Pager";
 import PostItem from '../../Components/Posts/PostItem'
 import { getPosts } from "../../Services/BlogRepository";
@@ -7,13 +8,6 @@ import { getPosts } from "../../Services/BlogRepository";
 const Index = () => {
   const[postList, setPostList] = useState([]);
   const [metadata, setMetaData] = useState({});
-
-  function useQuery(){
-    const {search} = useLocation();
-
-    return React.useMemo(() => 
-    new URLSearchParams(search), [search]);
-  }
 
   let query = useQuery(),
   k = query.get('k') ?? '',
