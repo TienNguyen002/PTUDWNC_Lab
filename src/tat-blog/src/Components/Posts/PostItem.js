@@ -1,7 +1,7 @@
-import TagList from './TagList';
+import TagList from '../Shared/TagList';
 import Card from 'react-bootstrap/Card';
 import {Link} from 'react-router-dom';
-import {isEmptyOrSpaces} from '../Utils/Utils'
+import {isEmptyOrSpaces} from '../../Utils/Utils'
 
 const PostList = ({postItem}) => {
     let imageUrl = isEmptyOrSpaces(postItem.imageUrl)
