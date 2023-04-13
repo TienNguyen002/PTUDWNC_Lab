@@ -1,6 +1,6 @@
 import { Image } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "../Utils/Utils";
+import { useQuery } from "../../Utils/Utils";
 
 const BadRequest = () => {
     const navigate = useNavigate();

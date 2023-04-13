@@ -15,8 +15,8 @@ import Categories from './Pages/Admin/Categories';
 import Comments from './Pages/Admin/Comments';
 import Posts from './Pages/Admin/Post/Posts';
 import Tags from './Pages/Admin/Tags';
-import NotFound from './Pages/NotFound';
-import BadRequest from './Pages/BadRequest';
+import NotFound from './Pages/Shared/NotFound';
+import BadRequest from './Pages/Shared/BadRequest';
 
 function App() {
   return (
