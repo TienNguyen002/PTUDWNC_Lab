@@ -4,7 +4,6 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import { getPostsFilter } from "../../../Services/BlogRepository";
 import Loading from "../../../Components/Shared/Loading"; 
 import { isInteger } from '../../../Utils/Utils'
-import Pager from '../../../Components/Shared/Pager'
 import PostFilterPane from "../../../Components/Admin/Posts/PostFilterPane";
 import { useSelector } from "react-redux";
 
