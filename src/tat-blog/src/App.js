@@ -28,7 +28,7 @@ function App() {
           <Route path='blog/RSS' element={<Rss />} />
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>
-          <Route path='/admin' element={<AdminIndex/>}/>
+          <Route path='/admin' element={<AdminIndex.default/>}/>
           <Route path='/admin/authors' element={<Authors/>}/>
           <Route path='/admin/categories' element={<Categories/>}/>
           <Route path='/admin/comments' element={<Comments/>}/>
