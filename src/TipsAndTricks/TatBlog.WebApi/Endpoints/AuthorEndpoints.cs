@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TatBlog.Core.Collections;
 using TatBlog.Core.DTO.Author;
+using TatBlog.Core.DTO.Category;
 using TatBlog.Core.DTO.Post;
 using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
@@ -26,9 +27,13 @@ namespace TatBlog.WebApi.Endpoints
         {
             var routeGroupBuilder = app.MapGroup("/api/authors");
 
-            routeGroupBuilder.MapGet("/", GetAuthors)
+            routeGroupBuilder.MapGet("/pages", GetAuthors)
               .WithName("GetAuthors")
               .Produces<ApiResponse<PaginationResult<AuthorItem>>>();
+
+            routeGroupBuilder.MapGet("/", GetAllAuthors)
+                .WithName("GetAllAuthors")
+                .Produces<ApiResponse<PaginationResult<AuthorItem>>>();
 
             routeGroupBuilder.MapGet("/{id:int}", GetAuthorDetails)
               .WithName("GetAuthorDetails")
@@ -77,6 +82,12 @@ namespace TatBlog.WebApi.Endpoints
             return Results.Ok(ApiResponse.Success(paginationResult));
         }
 
+        private static async Task<IResult> GetAllAuthors(
+            IAuthorRepository authorRepository)
+        {
+            var authors = await authorRepository.GetAuthorAsync();
+            return Results.Ok(ApiResponse.Success(authors));
+        }
         private static async Task<IResult> GetAuthorDetails(
           int id,
           IAuthorRepository authorRepository,

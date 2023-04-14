@@ -612,7 +612,10 @@ namespace TatBlog.Services.Blogs
             post.Tags = post.Tags.Where(t => validTags.ContainsKey(t.UrlSlug)).ToList();
 
             if (post.Id > 0)
+            {
+                post.ModifiedDate = DateTime.Now;
                 _context.Update(post);
+            }      
             else
                 _context.Add(post);
 

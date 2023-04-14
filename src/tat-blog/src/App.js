@@ -17,6 +17,7 @@ import Posts from './Pages/Admin/Post/Posts';
 import Tags from './Pages/Admin/Tags';
 import NotFound from './Pages/Shared/NotFound';
 import BadRequest from './Pages/Shared/BadRequest';
+import Edit from './Pages/Admin/Post/Edit';
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
           <Route path='/admin/categories' element={<Categories/>}/>
           <Route path='/admin/comments' element={<Comments/>}/>
           <Route path='/admin/posts' element={<Posts/>}/>
+          <Route path='/admin/posts/edit' element={<Edit/>}/>
+          <Route path='/admin/posts/edit/:id' element={<Edit/>}/>
           <Route path='/admin/tags' element={<Tags/>}/>
         </Route>
       </Routes>
