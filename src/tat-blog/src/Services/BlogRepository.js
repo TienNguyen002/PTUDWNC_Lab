@@ -56,3 +56,7 @@ export function addOrUpdatePost(formData){
 export function deletePost(id = 0){
     return delete_api(`https://localhost:7251/api/posts/${id}`)
 }
+
+export function changePublished(id = 0){
+    return get_api(`https://localhost:7251/api/posts/chage-post-published/${id}`)
+}
