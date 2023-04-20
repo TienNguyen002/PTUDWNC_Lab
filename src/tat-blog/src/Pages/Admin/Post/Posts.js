@@ -54,9 +54,9 @@ const Posts = () => {
         async function ChangePublished(id){
             const response = await changePublished(id);
             if(response)
-                alert(response);
+                console.log(response);
             else
-                alert("Thay đổi không thành công");
+                console.log("Thay đổi không thành công");
         }
     }
 

@@ -21,6 +21,9 @@ namespace TatBlog.WebApi.Models.Post
         [DisplayName("Tháng")]
         public int? PostMonth { get; set; }
 
+        [DisplayName("Xuất bản")]
+        public bool? NotPublished { get; set; }
+
         public IEnumerable<SelectListItem> AuthorList { get; set; }
         public IEnumerable<SelectListItem> CategoryList { get; set; }
         public IEnumerable<SelectListItem> MonthList { get; set; }
