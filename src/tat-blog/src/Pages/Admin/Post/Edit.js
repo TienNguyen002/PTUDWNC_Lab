@@ -62,6 +62,7 @@ const Edit = () => {
         e.preventDefault();
         console.log(post)
         let form = new FormData(e.target);
+        console.log(e.target);
         addOrUpdatePost(form).then(data => {
             console.log(data)
             if(data)

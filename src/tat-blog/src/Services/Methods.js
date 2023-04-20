@@ -28,6 +28,20 @@ export async function post_api(your_api, formData) {
     }
 }
 
+export async function delete_api(your_api) {
+    try { 
+        const response = await axios.delete(your_api); 
+        const data = response.data; 
+        if (data.isSuccess) 
+            return data.result; 
+        else 
+            return null; 
+    } catch (error) { 
+        console.log('Error', error.message); 
+        return null; 
+    }
+}
+
 export function decode(str){
     let txt = new DOMParser().parseFromString(str, "text/html");
     return txt.documentElement.textContent;

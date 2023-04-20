@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table"
 import { Link, useParams} from "react-router-dom";
-import { getPostsFilter } from "../../../Services/BlogRepository";
+import { deletePost, getPostsFilter } from "../../../Services/BlogRepository";
 import Loading from "../../../Components/Shared/Loading"; 
 import PostFilterPane from "../../../Components/Admin/Posts/PostFilterPane";
 import { useSelector } from "react-redux";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Posts = () => {
     const [postsList, setPostsList] = useState([]);
@@ -27,12 +29,22 @@ const Posts = () => {
                 setPostsList([]);
             setIsVisibleLoading(false);
         })
-    }, [postFilter.keyword,
-        postFilter.authorId,
-        postFilter.categoryId,
-        postFilter.year,
-        postFilter.month,
-        p, ps]);
+    }, [postFilter, p, ps, postsList]);
+
+    const handleDelete = (e, id) => {
+        e.preventDefault();
+        DeletePost(id);
+
+        async function DeletePost(id){
+            if(window.confirm("Xóa bài viết này?")){
+                const response = await deletePost(id);
+                if(response)
+                    alert("Xóa thành công!");
+                else
+                    alert("Lỗi!!");
+            }
+        }
+    };
 
     return (
         <>
@@ -46,6 +58,7 @@ const Posts = () => {
                             <th>Tác giả</th>
                             <th>Chủ đề</th>
                             <th>Xuất bản</th>
+                            <th>Xóa</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,11 +74,17 @@ const Posts = () => {
                             <td>{item.author.fullName}</td>
                             <td>{item.category.name}</td>
                             <td>{item.published ? "Có" : "Không"}</td>
+                            <td>
+                                <div className="text-center"
+                                    onClick={(e) => handleDelete(e, item.id)}>
+                                    <FontAwesomeIcon icon={faTrash}/>
+                                </div>
+                            </td>
                         </tr>
                         ) :
                         <tr>
                             <td colSpan={4}>
-                                <h4 className="text-danger text-center">Không tìm thấy bài viết nào</h4>
+                                <h4 className="text-danger text-center">Không tìm thấy bài viết nào</h4> 
                             </td>    
                         </tr>}
                     </tbody>
