@@ -29,7 +29,7 @@ const Contact = () => {
                 <br />Chúng tôi sẽ sớm giải đáp thắc mắc của các bạn!
             </p>
             <div class="row">
-                <div id ="Form" class="col-md-9 mb-md-0 mb-5">
+                <div id="Form" class="col-md-9 mb-md-0 mb-5">
                     <Form method="get" onSubmit={handleSubmit}>
                         <label for="name" class="">Tên của bạn:</label>
                         <Form.Group>
@@ -72,12 +72,14 @@ const Contact = () => {
                                 aria-describedby="btnSend"
                                 placeholder="Nội dung bạn muốn gửi" />
                         </Form.Group>
-                        <Button
-                            id='btnSend'
-                            variant='outline-secondary'
-                            type='submit'>
-                            Gửi
-                        </Button>
+                        <div className="text-center">
+                            <Button
+                                id='btnSend'
+                                variant='primary'
+                                type='submit'>
+                                Gửi
+                            </Button>
+                        </div>
                     </Form>
                     <div class="status"></div>
                 </div>

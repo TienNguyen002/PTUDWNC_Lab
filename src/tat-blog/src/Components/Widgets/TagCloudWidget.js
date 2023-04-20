@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Link } from "react-router-dom";
-import { getTags } from "../../../Services/Widgets";
+import { getTags } from "../../Services/Widgets";
 
 const TagCloudWidget = () => {
   const [tagList, setTagList] = useState([]);
