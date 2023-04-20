@@ -82,11 +82,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             var postQuery = _mapper.Map<PostQuery>(model);
 
             _logger.LogInformation("Lấy danh sách bài viết từ CSDL");
-<<<<<<< HEAD
-            ViewBag.PostsList = await _blogRepository.GetAllPagedPostQueryAsync(postQuery, pageNumber: pageNumber, pageSize: pageSize);
-=======
             ViewBag.Items = await _blogRepository.GetAllPagedPostQueryAsync(postQuery, pageNumber: pageNumber, pageSize: pageSize);
->>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
             ViewBag.PostQuery = postQuery;
             _logger.LogInformation("Chuẩn bị dữ liệu cho ViewModel");
             await PopulatePostFilterModelAsync(model);
@@ -186,23 +182,5 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             var slugExited = await _blogRepository.IsPostSlugExistedAsync(id, urlSlug);
             return slugExited ? Json($"Slug '{urlSlug}' đã được sử dụng") : Json(true);
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
-        //private IPagingParams CreatePagingParamsForPost(
-        //    int pageNumber = 1,
-        //    int pageSize = 5,
-        //    string sortColumn = "PostedDate",
-        //    string sortOrder = "DESC")
-        //{
-        //    return new PagingParams()
-        //    {
-        //        PageNumber = pageNumber,
-        //        PageSize = pageSize,
-        //        SortColumn = sortColumn,
-        //        SortOrder = sortOrder,
-        //    };
-        //}
     }
 }

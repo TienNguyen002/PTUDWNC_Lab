@@ -15,14 +15,19 @@ var builder = WebApplication.CreateBuilder(args);
 }
 
 var app = builder.Build();
-{ 
+{
     //Configure the HTTP request pipeline.
     app.SetupRequestPipeline();
+
+    app.UseDataSeeder();
+
     //Configure API endpoints
     app.MapAuthorEndpoints()
        .MapCategoryEndpoints()
        .MapPostEndpoints()
        .MapTagEndpoints();
+
+
     app.Run();
 }
 

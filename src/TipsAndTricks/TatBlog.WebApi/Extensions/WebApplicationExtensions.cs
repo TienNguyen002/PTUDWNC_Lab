@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 using TatBlog.Data.Contexts;
+using TatBlog.Data.Seeders;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
 using TatBlog.Services.Timing;
@@ -22,6 +23,7 @@ namespace TatBlog.WebApi.Extensions
             builder.Services.AddScoped<IMediaManager, LocalFileSystemMediaManager>();
             builder.Services.AddScoped<IBlogRepository, BlogRepository>();
             builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+            builder.Services.AddScoped<IDataSeeder, DataSeeder>();
 
             return builder;
         }
@@ -66,6 +68,24 @@ namespace TatBlog.WebApi.Extensions
 
             app.UseCors("TatBlogApp");
 
+            return app;
+        }
+
+        public static IApplicationBuilder UseDataSeeder(this IApplicationBuilder app)
+        {
+            using var scope = app.ApplicationServices.CreateScope();
+            try
+            {
+                scope.ServiceProvider
+                  .GetRequiredService<IDataSeeder>()
+                  .Initialize();
+            }
+            catch (Exception ex)
+            {
+                scope.ServiceProvider
+                    .GetRequiredService<ILogger<Program>>()
+                    .LogError(ex, "Could not insert data into database");
+            }
             return app;
         }
     }
