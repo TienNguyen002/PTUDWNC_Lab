@@ -331,7 +331,7 @@ namespace TatBlog.WebApi.Endpoints
             IBlogRepository blogRepository)
         {
             var postQuery = mapper.Map<PostQuery>(model);
-            var postsList = await blogRepository.GetPagedPostsAsync(postQuery, model, posts =>
+            var postsList = await blogRepository.GetPagedAllPostsAsync(postQuery, model, posts =>
             posts.ProjectToType<PostDto>());
             var paginationResult = new PaginationResult<PostDto>(postsList);
             return Results.Ok(ApiResponse.Success(paginationResult));
