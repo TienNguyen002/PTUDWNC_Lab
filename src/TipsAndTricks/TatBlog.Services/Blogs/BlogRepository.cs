@@ -837,13 +837,6 @@ namespace TatBlog.Services.Blogs
             return await result
               .ToPagedListAsync(pagingParams, cancellationToken);
         }
-<<<<<<< HEAD
-
-        public async Task<IPagedList<Post>> GetPagedPostQueryAsync(PostQuery postQuery,
-            int pageNumber,
-            int pageSize,
-            string sortColumn = "id",
-=======
         #endregion
 
         #region Get(All)PagedPostQueryAsync (Lấy ds Post và phân trang theo các tham số của Paging)
@@ -851,7 +844,6 @@ namespace TatBlog.Services.Blogs
             int pageNumber,
             int pageSize,
             string sortColumn = "Id",
->>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default)
         {
@@ -869,11 +861,7 @@ namespace TatBlog.Services.Blogs
         public async Task<IPagedList<Post>> GetAllPagedPostQueryAsync(PostQuery postQuery,
             int pageNumber,
             int pageSize,
-<<<<<<< HEAD
-            string sortColumn = "id",
-=======
             string sortColumn = "Id",
->>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
             string sortOrder = "ASC",
             CancellationToken cancellationToken = default)
         {
@@ -887,8 +875,6 @@ namespace TatBlog.Services.Blogs
             IQueryable<Post> postResult = FindAllPostByQueryable(postQuery);
             return await postResult.ToPagedListAsync(pagingParams, cancellationToken);
         }
-<<<<<<< HEAD
-=======
         #endregion
 
         #region DeletePostByIdAsync (Xóa Post theo Id)
@@ -946,6 +932,5 @@ namespace TatBlog.Services.Blogs
         }
         #endregion
         #endregion   
->>>>>>> e5c9cbcf370b9a70e344c3af8641a5692461d18f
     }
 }
