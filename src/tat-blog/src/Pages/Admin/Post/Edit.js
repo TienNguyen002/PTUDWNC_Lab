@@ -7,6 +7,7 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { addOrUpdatePost, getFilter, getPostById } from '../../../Services/BlogRepository';
 
 const Edit = () => {
+  const [validated, setValidated] = useState(false);
   const initialState = {
       id: 0,
       title: '',
@@ -59,12 +60,18 @@ const Edit = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let form = new FormData(e.target);
-
-    addOrUpdatePost(form).then((data) => {
-      if (data) alert('Lưu thành công!');
-      else alert('Đã xảy ra lỗi!!');
-    });
+    if (e.currentTarget.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+    } else {
+      let form = new FormData(e.target);
+      console.log(e.target)
+      form.append("published", post.published);
+      addOrUpdatePost(form).then((data) => {
+        if (data) alert("Đã lưu thành công!");
+        else alert("Đã xảy ra lỗi!");
+      });
+    }
   };
 
   if (id && !isInteger(id)) return <Navigate to={`/400?redirectTo=/admin/posts`} />;
@@ -74,6 +81,8 @@ const Edit = () => {
         method='post'
         encType='multipart/form-data'
         onSubmit={handleSubmit}
+        noValidate
+        validated={validated}
       >
         <Form.Control
           type='hidden'
@@ -96,9 +105,12 @@ const Edit = () => {
                 })
               }
             />
+            <Form.Control.Feedback type="invalid">
+              Không được bỏ trống.
+            </Form.Control.Feedback>
           </div>
         </div>
-        {/* <div className='row mb-3'>
+        <div className='row mb-3'>
           <Form.Label className='col-sm-2 col-form-label'>Slug</Form.Label>
           <div className='col-sm-10'>
             <Form.Control
@@ -114,28 +126,9 @@ const Edit = () => {
               }
             />
           </div>
-        </div> */}
-        <div className='row mb-3'>
-          <Form.Label className='col-sm-2 col-form-label'>Giới thiệu</Form.Label>
-          <div className='col-sm-10'>
-            <Form.Control
-              as={'textarea'}
-              type='text'
-              required
-              name='description'
-              title='description'
-              value={decode(post.description || '')}
-              onChange={(e) =>
-                setPost({
-                  ...post,
-                  description: e.target.value,
-                })
-              }
-            />
-          </div>
         </div>
         <div className='row mb-3'>
-          <Form.Label className='col-sm-2 col-form-label'>Giới thiệu ngắn</Form.Label>
+          <Form.Label className='col-sm-2 col-form-label'>Giới thiệu</Form.Label>
           <div className='col-sm-10'>
             <Form.Control
               as={'textarea'}
@@ -151,6 +144,31 @@ const Edit = () => {
                 })
               }
             />
+            <Form.Control.Feedback type="invalid">
+              Không được bỏ trống.
+            </Form.Control.Feedback>
+          </div>
+        </div>
+        <div className='row mb-3'>
+          <Form.Label className='col-sm-2 col-form-label'>Nội dung</Form.Label>
+          <div className='col-sm-10'>
+            <Form.Control
+              as={'textarea'}
+              type='text'
+              required
+              name='description'
+              title='description'
+              value={decode(post.description || '')}
+              onChange={(e) =>
+                setPost({
+                  ...post,
+                  description: e.target.value,
+                })
+              }
+            />
+            <Form.Control.Feedback type="invalid">
+              Không được bỏ trống.
+            </Form.Control.Feedback>
           </div>
         </div>
         <div className='row mb-3'>
@@ -169,6 +187,9 @@ const Edit = () => {
                 })
               }
             />
+            <Form.Control.Feedback type="invalid">
+              Không được bỏ trống.
+            </Form.Control.Feedback>
           </div>
         </div>
         <div className='row mb-3'>
@@ -197,6 +218,9 @@ const Edit = () => {
                   </option>
                 ))}
             </Form.Select>
+            <Form.Control.Feedback type="invalid">
+              Không được bỏ trống.
+            </Form.Control.Feedback>
           </div>
         </div>
 
@@ -226,6 +250,9 @@ const Edit = () => {
                   </option>
                 ))}
             </Form.Select>
+            <Form.Control.Feedback type="invalid">
+              Không được bỏ trống.
+            </Form.Control.Feedback>
           </div>
         </div>
         <div className='row mb-3'>
@@ -246,6 +273,9 @@ const Edit = () => {
                 })
               }
             />
+            <Form.Control.Feedback type="invalid">
+              Không được bỏ trống.
+            </Form.Control.Feedback>
           </div>
         </div>
         {!isEmptyOrSpaces(post.imageUrl) && (
