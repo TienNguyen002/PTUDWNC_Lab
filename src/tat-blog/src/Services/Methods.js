@@ -16,7 +16,15 @@ export async function get_api(your_api) {
 
 export async function post_api(your_api, formData) {
     try { 
-        const response = await axios.post(your_api, formData); 
+        const response = await axios({
+            method: 'post',
+            url: your_api,
+            data: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          console.log(response);
         const data = response.data; 
         if (data.isSuccess) 
             return data.result; 
