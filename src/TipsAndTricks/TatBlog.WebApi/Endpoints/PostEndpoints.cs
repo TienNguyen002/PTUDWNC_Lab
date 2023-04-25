@@ -58,7 +58,6 @@ namespace TatBlog.WebApi.Endpoints
               .Accepts<IFormFile>("multipart/form-data")
               .Produces<ApiResponse<string>>();
 
-
             routeGroupBuilder.MapPut("/{id:int}", UpdatePost)
               .WithName("UpdatePost")
               .AddEndpointFilter<ValidatorFilter<PostEditModel>>()
@@ -66,6 +65,10 @@ namespace TatBlog.WebApi.Endpoints
 
             routeGroupBuilder.MapDelete("/{id:int}", DeletePost)
               .WithName("DeletePost")
+              .Produces<ApiResponse<string>>();
+
+            routeGroupBuilder.MapGet("/chage-post-published/{id:int}", ChangePublishedStatus)
+              .WithName("ChangePublishedStatus")
               .Produces<ApiResponse<string>>();
 
             routeGroupBuilder.MapGet("/get-posts-filter", GetFilteredPosts)
@@ -328,10 +331,23 @@ namespace TatBlog.WebApi.Endpoints
             IBlogRepository blogRepository)
         {
             var postQuery = mapper.Map<PostQuery>(model);
-            var postsList = await blogRepository.GetPagedPostsAsync(postQuery, model, posts =>
+            var postsList = await blogRepository.GetPagedAllPostsAsync(postQuery, model, posts =>
             posts.ProjectToType<PostDto>());
             var paginationResult = new PaginationResult<PostDto>(postsList);
             return Results.Ok(ApiResponse.Success(paginationResult));
+        }
+
+        private static async Task<IResult> ChangePublishedStatus(
+           int id,
+           IBlogRepository blogRepository)
+        {
+            var post = await blogRepository.GetPostByIdAsync(id);
+            if(post == null) 
+            {
+                Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, $"Không tìm thấy bài viết có id = {id}"));
+            }
+            await blogRepository.ChangePublishedPostAsync(id);
+            return Results.Ok(ApiResponse.Success("Chỉnh trạng thái thành công", HttpStatusCode.NoContent));
         }
     }
 }

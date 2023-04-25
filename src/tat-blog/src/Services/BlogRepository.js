@@ -1,4 +1,4 @@
-import { get_api, post_api } from "./Methods";
+import { delete_api, get_api, post_api } from "./Methods";
 
 export function getPosts(keyword = '',
         pageSize = 10,
@@ -28,7 +28,8 @@ export function getPostsFilter(keyword = '',
     pageSize = 10,
     pageNumber = 1,
     sortColumn = '',
-    sortOrder = '')
+    sortOrder = '',
+    notPublished = false)
 {
     let url = new URL('https://localhost:7251/api/posts/get-posts-filter');
     keyword !== '' && url.searchParams.append('Keyword', keyword);
@@ -38,6 +39,7 @@ export function getPostsFilter(keyword = '',
     month !== '' && url.searchParams.append('PostMonth', month);
     sortColumn !== '' && url.searchParams.append('SortColumn', sortColumn);
     sortOrder !== '' && url.searchParams.append('SortOrder', sortOrder);
+    url.searchParams.append('NotPublished', notPublished);
     url.searchParams.append('PageSize', pageSize);
     url.searchParams.append('PageNumber', pageNumber);
     return get_api(url.href);
@@ -51,4 +53,12 @@ export async function getPostById(id = 0){
 
 export function addOrUpdatePost(formData){
     return post_api(`https://localhost:7251/api/posts`, formData);
+}
+
+export function deletePost(id = 0){
+    return delete_api(`https://localhost:7251/api/posts/${id}`)
+}
+
+export function changePublished(id = 0){
+    return get_api(`https://localhost:7251/api/posts/chage-post-published/${id}`)
 }

@@ -1,0 +1,24 @@
+.published{
+    color: deepskyblue;
+}
+
+.not-published{
+    color: red
+}
+
+.delete{
+    color: red
+}
+
+.title{
+    width: 50%;
+    text-align: left;
+}
+
+thead{
+    text-align: center;
+}
+
+tbody{
+    text-align: center;
+}

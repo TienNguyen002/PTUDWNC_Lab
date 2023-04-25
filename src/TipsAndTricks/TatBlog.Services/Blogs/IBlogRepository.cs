@@ -223,8 +223,9 @@ namespace TatBlog.Services.Blogs
         Task<IPagedList<Post>> GetPagesAllPostQueryAsync(PostQuery postQuery, IPagingParams pagingParams, CancellationToken cancellationToken = default);
         #endregion
 
-        #region GetPagedPostsAsync<T> (Lấy ds Post theo T)
+        #region GetPaged(All)PostsAsync<T> (Lấy ds Post theo T)
         Task<IPagedList<T>> GetPagedPostsAsync<T>(PostQuery postQuery, IPagingParams pagingParams, Func<IQueryable<Post>, IQueryable<T>> mapper, CancellationToken cancellationToken = default);
+        Task<IPagedList<T>> GetPagedAllPostsAsync<T>(PostQuery postQuery, IPagingParams pagingParams, Func<IQueryable<Post>, IQueryable<T>> mapper, CancellationToken cancellationToken = default);
         #endregion
 
         #region Get(All)PagedPostQueryAsync (Lấy ds Post và phân trang theo các tham số của Paging)

@@ -5,7 +5,7 @@ const initialState = {
     authorId: '',
     categoryId: '',
     year: '',
-    month: ''
+    month: '',
 };
 
 const postFilterReducer = createSlice({
@@ -54,7 +54,7 @@ export const {
     updateAuthorId,
     updateCategoryId,
     updateMonth,
-    updateYear
+    updateYear,
 } = postFilterReducer.actions;
 
 export const reducer = postFilterReducer.reducer;
